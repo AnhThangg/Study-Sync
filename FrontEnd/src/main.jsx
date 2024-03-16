@@ -1,11 +1,16 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import './index.css'
-import Student from './Component/Template/Student/Student.jsx'
-import Check from './Component/Check/Check.jsx'
-import Profile from './Pages/Student/Profile/Profile.jsx'
-import Project from './Pages/Student/Project/Project.jsx'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import './index.css';
+import Student from './Component/Template/Student/Student.jsx';
+import Faculty from './Component/Template/Faculty/Faculty.jsx';
+import Check from './Component/Check/Check.jsx';
+import Profile from './Pages/Student/Profile/Profile.jsx';
+import Project from './Pages/Student/Project/Project.jsx';
+import Mentor from './Pages/Faculty/Mentor/Mentor.jsx';
+import StudentOfFaculty from './Pages/Faculty/Student/Student.jsx';
+import ProjectOfFaculty from './Pages/Faculty/Project/Project.jsx';
+import ProfileOfFaculty from './Pages/Faculty/Profile/Profile.jsx';
 
 const router = createBrowserRouter([
   {
@@ -17,15 +22,35 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/student/project',
-        element: <Project/>
+        element: <Project />
       },
       {
         path: '/student/profile',
         element: <Profile />
       }
-//
     ]
-
+  },
+  {
+    element: <Faculty />,
+    children: [
+      {
+        path: '/faculty/mentor',
+        element: <Mentor/>
+      },
+      {
+        path: '/faculty/student',
+        element: <StudentOfFaculty/>
+      },
+      {
+        path: '/faculty/project',
+        element: <ProjectOfFaculty/>
+      },
+      {
+        path: '/faculty/profile',
+        element: <ProfileOfFaculty/>
+      }
+      //
+    ]
   }
 ])
 
