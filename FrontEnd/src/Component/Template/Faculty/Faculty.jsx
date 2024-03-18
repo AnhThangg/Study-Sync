@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, NavLink, useLocation } from "react-router-dom";
 import { Button, Box, Typography } from "@mui/material";
-import { AccountBox, AccountTree } from "@mui/icons-material";
+import { ContactEmergency, AccountBox, Person, AccountTree } from "@mui/icons-material";
 import logoDTU from "../../../assets/Logo-DuyTan.png";
 import avatar from "../../../assets/Avatar.png";
-import "./Student.scss";
+import "./Faculty.scss";
 
-const Student = () => {
+const Faculty = () => {
+
   const { pathname: url } = useLocation();
   useEffect(() => {
     const navLinks = document.getElementsByClassName("listBar");
@@ -20,7 +21,7 @@ const Student = () => {
   }, [url]);
 
   const homeClick = () => {
-    window.location.href = "/student/Project";
+    window.location.href = "/faculty/profile";
   };
 
   const userInfo = {
@@ -75,7 +76,58 @@ const Student = () => {
               width: "100%",
             }}
           >
-            <NavLink to="/student/Project" className="listBar">
+            {/* Mentor */}
+            <NavLink to="/faculty/mentor" className="listBar">
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: "10px",
+                  height: "50px",
+                  paddingLeft: "10px",
+                }}
+              >
+                <ContactEmergency fontSize="large" sx={{ color: "#D82C2C" }} />
+                <Typography
+                  sx={{
+                    color: "#D82C2C",
+                    fontWeight: "bold",
+                    fontSize: "20px",
+                  }}
+                >
+                  Mentor
+                </Typography>
+              </Box>
+            </NavLink>
+
+            {/* Student */}
+            <NavLink to="/faculty/student" className="listBar">
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: "10px",
+                  height: "50px",
+                  paddingLeft: "10px",
+                }}
+              >
+                <Person fontSize="large" sx={{ color: "#D82C2C" }} />
+                <Typography
+                  sx={{
+                    color: "#D82C2C",
+                    fontWeight: "bold",
+                    fontSize: "20px",
+                  }}
+                >
+                  Student
+                </Typography>
+              </Box>
+            </NavLink>
+
+            {/* Project */}
+            <NavLink to="/faculty/project" className="listBar">
               <Box
                 sx={{
                   display: "flex",
@@ -99,7 +151,8 @@ const Student = () => {
               </Box>
             </NavLink>
 
-            <NavLink to="/student/Profile" className="listBar">
+            {/* Profile */}
+            <NavLink to="/faculty/profile" className="listBar">
               <Box
                 sx={{
                   display: "flex",
@@ -179,6 +232,6 @@ const Student = () => {
       </Box>
     </Box>
   );
-};
+}
 
-export default Student;
+export default Faculty
