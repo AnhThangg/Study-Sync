@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import {
   Box,
   Icon,
@@ -6,6 +6,7 @@ import {
   Typography,
   Button,
   IconButton,
+  TextareaAutosize,
 } from "@mui/material";
 import {
   Person2,
@@ -36,6 +37,19 @@ function InformationProject() {
       </Typography>
     </Box>
   );
+
+  const fileInputRef = useRef(null);
+  const [uploadedFile, setUploadedFile] = useState(null);
+
+  const handleUploadClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    console.log("Selected file:", file); // Kiểm tra xem file đã được chọn hay không
+    setUploadedFile(file);
+  };
   return (
     <Box sx={{ margin: "50px 50px 0 50px", color: "#818181" }}>
       <Box
@@ -81,26 +95,41 @@ function InformationProject() {
           <Box className="describe" sx={{ marginBottom: "20px" }}>
             <InfoItem label="Describe project" />
 
-            <TextField
-              multiline
-              variant="outlined"
-              placeholder="Enter text here..."
-              sx={{ width: "700px" }}
+            <TextareaAutosize
+              style={{
+                width: "700px",
+                height: "200px",
+                border: "2px solid #999",
+                borderRadius: "10px",
+                padding: "10px",
+                fontSize: "20px",
+              }}
             />
           </Box>
           <Box className="technology" sx={{ marginBottom: "20px" }}>
             <InfoItem label="Technology" />
 
-            <TextField
-              multiline
-              variant="outlined"
-              placeholder="Enter text here..."
-              sx={{ width: "700px" }}
+            <TextareaAutosize
+              style={{
+                width: "700px",
+                height: "200px",
+                border: "2px solid #999",
+                borderRadius: "10px",
+                padding: "10px",
+                fontSize: "20px",
+              }}
             />
           </Box>
 
           <Box className="document" sx={{ marginBottom: "20px" }}>
             <InfoItem label="Document Uploaded" />
+            <input
+              type="file"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
+
             <Box
               className="proposal"
               sx={{
@@ -112,17 +141,28 @@ function InformationProject() {
               <Icon>
                 <Description />
               </Icon>
-              <Typography sx={{ padding: "0 180px 0 10px" }}>
-                Proposal
-              </Typography>
+              <Typography sx={{ width: "40%" }}>Proposal</Typography>
+
               <Box className="upload">
-                <IconButton>
+                <IconButton onClick={handleUploadClick}>
                   <Upload />
                 </IconButton>
               </Box>
             </Box>
+            {uploadedFile && (
+              <Typography
+                sx={{
+                  // width: "100%",
+                  paddingLeft: "25px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {uploadedFile.name}
+              </Typography>
+            )}
             <Box
-              className="proposal"
+              className="projectPlan"
               sx={{
                 display: "flex",
                 flexDirection: "row",
@@ -132,15 +172,29 @@ function InformationProject() {
               <Icon>
                 <Description />
               </Icon>
-              <Typography sx={{ padding: "0 160px 0 10px" }}>
-                Project Plan
-              </Typography>
+              <Typography sx={{ width: "40%" }}>Project Plan</Typography>
+              <IconButton >
+                <Upload />
+              </IconButton>
+            </Box>
+            <Box
+              className="productBacklog"
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Icon>
+                <Description />
+              </Icon>
+              <Typography sx={{ width: "40%" }}>Product Backlog</Typography>
               <IconButton>
                 <Upload />
               </IconButton>
             </Box>
             <Box
-              className="proposal"
+              className="userStories"
               sx={{
                 display: "flex",
                 flexDirection: "row",
@@ -150,15 +204,13 @@ function InformationProject() {
               <Icon>
                 <Description />
               </Icon>
-              <Typography sx={{ padding: "0 130px 0 10px" }}>
-                Product Backlog
-              </Typography>
+              <Typography sx={{ width: "40%" }}>User Stories</Typography>
               <IconButton>
                 <Upload />
               </IconButton>
             </Box>
             <Box
-              className="proposal"
+              className="architecture"
               sx={{
                 display: "flex",
                 flexDirection: "row",
@@ -168,15 +220,13 @@ function InformationProject() {
               <Icon>
                 <Description />
               </Icon>
-              <Typography sx={{ padding: "0 160px 0 10px" }}>
-                User Stories
-              </Typography>
+              <Typography sx={{ width: "40%" }}>Architecture Design</Typography>
               <IconButton>
                 <Upload />
               </IconButton>
             </Box>
             <Box
-              className="proposal"
+              className="database"
               sx={{
                 display: "flex",
                 flexDirection: "row",
@@ -186,15 +236,13 @@ function InformationProject() {
               <Icon>
                 <Description />
               </Icon>
-              <Typography sx={{ padding: "0 110px 0 10px" }}>
-                Architecture Design
-              </Typography>
+              <Typography sx={{ width: "40%" }}>Database Design</Typography>
               <IconButton>
                 <Upload />
               </IconButton>
             </Box>
             <Box
-              className="proposal"
+              className="userInter"
               sx={{
                 display: "flex",
                 flexDirection: "row",
@@ -204,25 +252,7 @@ function InformationProject() {
               <Icon>
                 <Description />
               </Icon>
-              <Typography sx={{ padding: "0 130px 0 10px" }}>
-                Database Design
-              </Typography>
-              <IconButton>
-                <Upload />
-              </IconButton>
-            </Box>
-            <Box
-              className="proposal"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ padding: "0 100px 0 10px" }}>
+              <Typography sx={{ width: "40%" }}>
                 User Interface Design
               </Typography>
               <IconButton>
@@ -230,7 +260,7 @@ function InformationProject() {
               </IconButton>
             </Box>
             <Box
-              className="proposal"
+              className="testCase"
               sx={{
                 display: "flex",
                 flexDirection: "row",
@@ -240,15 +270,13 @@ function InformationProject() {
               <Icon>
                 <Description />
               </Icon>
-              <Typography sx={{ padding: "0 190px 0 10px" }}>
-                Test Case
-              </Typography>
+              <Typography sx={{ width: "40%" }}>Test Case</Typography>
               <IconButton>
                 <Upload />
               </IconButton>
             </Box>
             <Box
-              className="proposal"
+              className="testPlan"
               sx={{
                 display: "flex",
                 flexDirection: "row",
@@ -258,15 +286,13 @@ function InformationProject() {
               <Icon>
                 <Description />
               </Icon>
-              <Typography sx={{ padding: "0 190px 0 10px" }}>
-                Test Plan
-              </Typography>
+              <Typography sx={{ width: "40%" }}>Test Plan</Typography>
               <IconButton>
                 <Upload />
               </IconButton>
             </Box>
             <Box
-              className="proposal"
+              className="sprintBacklog"
               sx={{
                 display: "flex",
                 flexDirection: "row",
@@ -276,9 +302,7 @@ function InformationProject() {
               <Icon>
                 <Description />
               </Icon>
-              <Typography sx={{ padding: "0 160px 0 10px" }}>
-                Sprint Backlog
-              </Typography>
+              <Typography sx={{ width: "40%" }}>Sprint Backlog</Typography>
               <IconButton>
                 <Upload />
               </IconButton>
@@ -401,6 +425,10 @@ function InformationProject() {
             fontWeight: "bold",
             fontSize: "20px",
             textTransform: "none",
+            "&:hover": {
+              backgroundColor: "#818181",
+              color: "#000",
+            },
           }}
         >
           Update
