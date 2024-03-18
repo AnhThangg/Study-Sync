@@ -6,6 +6,9 @@ import Student from './Component/Template/Student/Student.jsx'
 import Check from './Component/Check/Check.jsx'
 import Profile from './Pages/Student/Profile/Profile.jsx'
 import Project from './Pages/Student/Project/Project.jsx'
+import InformationProject from './Pages/Student/InformationProject/InformationProject.js'
+import CreateProject from './Pages/Student/CreateProject/CreateProject.jsx'
+
 
 const router = createBrowserRouter([
   {
@@ -22,7 +25,16 @@ const router = createBrowserRouter([
       {
         path: '/student/profile',
         element: <Profile />
+      },
+      {
+        path: '/student/informationProject',
+        element: <InformationProject />
+      },
+      {
+        path: '/student/createProject',
+        element: <CreateProject />
       }
+
 //
     ]
 
