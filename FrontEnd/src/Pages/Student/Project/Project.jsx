@@ -32,7 +32,7 @@ function Project() {
         <Table
         sx={{
           marginTop:'20px',
-//
+
         }}>
         <thead >
           <tr>
