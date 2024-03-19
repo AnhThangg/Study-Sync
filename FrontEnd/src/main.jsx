@@ -6,6 +6,8 @@ import Student from './Component/Template/Student/Student.jsx'
 import Check from './Component/Check/Check.jsx'
 import Profile from './Pages/Student/Profile/Profile.jsx'
 import Project from './Pages/Student/Project/Project.jsx'
+import Univer from './Component/Template/Univer/Univer.jsx'
+import { Dashboard } from '@mui/icons-material'
 
 const router = createBrowserRouter([
   {
@@ -17,13 +19,32 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/student/project',
-        element: <Project/>
+        element: <Project />
       },
       {
         path: '/student/profile',
         element: <Profile />
       }
-//
+      //
+    ]
+
+  },
+  {
+    element: <Univer />,
+    children: [
+      {
+        path: '/Univer/Dashboard',
+        element: <Dashboard />
+      },
+      {
+        path: '/Univer/DashboadDetail',
+        element: <div>DashboadDetail</div>
+      },
+      {
+        path: '/Univer/Certificate',
+        element: <div>Certificate</div>
+      }
+      //
     ]
 
   }
