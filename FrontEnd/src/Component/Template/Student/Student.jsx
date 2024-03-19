@@ -30,8 +30,9 @@ const Student = () => {
 
   return (
     <Box sx={{
-      display: 'flex',
-      flexDirection: 'row'
+      display:'flex',
+      flexDirection:'row',
+      
     }}>
       <Box className='sideBar' sx={{
         height: '100vh',
@@ -135,6 +136,7 @@ const Student = () => {
               alignItems: "center",
               paddingTop: "10px",
               gap: "3px",
+              
             }}
           >
             <Box className="avatar">
