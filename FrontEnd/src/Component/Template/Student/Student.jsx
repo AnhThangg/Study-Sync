@@ -36,12 +36,13 @@ const Student = () => {
     }}>
       <Box className='sideBar' sx={{
         height: '100vh',
-        flex: '1',
         background: '#F6E6E6',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: '25px'
+        gap: '25px',
+        position: 'fixed',
+        width: '16.5%',
       }}>
         <img
           src={logoDTU}
@@ -175,7 +176,8 @@ const Student = () => {
         </Box>
       </Box>
       <Box sx={{
-        flex: '5'
+        width: '83.5%',
+        marginLeft: '16.5%'
       }}>
         <Outlet />
       </Box>
