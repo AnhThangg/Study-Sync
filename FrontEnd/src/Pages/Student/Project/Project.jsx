@@ -1,7 +1,24 @@
 import React from "react";
-import { Box, Button, Table, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function Project() {
+  const usenavigate = useNavigate();
+
+  const handleCreateProject = () => {
+    usenavigate("/student/createProject");
+  };
+
   return (
     <Box sx={{ margin: "50px 0 0 50px" }}>
       <Box
@@ -19,32 +36,47 @@ function Project() {
           Project
         </Typography>
       </Box>
-      
+
       <Box
         sx={{
           width: "1036px",
-          height: "400px",
+          height: "auto",
           backgroundColor: "#F6E8E8",
           borderRadius: "20px",
           margin: "50px 50px 20px 50px",
+          padding: "10px",
         }}
       >
-        <Table
-        sx={{
-          marginTop:'20px',
-
-        }}>
-        <thead >
-          <tr>
-            <th>No.</th>
-            <th>Project Code</th>
-            <th>Project Name</th>
-            <th>Leader</th>
-          </tr>
-        </thead>
-      </Table>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ fontSize: "20px", fontWeight: "bold" }}>
+                  No.
+                </TableCell>
+                <TableCell sx={{ fontSize: "20px", fontWeight: "bold" }}>
+                  Project Code
+                </TableCell>
+                <TableCell sx={{ fontSize: "20px", fontWeight: "bold" }}>
+                  Project Name
+                </TableCell>
+                <TableCell sx={{ fontSize: "20px", fontWeight: "bold" }}>
+                  Leader
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell>1</TableCell>
+                <TableCell>KCKH01</TableCell>
+                <TableCell>Quản lí đồ án nghiên cứu khoa học</TableCell>
+                <TableCell>Nguyễn Trần Anh Thắng</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Box>
-    
+
       <Box
         sx={{
           margin: "0 50px 0 50px",
@@ -60,6 +92,7 @@ function Project() {
             fontSize: "16px",
             textTransform: "none",
           }}
+          onClick={handleCreateProject}
         >
           + Create Project
         </Button>

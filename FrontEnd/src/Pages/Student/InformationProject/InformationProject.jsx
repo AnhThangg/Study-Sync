@@ -47,9 +47,35 @@ function InformationProject() {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    console.log("Selected file:", file); // Kiểm tra xem file đã được chọn hay không
+    console.log("Selected file:", file);
     setUploadedFile(file);
   };
+
+  const project = {
+    faculty: "Khoa Công Nghệ Phần Mềm",
+    projectName: "StudySync Manage scientific research projects for students in Duy Tan University",
+    procjectCode: "PJ01SA",
+  };
+  const mentor = {
+    mentorName: "Dr. Tran Thi Thuy Trinh",
+    mentorEmail: "ttthuytrinh@dtu.edu.vn",
+    mentorPhone: "09133350642",
+  };
+
+  const leader = {
+    leaderName: "Nguyen Tran Anh Thang",
+    leaderEmail: "anhthang2529@gmail.com",
+    leaderPhone: "0869132529",
+  };
+
+  const members = {
+    membersOne: "Nguyen Hoang Quoc Anh",
+    membersTwo: "Duong Nguyen Cong Luan",
+    membersThree: "Nguyen Quoc Nhat",
+  };
+  const startTime = "24/02/2024";
+  const trangThai = "In progess";
+
   return (
     <Box sx={{ margin: "50px 50px 0 50px", color: "#818181" }}>
       <Box
@@ -65,10 +91,10 @@ function InformationProject() {
               //   width:'100%'
             }}
           >
-            Khoa Công Nghệ Phần Mềm
+            {project.faculty}
           </Typography>
           <Box>
-            <InfoItem label="Project code" value="PJ01SA" />
+            <InfoItem label="Project code" value={project.procjectCode} />
           </Box>
         </Box>
         <Box
@@ -76,8 +102,7 @@ function InformationProject() {
           sx={{ display: "flex", flexDirection: "row" }}
         >
           <Typography sx={{ fontSize: "24px" }}>
-            StudySync Manage scientific research projects for students in Duy
-            Tan University
+           {project.projectName}
           </Typography>
         </Box>
       </Box>
@@ -173,7 +198,7 @@ function InformationProject() {
                 <Description />
               </Icon>
               <Typography sx={{ width: "40%" }}>Project Plan</Typography>
-              <IconButton >
+              <IconButton>
                 <Upload />
               </IconButton>
             </Box>
@@ -333,9 +358,9 @@ function InformationProject() {
               </Icon>
               <Box sx={{ marginTop: "20px" }}>
                 <InfoItem label="Mentor" />
-                <Typography>Dr. Tran Thi Thuy Trinh</Typography>
-                <Typography>ttthuytrinh@dtu.edu.vn</Typography>
-                <Typography>09133350642</Typography>
+                <Typography>{mentor.mentorName}</Typography>
+                <Typography>{mentor.mentorEmail}</Typography>
+                <Typography>{mentor.mentorPhone}</Typography>
               </Box>
             </Box>
             <Box
@@ -347,9 +372,9 @@ function InformationProject() {
               </Icon>
               <Box sx={{ marginTop: "20px" }}>
                 <InfoItem label="Leader" />
-                <Typography>Nguyen Tran Anh Thang</Typography>
-                <Typography>anhthang2529@gmail.com</Typography>
-                <Typography>0869132529</Typography>
+                <Typography>{leader.leaderName}</Typography>
+                <Typography>{leader.leaderEmail}</Typography>
+                <Typography>{leader.leaderPhone}</Typography>
               </Box>
             </Box>
             <Box
@@ -361,9 +386,9 @@ function InformationProject() {
               </Icon>
               <Box sx={{ marginTop: "20px" }}>
                 <InfoItem label="Group members" />
-                <Typography>Nguyen Hoang Quoc Anh</Typography>
-                <Typography>Duong Nguyen Cong Luan</Typography>
-                <Typography>Nguyen Quoc Nhat</Typography>
+                <Typography>{members.membersOne}</Typography>
+                <Typography>{members.membersTwo}</Typography>
+                <Typography>{members.membersThree}</Typography>
               </Box>
             </Box>
             <Box
@@ -375,7 +400,7 @@ function InformationProject() {
               </Icon>
               <Box sx={{ marginTop: "20px" }}>
                 <InfoItem label="Start" />
-                <Typography>24/02/2024</Typography>
+                <Typography>{startTime}</Typography>
               </Box>
             </Box>
             <Box
@@ -387,7 +412,7 @@ function InformationProject() {
               </Icon>
               <Box sx={{ marginTop: "20px" }}>
                 <InfoItem label="Status" />
-                <Typography>In progess</Typography>
+                <Typography>{trangThai}</Typography>
               </Box>
             </Box>
           </Box>
@@ -426,8 +451,9 @@ function InformationProject() {
             fontSize: "20px",
             textTransform: "none",
             "&:hover": {
-              backgroundColor: "#818181",
-              color: "#000",
+              background: "#fff",
+              color: "#D82C2C",
+              border: "1px solid #999",
             },
           }}
         >
