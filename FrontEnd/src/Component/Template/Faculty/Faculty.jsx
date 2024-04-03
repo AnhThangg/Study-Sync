@@ -67,8 +67,7 @@ const Faculty = () => {
             gap: "10px",
             width: "80%",
             height: "100%",
-          }}
-        >
+          }}>
           <Box
             sx={{
               display: "flex",
