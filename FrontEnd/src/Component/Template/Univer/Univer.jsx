@@ -26,7 +26,7 @@ const Univer = () => {
 
     const userInfo = {
         userName: "Nguyễn Quốc Nhật",
-        userEmail: "nguyenhoangquocnhat@gmail.com",
+        userEmail: "nguyenquocnhat@gmail.com",
     };
 
     return (
@@ -35,13 +35,15 @@ const Univer = () => {
             flexDirection: 'row'
         }}>
             <Box className="sideBar" sx={{
-                flex: '1.3',
+                width:'16.5%',
+                position:'fixed',
                 height: '100vh',
                 background: '#F6E6E6',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'flex-start'
+
             }}>
                 <img src={logoDTU} alt="Logo"
                     width="80%"
@@ -81,7 +83,7 @@ const Univer = () => {
                                     flexDirection: "row",
                                     alignItems: "center",
                                     gap: "10px",
-                                    height: "50px",
+                                    height: "60px",
                                     paddingLeft: "10px",
                                 }}
                             >
@@ -105,7 +107,7 @@ const Univer = () => {
                                     flexDirection: "row",
                                     alignItems: "center",
                                     gap: "10px",
-                                    height: "50px",
+                                    height: "60px",
                                     paddingLeft: "10px",
                                 }}
                             >
@@ -129,7 +131,7 @@ const Univer = () => {
                                     flexDirection: "row",
                                     alignItems: "center",
                                     gap: "10px",
-                                    height: "50px",
+                                    height: "60px",
                                     paddingLeft: "10px",
                                 }}
                             >
@@ -195,7 +197,8 @@ const Univer = () => {
                 </Box>
             </Box>
             <Box sx={{
-                flex: '5'
+                width:'83.5%',
+                marginLeft:'16.5%'
             }}>
                 <Outlet />
             </Box>

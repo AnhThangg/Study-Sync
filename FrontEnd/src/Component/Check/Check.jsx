@@ -56,7 +56,9 @@ const Check = () => {
               flexDirection: 'column',
               gap: '25px'
             }}>
-              <Box className='loginFormInfoTitle'>
+              <Box className='loginFormInfoTitle' sx={{
+                paddingTop: '40px',
+              }}>
                 <Typography sx={{
                   fontSize: '24px',
                   fontWeight: 'bold',
