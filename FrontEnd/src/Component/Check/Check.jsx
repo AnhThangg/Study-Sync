@@ -3,9 +3,19 @@ import { Outlet, NavLink, useLocation } from 'react-router-dom';
 import { Box, Typography, TextField, Button } from '@mui/material';
 import logoDTU from '../../assets/Logo-DuyTan.png';
 import imgLogin from '../../assets/imageLogin.png';
+import {login} from '../../api/authApi';
 
 const Check = () => {
 
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  const onLogin = async () => {
+    const res = login({
+      userName,
+      password
+    });
+    console.log(res);
+  } 
   return (
     <Box className="contain" sx={{
       height: '100vh',
@@ -89,6 +99,7 @@ const Check = () => {
                     label='Enter username'
                     type='text'
                     size='small'
+                    onChange={(e)=>setUserName(e.target.value)}
                     sx={{
                       width: '380px'
                     }}
@@ -108,6 +119,7 @@ const Check = () => {
                     label='Enter password'
                     type='password'
                     size='small'
+                    onChange={(e)=>setPassword(e.target.value)}
                     sx={{
                       width: '380px'
                     }}
@@ -117,7 +129,9 @@ const Check = () => {
 
 
             </Box>
-            <Button sx={{
+            <Button 
+            onClick={onLogin}
+            sx={{
               width: '200px',
               height: '40px',
               background: '#D82C2C',

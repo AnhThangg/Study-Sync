@@ -7,7 +7,12 @@ const Mentor = () => {
   return (
     <Box sx={{
       
-    }}>Anh Thắng dzvcl</Box>
+    }}>
+      <svg>
+        <b>Nguyễn trần anh thắng</b> <br />
+        <b>đẹp trai vãi lồn</b>
+      </svg>
+    </Box>
   )
 }
 

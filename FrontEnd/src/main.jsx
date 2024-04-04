@@ -13,11 +13,31 @@ import Mentor from "./Pages/Faculty/Mentor/Mentor.jsx";
 import StudentOfFaculty from "./Pages/Faculty/Student/Student.jsx";
 import ProjectOfFaculty from "./Pages/Faculty/Project/Project.jsx";
 import ProfileOfFaculty from "./Pages/Faculty/Profile/Profile.jsx";
+import Admin from "./Component/Template/Admin/Admin.jsx";
+import AddAccount from "./Pages/Admin/AddAccount/AddAccount.jsx";
+import HomePage from "./Pages/Admin/HomePage/HomePage.jsx";
+import Page404 from "./Pages/NotFound/NotFound.jsx";
+
 
 const router = createBrowserRouter([
+
+  { path: '*', element: <Page404 /> },
   {
     path: "/",
     element: <Check />,
+  },
+  {
+    element: <Admin />,
+    children: [
+      {
+        path: "/admin/homepage",
+        element: <HomePage />,
+      },
+      {
+        path: "/admin/addaccount",
+        element: <AddAccount />,
+      },
+    ],
   },
   {
     element: <Student />,
@@ -38,8 +58,6 @@ const router = createBrowserRouter([
         path: "/student/createProject",
         element: <CreateProject />,
       },
-
-      //
     ],
   },
   {
