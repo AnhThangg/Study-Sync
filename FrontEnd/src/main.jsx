@@ -9,7 +9,7 @@ import Project from './Pages/Student/Project/Project.jsx'
 import Univer from './Component/Template/Univer/Univer.jsx'
 import InformationProject from "./Pages/Student/InformationProject/InformationProject.js";
 import CreateProject from "./Pages/Student/CreateProject/CreateProject.jsx";
-import Mentor from "./Pages/Faculty/Mentor/Mentor.jsx";
+import MentorOfFaculty from "./Pages/Faculty/Mentor/Mentor.jsx";
 import StudentOfFaculty from "./Pages/Faculty/Student/Student.jsx";
 import ProjectOfFaculty from "./Pages/Faculty/Project/Project.jsx";
 import ProfileOfFaculty from "./Pages/Faculty/Profile/Profile.jsx";
@@ -26,6 +26,14 @@ import Dashboard_Detail from './Pages/Univer/Dashboarddetails/Dashboard_Detail.j
 import ListProjects from './Pages/Univer/Dashboarddetails/ListProjects/index.js'
 import InforProject from './Pages/Univer/Dashboarddetails/InfoProject/InforProject.jsx'
 import StickyHeadTable from './Pages/Univer/Dashboarddetails/ListFaculty/StickyHeadTable.jsx'
+import Mentor from './Component/Template/Mentor/Mentor.jsx'
+// import MentorHomepage from './Pages/Mentor/MentorHomePage/MentorHomePage.jsx'
+import MentorHomepage from './Pages/Mentor/MentorHomepage/MentorHomepage.jsx'
+import MentorProposeIdea from './Pages/Mentor/MentorProposeIdea/MentorProposeIdea.jsx'
+import MentorProject from './Pages/Mentor/MentorProject/MentorProject.jsx'
+import MentorWaitting from './Pages/Mentor/MentorWaitting/MentorWaitting.jsx'
+import MentorInformation from './Pages/Mentor/MentorInformation/MentorInformation.jsx'
+
 const router = createBrowserRouter([
 
   { path: '*', element: <Page404 /> },
@@ -108,13 +116,41 @@ const router = createBrowserRouter([
         element: <div>Certificate</div>
       }
     ]
+
+  },
+  {
+    element: <Mentor />,
+    children: [
+      {
+        path: '/Mentor/MentorHomepage',
+        element: <MentorHomepage />,
+        children: [
+          {
+            path: '/Mentor/MentorHomepage/MentorProject',
+            element: <MentorProject />
+          },
+          {
+            path: '/Mentor/MentorHomepage/MentorWaitting',
+            element: <MentorWaitting />
+          }
+        ]
+      },
+      {
+        path: '/Mentor/MentorProposeIdea',
+        element: <MentorProposeIdea />
+      },
+      {
+        path: '/Mentor/MentorInformation',
+        element: <MentorInformation />
+      }
+    ]
   },
   {
     element: <Faculty />,
     children: [
       {
         path: "/faculty/mentor",
-        element: <Mentor />,
+        element: <MentorOfFaculty />,
       },
       {
         path: "/faculty/student",

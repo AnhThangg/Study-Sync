@@ -25,6 +25,8 @@ const Check = () => {
             navigate('/univer/dashboard/faculty')
           } else if (role === 'faculty') {
             navigate('/faculty/mentor')
+          } else if (role === 'mentor') {
+            navigate('/mentor/mentorhomepage/mentorproject')
           } else if (role === 'student') {
             navigate('/student/project')
           }
@@ -47,6 +49,8 @@ const Check = () => {
         navigate('/univer/dashboard/faculty')
       } else if (res.data.role === 'faculty') {
         navigate('/faculty/mentor')
+      } else if (res.data.role === 'mentor') {
+        navigate('/mentor/mentorhomepage/mentorproject')
       } else if (res.data.role === 'student') {
         navigate('/student/project')
       }
