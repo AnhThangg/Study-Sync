@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button, Box, Typography } from "@mui/material";
-import { Home, PersonAddAlt1 } from "@mui/icons-material";
+import { Home, PersonAddAlt1, Logout } from "@mui/icons-material";
 import logoDTU from "../../../assets/Logo-DuyTan.png";
 import avatar from "../../../assets/Avatar.png";
 import "./Admin.scss";
@@ -9,6 +9,13 @@ import "./Admin.scss";
 const Admin = () => {
     const { pathname: url } = useLocation();
     const navigate = useNavigate();
+
+    useEffect(()=>{
+      if(!localStorage.getItem('accessToken')){
+        navigate('/')
+      }
+    },[])
+  
     useEffect(() => {
         const navLinks = document.getElementsByClassName("listBar");
         for (let i = 0; i < navLinks.length; i += 1) {
@@ -117,6 +124,36 @@ const Admin = () => {
                                 </Typography>
                             </Box>
                         </NavLink>
+                        <Button
+                            onClick={logOut}
+                            sx={{
+                                display: "flex",
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: 'left',
+                                gap: "10px",
+                                height: "50px",
+                                paddingLeft: "10px",
+                                textTransform: 'none'
+                            }}>
+                            <Box sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "10px",
+                            }} >
+                                <Logout fontSize="large" sx={{
+                                    color: '#D82c2c',
+                                    transform: 'rotate(180deg)'
+                                }} />
+                                <Typography sx={{
+                                    color: "#D82C2C",
+                                    fontWeight: "bold",
+                                    fontSize: "20px",
+                                }}>
+                                    Logout
+                                </Typography>
+                            </Box>
+                        </Button>
                     </Box>
                     <Box className="bottom">
                         <Box className="accountBox" sx={{
@@ -155,13 +192,6 @@ const Admin = () => {
                                 </Box>
                             </Box>
                         </Box>
-                        <Button
-                            onClick={logOut}
-                            sx={{
-                                background: 'red'
-                            }}>
-                            Logout
-                        </Button>
                     </Box>
 
 

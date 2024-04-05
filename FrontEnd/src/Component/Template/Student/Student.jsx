@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Outlet, NavLink, useLocation } from "react-router-dom";
+import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button, Box, Typography } from "@mui/material";
 import { AccountBox, AccountTree } from "@mui/icons-material";
 import logoDTU from "../../../assets/Logo-DuyTan.png";
@@ -8,6 +8,14 @@ import "./Student.scss";
 
 const Student = () => {
   const { pathname: url } = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!localStorage.getItem('accessToken')) {
+      navigate('/')
+    }
+  }, [])
+
   useEffect(() => {
     const navLinks = document.getElementsByClassName("listBar");
     for (let i = 0; i < navLinks.length; i += 1) {
@@ -27,6 +35,11 @@ const Student = () => {
     userName: "Nguyễn Trần Anh Thắng",
     userEmail: "anhthang2529@gmail.com",
   };
+
+  const logOut = () => {
+    localStorage.removeItem('accessToken');
+    navigate('/')
+  }
 
   return (
     <Box sx={{
@@ -124,6 +137,36 @@ const Student = () => {
                 </Typography>
               </Box>
             </NavLink>
+            <Button
+              onClick={logOut}
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: 'left',
+                gap: "10px",
+                height: "50px",
+                paddingLeft: "10px",
+                textTransform: 'none'
+              }}>
+              <Box sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+              }} >
+                <Logout fontSize="large" sx={{
+                  color: '#D82c2c',
+                  transform: 'rotate(180deg)'
+                }} />
+                <Typography sx={{
+                  color: "#D82C2C",
+                  fontWeight: "bold",
+                  fontSize: "20px",
+                }}>
+                  Logout
+                </Typography>
+              </Box>
+            </Button>
           </Box>
 
           <Box

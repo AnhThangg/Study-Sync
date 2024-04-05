@@ -22,11 +22,11 @@ const Check = () => {
           if (role === 'admin') {
             navigate('/admin/homepage')
           } else if (role === 'univer') {
-            navigate('')
+            navigate('/univer/dashboard/faculty')
           } else if (role === 'faculty') {
-            navigate('')
+            navigate('/faculty/mentor')
           } else if (role === 'student') {
-            navigate('/student/Project')
+            navigate('/student/project')
           }
         })
         .catch(e => {
@@ -44,14 +44,15 @@ const Check = () => {
       if (res.data.role === 'admin') {
         navigate('/admin/homepage')
       } else if (res.data.role === 'univer') {
-
+        navigate('/univer/dashboard/faculty')
       } else if (res.data.role === 'faculty') {
-
+        navigate('/faculty/mentor')
       } else if (res.data.role === 'student') {
-        navigate('/student/Project')
+        navigate('/student/project')
       }
+    } else {
+      setErrorMessage('Sai mật khẩu hoặc tài khoản');
     }
-    console.log(res);
   }
   return (
     <Box className="contain" sx={{
