@@ -1,5 +1,5 @@
 const express = require('express');
-const {getInfoPersonal} = require('../controllers/info.controllers')
+const {getInfoPersonal, getRole} = require('../controllers/info.controllers')
 const {authenMiddleware} = require('../middlewares/authen.middleware'); 
 const perInfoRoute = express.Router();
 perInfoRoute
@@ -8,7 +8,12 @@ perInfoRoute
       authenMiddleware ,
       getInfoPersonal
     );
-    
+perInfoRoute
+      .route('/role')
+      .get(
+        authenMiddleware,
+        getRole
+      );
 
     // .post(
     //     login

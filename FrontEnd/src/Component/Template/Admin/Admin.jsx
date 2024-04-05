@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Outlet, NavLink, useLocation } from "react-router-dom";
+import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button, Box, Typography } from "@mui/material";
 import { Home, PersonAddAlt1 } from "@mui/icons-material";
 import logoDTU from "../../../assets/Logo-DuyTan.png";
 import avatar from "../../../assets/Avatar.png";
 import "./Admin.scss";
-const Admin = () => {
 
+const Admin = () => {
     const { pathname: url } = useLocation();
+    const navigate = useNavigate();
     useEffect(() => {
         const navLinks = document.getElementsByClassName("listBar");
         for (let i = 0; i < navLinks.length; i += 1) {
@@ -26,8 +27,11 @@ const Admin = () => {
     const userInfo = {
         userName: "Nguyễn Trần Anh Thắng",
         userEmail: "anhthang2529@gmail.com",
-      };
-
+    };
+    const logOut = () => {
+        localStorage.removeItem('accessToken');
+        navigate('/')
+    }
     return (
         <Box sx={{
             display: 'flex',
@@ -42,6 +46,7 @@ const Admin = () => {
                 gap: '25px',
                 position: 'fixed',
                 width: '16.5%',
+                minWidth: '250px'
             }}>
                 <img
                     src={logoDTU}
@@ -113,42 +118,53 @@ const Admin = () => {
                             </Box>
                         </NavLink>
                     </Box>
-                    <Box className="accountBox" sx={{
-                        borderTop: "1px Solid #707070",
-                        marginBottom: "40px",
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        paddingTop: "10px",
-                        gap: "3px",
-                    }} >
-                        <Box className="avatar">
-                            <img className="avatar" src={avatar} alt="avatar" width="50px" />
-                        </Box>
-                        <Box className="infor" sx={{
+                    <Box className="bottom">
+                        <Box className="accountBox" sx={{
+                            borderTop: "1px Solid #707070",
+                            marginBottom: "40px",
                             display: "flex",
-                            flexDirection: "column",
+                            flexDirection: "row",
                             justifyContent: "center",
+                            alignItems: "center",
+                            paddingTop: "10px",
+                            gap: "3px",
                         }} >
-                            <Box className="userName">
-                                <Typography sx={{
-                                    fontSize: "12px",
-                                    fontWeight: "bold",
-                                }} >
-                                    {userInfo.userName}
-                                </Typography>
+                            <Box className="avatar">
+                                <img className="avatar" src={avatar} alt="avatar" width="50px" />
                             </Box>
-                            <Box className="userEmail">
-                                <Typography sx={{
-                                    fontSize: "12px",
-                                    fontWeight: "bold",
-                                }} >
-                                    {userInfo.userEmail}
-                                </Typography>
+                            <Box className="infor" sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "center",
+                            }} >
+                                <Box className="userName">
+                                    <Typography sx={{
+                                        fontSize: "12px",
+                                        fontWeight: "bold",
+                                    }} >
+                                        {userInfo.userName}
+                                    </Typography>
+                                </Box>
+                                <Box className="userEmail">
+                                    <Typography sx={{
+                                        fontSize: "12px",
+                                        fontWeight: "bold",
+                                    }} >
+                                        {userInfo.userEmail}
+                                    </Typography>
+                                </Box>
                             </Box>
                         </Box>
+                        <Button
+                            onClick={logOut}
+                            sx={{
+                                background: 'red'
+                            }}>
+                            Logout
+                        </Button>
                     </Box>
+
+
                 </Box>
             </Box>
             {/* container */}
