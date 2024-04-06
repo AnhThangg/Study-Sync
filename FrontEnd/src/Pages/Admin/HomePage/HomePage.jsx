@@ -6,7 +6,10 @@ import {
     Typography,
 } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
-import { Edit, Delete} from "@mui/icons-material";
+import { Edit, Delete } from "@mui/icons-material";
+import { useEffect } from 'react';
+import { getAccount } from '../../../api/adminApi';
+import { useState } from 'react';
 
 const columns = [
     {
@@ -61,33 +64,51 @@ const columns = [
     },
 ];
 
-const rows = [
-    { id: 1, role: 'univer', username: 'truongdulich', roleCode: 'DTDL' },
-    { id: 2, role: 'univer', username: 'truongdaotao', roleCode: 'DTQT' },
-    { id: 3, role: 'faculty', username: 'nguyentanhthang', roleCode: '26211329003' },
-    { id: 4, role: 'student', username: 'duongnguyencongluan', roleCode: '26211329003' },
-    { id: 5, role: 'student', username: 'nguyenhoangquocanh', roleCode: '26211329003' },
-    { id: 6, role: 'student', username: 'nguyenquocnhat', roleCode: '26211329003' },
-    { id: 7, role: 'student', username: 'nguyenxuanvang', roleCode: '26211329003' },
-    { id: 8, role: 'student', username: 'nguyentanhdo', roleCode: '26211329003' },
-    { id: 9, role: 'student', username: 'trancongtri', roleCode: '26211329003' },
-    { id: 10, role: 'univer', username: 'truongdulich', roleCode: 'DTDL' },
-    { id: 11, role: 'univer', username: 'truongdaotao', roleCode: 'DTQT' },
-    { id: 12, role: 'faculty', username: 'nguyentanhthang', roleCode: '26211329003' },
-    { id: 13, role: 'student', username: 'duongnguyencongluan', roleCode: '26211329003' },
-    { id: 14, role: 'student', username: 'nguyenhoangquocanh', roleCode: '26211329003' },
-    { id: 15, role: 'student', username: 'nguyenquocnhat', roleCode: '26211329003' },
-    { id: 16, role: 'student', username: 'nguyenxuanvang', roleCode: '26211329003' },
-    { id: 17, role: 'student', username: 'nguyentanhdo', roleCode: '26211329003' },
-    { id: 18, role: 'student', username: 'trancongtri', roleCode: '26211329003' },
-    { id: 19, role: 'student', username: 'nguyentanhdo', roleCode: '26211329003' },
-    {
-        id: 20
-        , role: 'student', username: 'trancongtri', roleCode: '26211329003'
-    },
-];
+// const rows = [
+//     { id: 1, role: 'univer', username: 'truongdulich', roleCode: 'DTDL' },
+//     { id: 2, role: 'univer', username: 'truongdaotao', roleCode: 'DTQT' },
+//     { id: 3, role: 'faculty', username: 'nguyentanhthang', roleCode: '26211329003' },
+//     { id: 4, role: 'student', username: 'duongnguyencongluan', roleCode: '26211329003' },
+//     { id: 5, role: 'student', username: 'nguyenhoangquocanh', roleCode: '26211329003' },
+//     { id: 6, role: 'student', username: 'nguyenquocnhat', roleCode: '26211329003' },
+//     { id: 7, role: 'student', username: 'nguyenxuanvang', roleCode: '26211329003' },
+//     { id: 8, role: 'student', username: 'nguyentanhdo', roleCode: '26211329003' },
+//     { id: 9, role: 'student', username: 'trancongtri', roleCode: '26211329003' },
+//     { id: 10, role: 'univer', username: 'truongdulich', roleCode: 'DTDL' },
+//     { id: 11, role: 'univer', username: 'truongdaotao', roleCode: 'DTQT' },
+//     { id: 12, role: 'faculty', username: 'nguyentanhthang', roleCode: '26211329003' },
+//     { id: 13, role: 'student', username: 'duongnguyencongluan', roleCode: '26211329003' },
+//     { id: 14, role: 'student', username: 'nguyenhoangquocanh', roleCode: '26211329003' },
+//     { id: 15, role: 'student', username: 'nguyenquocnhat', roleCode: '26211329003' },
+//     { id: 16, role: 'student', username: 'nguyenxuanvang', roleCode: '26211329003' },
+//     { id: 17, role: 'student', username: 'nguyentanhdo', roleCode: '26211329003' },
+//     { id: 18, role: 'student', username: 'trancongtri', roleCode: '26211329003' },
+//     { id: 19, role: 'student', username: 'nguyentanhdo', roleCode: '26211329003' },
+//     {
+//         id: 20
+//         , role: 'student', username: 'trancongtri', roleCode: '26211329003'
+//     },
+// ];
 
 const HomePage = () => {
+    const [listAccount, setListAccount] = useState([]);
+    useEffect(() => {
+        getAccount('all')
+            .then(list => {
+                setListAccount(list);
+            })
+    }, []);
+    console.log(listAccount);
+
+    const rows = listAccount.map((item,index) => {
+        return {
+            id: index+1, 
+            role: item.role, 
+            username: item.userName, 
+            roleCode: item.roleCode
+        }
+    })
+
     return (
         <Box className="container" sx={{ margin: "50px 0 0 50px" }}>
             <Typography

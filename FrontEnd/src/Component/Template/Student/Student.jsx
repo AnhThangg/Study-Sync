@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button, Box, Typography } from "@mui/material";
-import { AccountBox, AccountTree } from "@mui/icons-material";
+import { AccountBox, AccountTree, Logout} from "@mui/icons-material";
 import logoDTU from "../../../assets/Logo-DuyTan.png";
 import avatar from "../../../assets/Avatar.png";
 import "./Student.scss";

@@ -16,6 +16,7 @@ import ProfileOfFaculty from "./Pages/Faculty/Profile/Profile.jsx";
 import Admin from "./Component/Template/Admin/Admin.jsx";
 import AddAccount from "./Pages/Admin/AddAccount/AddAccount.jsx";
 import HomePage from "./Pages/Admin/HomePage/HomePage.jsx";
+import EditAccount from './Pages/Admin/EditAccount/EditAccount.jsx'
 import Page404 from "./Pages/NotFound/NotFound.jsx";
 import Faculty from "./Component/Template/Faculty/Faculty.jsx";
 import Dashboard from './Pages/Univer/Dashboard/Dashboard.jsx'
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
       {
         path: "/admin/addaccount",
         element: <AddAccount />,
+      },
+      {
+        path: "/admin/editaccount",
+        element: <EditAccount />,
       },
     ],
   },
