@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -31,6 +31,7 @@ function CreateProject() {
       </Typography>
     </Box>
   );
+
   const options = [
     { label: "Dr. Tran Thi Thuy Trinh", value: 1 },
     { label: "Dr. Nguyen Dinh Huy", value: 2 },
@@ -43,31 +44,53 @@ function CreateProject() {
   const [selectedMentor, setSelectedMentor] = useState(null);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+
   const [isOpenA, setIsOpenA] = useState(false);
   const [statusA, setStatusA] = useState("success");
   const [messageA, setMessageA] = useState("");
 
+  const [nextId, setNextId] = useState(1);
+
   const handleStudentCodeChange = (event) => {
-    setStudentCode(event.target.value);
-    if (event.target.value === "26211329003") {
+    const code = event.target.value;
+    setStudentCode(code);
+    if (event.target.value === "26211329003" || event.target.value === "26211236334") {
       setShowInfo(true);
     } else {
       setShowInfo(false);
     }
   };
 
-  const handleDeleteMember = (memberId) => {
-    const updatedMembers = members.filter((member) => member.id !== memberId);
-    setMembers(updatedMembers);
-  };
-
   const handleAddMember = () => {
+    if (members.length === 1) {
+      setStatusA("warning");
+      setMessageA("Please add at least one member!");
+      setIsOpenA(true);
+      return;
+    }
+  
     const newMember = {
-      id: members.length + 1,
+      id: nextId,
       studentCode: studentCode,
     };
-    setMembers([...members, { id: members.length + 1 }]);
+    setNextId(nextId + 1);
+    setMembers([...members, newMember]);
+    setStudentCode("");
+    console.log("Add Member: ", newMember);
   };
+  
+
+  const handleDeleteMember = (id) => {
+    const updatedMembers = members.filter((member) => member.id !== id);
+    if (updatedMembers.length === members.length) {
+      setStatusA("warning");
+      setMessageA("Failed to delete member!");
+      setIsOpenA(true);
+      return;
+    }
+    setMembers(updatedMembers);
+  };
+  
 
   const handleSelectMentor = (event, newValue) => {
     const isValidMentor = options.some(
@@ -83,32 +106,71 @@ function CreateProject() {
 
   const handleStartTimeChange = (event) => {
     const inputStartTime = event.target.value;
-    if (inputStartTime >= getCurrentDate()) {
+    const today = new Date();
+    const sevenDaysFromNow = new Date(today.setDate(today.getDate() + 6));
+
+    if (new Date(inputStartTime) >= sevenDaysFromNow) {
       setStartTime(inputStartTime);
+
+      const threeMonthsFromStart = new Date(
+        new Date(inputStartTime).setMonth(new Date(inputStartTime).getMonth() + 3)
+      );
+      if (!endTime || new Date(endTime) > threeMonthsFromStart) {
+        setEndTime(threeMonthsFromStart.toISOString().split("T")[0]);
+      }
     } else {
       setStatusA("warning");
-      setMessageA("Start Time must be before Today.");
+      setMessageA("Start Time must be at least 7 days from today.");
       setIsOpenA(true);
     }
   };
 
   const handleEndTimeChange = (event) => {
     const inputEndTime = event.target.value;
-    if (inputEndTime > startTime) {
+    const threeMonthsFromStart = new Date(
+      new Date(startTime).setMonth(new Date(startTime).getMonth() + 3)
+    );
+
+    if (
+      new Date(inputEndTime) > new Date(startTime) &&
+      new Date(inputEndTime) >= threeMonthsFromStart
+    ) {
       setEndTime(inputEndTime);
     } else {
       setStatusA("warning");
-      setMessageA("End Time must be after Start Time.");
+      setMessageA("End Time must be after Start Time and within 3 months.");
       setIsOpenA(true);
     }
   };
 
-  const getCurrentDate = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, "0");
-    const day = String(today.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
+  const leader = {
+    leaderName: "Thang, Nguyen Tran Anh",
+    leaderCode: "26211329003",
+    leaderPhone: "0869132529",
+    leaderClass: "K26 CMU-TPM4",
+    leaderEmail: "anhthang2529@gmail.com",
+    leaderDepartment: "Khoa Công Nghệ Phần Mềm CMU",
+    leaderAddress: "60/1 Lê Thị Tính, An Khê, Thanh Khê, Đà Nẵng",
+  };
+
+  const addMembers = {
+    memberName: "Luan, Duong Nguyen Cong",
+    memberCode: "26211236334",
+    memberPhone: "0796503172",
+    memberClass: "K26 CMU-TPM4",
+    memberEmail: "duongnguyencongluan@gmail.com",
+    memberDepartment: "Khoa Công Nghệ Phần Mềm CMU",
+    memberAddress: "Tân Hạnh, Hòa Phước, Hòa Vang, Đà Nẵng",
+  };
+
+  const mentor = {
+    mentorName: "Tran Thi Thuy Trinh",
+    scientificName: "Dr. Tran Thi Thuy Trinh",
+    mentorPhone: "0913350642",
+    degree: "Doctor",
+    mentorEmail: "tthuytrinh@dtu.edu.vn",
+    mentorDepartment: "Khoa Công Nghệ Phần Mềm CMU",
+    mentorAddress: "Biệt thự 5 đứa con Đà Nẵng",
   };
 
   return (
@@ -140,7 +202,6 @@ function CreateProject() {
         ></TextField>
 
         <Box>
-          {/* Infomation Leader */}
           <Box
             sx={{
               margin: "20px 0 0 10px",
@@ -163,7 +224,7 @@ function CreateProject() {
               color: "#818181",
             }}
           >
-            <InfoItem label="Full Name" value="Thang, Nguyen Tran Anh" />
+            <InfoItem label="Full Name" value={leader.leaderName} />
             <Box
               sx={{
                 display: "flex",
@@ -171,8 +232,8 @@ function CreateProject() {
                 marginBottom: "5px",
               }}
             >
-              <InfoItem label="Student Code" value="26211329003" />
-              <InfoItem label="Class" value="K26 CMU-TPM4" />
+              <InfoItem label="Student Code" value={leader.leaderCode} />
+              <InfoItem label="Class" value={leader.leaderClass} />
             </Box>
             <Box
               sx={{
@@ -181,17 +242,14 @@ function CreateProject() {
                 marginBottom: "5px",
               }}
             >
-              <InfoItem label="Phone" value="0869132529" />
-              <InfoItem label="Email" value="anhthang2529@gmail.com" />
+              <InfoItem label="Phone" value={leader.leaderPhone} />
+              <InfoItem label="Email" value={leader.leaderEmail} />
             </Box>
-            <InfoItem label="Department" value="Khoa Công Nghệ Phần Mềm CMU" />
-            <InfoItem
-              label="Address"
-              value="60/1 Lê Thị Tính, An Khê, Thanh Khê, Đà Nẵng"
-            />
+            <InfoItem label="Department" value={leader.leaderDepartment} />
+            <InfoItem label="Address" value={leader.leaderAddress} />
           </Box>
         </Box>
-        {/* Team member */}
+
         <Box>
           <Box
             sx={{
@@ -221,15 +279,21 @@ function CreateProject() {
                 <TextField
                   type="number"
                   size="small"
-                  value={studentCode}
-                  onChange={handleStudentCodeChange}
+                  value={member.studentCode}
+                  onChange={(e) => {
+                    handleStudentCodeChange(e);
+                    setMembers(
+                      members.map((m) =>
+                        m.id === member.id ? { ...m, studentCode: e.target.value } : m
+                      )
+                    );
+                  }}
                   sx={{
                     width: "170px",
-                    '& .MuiInputBase-input[type="number"]::-webkit-inner-spin-button, & .MuiInputBase-input[type="number"]::-webkit-outer-spin-button':
-                      {
-                        "-webkit-appearance": "none",
-                        margin: 0,
-                      },
+                    '& .MuiInputBase-input[type="number"]::-webkit-inner-spin-button, & .MuiInputBase-input[type="number"]::-webkit-outer-spin-button': {
+                      "-webkit-appearance": "none",
+                      margin: 0,
+                    },
                     '& .MuiInputBase-input[type="number"]': {
                       "-moz-appearance": "textfield",
                     },
@@ -250,7 +314,7 @@ function CreateProject() {
                     color: "#818181",
                   }}
                 >
-                  <InfoItem label="Full Name" value="Thang, Nguyen Tran Anh" />
+                  <InfoItem label="Full Name" value={addMembers.memberName} />
                   <Box
                     sx={{
                       display: "flex",
@@ -258,8 +322,8 @@ function CreateProject() {
                       marginBottom: "5px",
                     }}
                   >
-                    <InfoItem label="Student Code" value="26211329003" />
-                    <InfoItem label="Class" value="K26 CMU-TPM4" />
+                    <InfoItem label="Student Code" value={addMembers.memberCode} />
+                    <InfoItem label="Class" value={addMembers.memberClass} />
                   </Box>
                   <Box
                     sx={{
@@ -268,17 +332,11 @@ function CreateProject() {
                       marginBottom: "5px",
                     }}
                   >
-                    <InfoItem label="Phone" value="0869132529" />
-                    <InfoItem label="Email" value="anhthang2529@gmail.com" />
+                    <InfoItem label="Phone" value={addMembers.memberPhone} />
+                    <InfoItem label="Email" value={addMembers.memberEmail} />
                   </Box>
-                  <InfoItem
-                    label="Department"
-                    value="Khoa Công Nghệ Phần Mềm CMU"
-                  />
-                  <InfoItem
-                    label="Address"
-                    value="60/1 Lê Thị Tính, An Khê, Thanh Khê, Đà Nẵng"
-                  />
+                  <InfoItem label="Department" value={addMembers.memberDepartment} />
+                  <InfoItem label="Address" value={addMembers.memberAddress} />
                 </Box>
               )}
             </Box>
@@ -309,7 +367,7 @@ function CreateProject() {
             </Button>
           </Box>
         </Box>
-        {/* Mentor */}
+
         <Box>
           <Box
             sx={{
@@ -330,15 +388,6 @@ function CreateProject() {
             className="nameMentor"
             sx={{ display: "flex", flexDirection: "row", marginLeft: "20px" }}
           >
-            {/* <Autocomplete
-              disablePortal
-              size="small"
-              id="combo-box-demo"
-              options={options}
-              getOptionLabel={(option) => option.label}
-              sx={{ width: 375 }}
-              renderInput={(params) => <TextField {...params} />}
-            /> */}
             <Autocomplete
               disablePortal
               size="small"
@@ -359,7 +408,7 @@ function CreateProject() {
           >
             {selectedMentor && (
               <>
-                <InfoItem label="Full Name" value="Tran Thi Thuy Trinh" />
+                <InfoItem label="Full Name" value={mentor.mentorName} />
                 <Box
                   sx={{
                     display: "flex",
@@ -367,11 +416,8 @@ function CreateProject() {
                     marginBottom: "5px",
                   }}
                 >
-                  <InfoItem
-                    label="Scientific Name"
-                    value="Dr. Tran Thi Thuy Trinh"
-                  />
-                  <InfoItem label="Degree" value="Doctor" />
+                  <InfoItem label="Scientific Name" value={mentor.scientificName} />
+                  <InfoItem label="Degree" value={mentor.degree} />
                 </Box>
                 <Box
                   sx={{
@@ -380,19 +426,16 @@ function CreateProject() {
                     marginBottom: "5px",
                   }}
                 >
-                  <InfoItem label="Phone" value="0913350642" />
-                  <InfoItem label="Email" value="tthuytrinh@dtu.edu.vn" />
+                  <InfoItem label="Phone" value={mentor.mentorPhone}/>
+                  <InfoItem label="Email" value={mentor.mentorEmail} />
                 </Box>
-                <InfoItem
-                  label="Department"
-                  value="Khoa Công Nghệ Phần Mềm CMU"
-                />
-                <InfoItem label="Address" value="Biệt thự 5 đứa con Đà Nẵng" />
+                <InfoItem label="Department" value={mentor.mentorDepartment} />
+                <InfoItem label="Address" value={mentor.mentorAddress} />
               </>
             )}
           </Box>
         </Box>
-        {/*  The Goal Of The Subject */}
+
         <Box>
           <Box
             sx={{
@@ -427,7 +470,7 @@ function CreateProject() {
             />
           </Box>
         </Box>
-        {/* Expected research products of the topic and applicability */}
+
         <Box>
           <Box
             sx={{
@@ -462,7 +505,7 @@ function CreateProject() {
             />
           </Box>
         </Box>
-        {/* Time */}
+
         <Box>
           <Box
             sx={{
@@ -490,7 +533,6 @@ function CreateProject() {
                 display: "flex",
                 flexDirection: "row",
                 marginBottom: "5px",
-                // justifyContent: "center",
               }}
             >
               <Box
@@ -507,7 +549,10 @@ function CreateProject() {
                   size="small"
                   value={startTime}
                   onChange={handleStartTimeChange}
-                  inputProps={{ inputMode: 'numeric', pattern: '\\d{4}-\\d{2}-\\d{2}' }}
+                  inputProps={{
+                    inputMode: "numeric",
+                    pattern: "\\d{4}-\\d{2}-\\d{2}",
+                  }}
                 />
               </Box>
               <Box
@@ -530,6 +575,7 @@ function CreateProject() {
             </Box>
           </Box>
         </Box>
+
         <Box
           className="btnCreate"
           sx={{
@@ -559,6 +605,7 @@ function CreateProject() {
           </Button>
         </Box>
       </Box>
+
       <Snackbar
         open={isOpenA}
         autoHideDuration={5000}

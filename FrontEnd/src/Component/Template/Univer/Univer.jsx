@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Outlet, NavLink, useLocation } from "react-router-dom";
+import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button, Box, Typography } from "@mui/material";
 import logoDTU from "../../../assets/Logo-DuyTan.png";
 import avatar from "../../../assets/QN.jpg";
 import "./Univer.scss";
-import { CardMembership, SpaceDashboard, Dashboard } from "@mui/icons-material";
+import { CardMembership, SpaceDashboard, Dashboard, Logout } from "@mui/icons-material";
 
 const Univer = () => {
 
     const { pathname: url } = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!localStorage.getItem('accessToken')) {
+            navigate('/')
+        }
+    }, [])
+
     useEffect(() => {
         const navLinks = document.getElementsByClassName("listBar");
         for (let i = 0; i < navLinks.length; i += 1) {
@@ -21,7 +29,7 @@ const Univer = () => {
     }, [url]);
 
     const homeClick = () => {
-        window.location.href = "/Univer/Dashboard"
+        window.location.href = "/Univer/Dashboard/faculty"
     }
 
     const userInfo = {
@@ -29,14 +37,18 @@ const Univer = () => {
         userEmail: "nguyenquocnhat@gmail.com",
     };
 
+    const logOut = () => {
+        localStorage.removeItem('accessToken');
+        navigate('/')
+    }
     return (
         <Box sx={{
             display: 'flex',
             flexDirection: 'row'
         }}>
             <Box className="sideBar" sx={{
-                width:'16.5%',
-                position:'fixed',
+                width: '16.5%',
+                position: 'fixed',
                 height: '100vh',
                 background: '#F6E6E6',
                 display: 'flex',
@@ -76,7 +88,7 @@ const Univer = () => {
                             width: "100%",
                         }}
                     >
-                        <NavLink to="/Univer/Dashboard" className="listBar">
+                        <NavLink to="/Univer/Dashboard/faculty" className="listBar">
                             <Box
                                 sx={{
                                     display: "flex",
@@ -147,6 +159,36 @@ const Univer = () => {
                                 </Typography>
                             </Box>
                         </NavLink>
+                        <Button
+                            onClick={logOut}
+                            sx={{
+                                display: "flex",
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: 'left',
+                                gap: "10px",
+                                height: "50px",
+                                paddingLeft: "10px",
+                                textTransform: 'none'
+                            }}>
+                            <Box sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "10px",
+                            }} >
+                                <Logout fontSize="large" sx={{
+                                    color: '#D82c2c',
+                                    transform: 'rotate(180deg)'
+                                }} />
+                                <Typography sx={{
+                                    color: "#D82C2C",
+                                    fontWeight: "bold",
+                                    fontSize: "20px",
+                                }}>
+                                    Logout
+                                </Typography>
+                            </Box>
+                        </Button>
                     </Box>
                     <Box
                         className="accountBox"
@@ -197,8 +239,8 @@ const Univer = () => {
                 </Box>
             </Box>
             <Box sx={{
-                width:'83.5%',
-                marginLeft:'16.5%'
+                width: '83.5%',
+                marginLeft: '16.5%'
             }}>
                 <Outlet />
             </Box>

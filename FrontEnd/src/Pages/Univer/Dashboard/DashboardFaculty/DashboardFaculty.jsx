@@ -37,7 +37,9 @@ const DashboardFaculty = () => {
             justifyContent:'center',
             alignItems:'center'
         }}>
-          <Chart_Faculty></Chart_Faculty>
+          <Chart_Faculty>
+            
+          </Chart_Faculty>
         </Box>
       </Box>
     </div>
