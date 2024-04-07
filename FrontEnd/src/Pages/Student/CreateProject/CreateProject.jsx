@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import "./CreateProject.scss";
 import { Delete } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 function CreateProject() {
   const InfoItem = ({ label, value }) => (
@@ -191,6 +192,8 @@ function CreateProject() {
     setResearchProducts(event.target.value);
   };
 
+  const usenavigate = useNavigate();
+
   const handleCreateProject = () => {
     let check = [];
 
@@ -226,6 +229,7 @@ function CreateProject() {
       // setTimeout(() => {
       //   navigate("/đường dẫn");
       // }, 1000);
+      usenavigate("/student/Project");
     }
   };
 
