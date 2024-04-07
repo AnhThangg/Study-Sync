@@ -51,10 +51,6 @@ function CreateProject() {
   const [isOpenA, setIsOpenA] = useState(false);
   const [statusA, setStatusA] = useState("success");
   const [messageA, setMessageA] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [showError, setShowError] = useState(false);
-  const[showErrorSnackbar, setShowErrorSnackbar] = useState(false);
-  const [errorMessageSnackbar, setErrorMessageSnackbar] = useState("");
 
   const [nextId, setNextId] = useState(1);
 
@@ -196,37 +192,40 @@ function CreateProject() {
   };
 
   const handleCreateProject = () => {
-    let error = "";
-    console.log("Checking conditions...");
+    let check = [];
 
     if (!projectName) {
-      error += "Project Name is required.\n";
+      check.push("Project Name is required.");
     }
     if (members.length < 1) {
-      error += "Please add at least one member.\n";
+      check.push("Please add at least one member.");
     }
     if (!selectedMentor) {
-      error += "Please select a mentor.\n";
+      check.push("Please select a mentor.");
     }
     if (!goalOfSubject.trim()) {
-      error += "The Goal Of The Subject is required.\n";
+      check.push("The Goal Of The Subject is required.");
     }
     if (!researchProducts.trim()) {
-      error += "Expected research products are required.\n";
+      check.push("Expected research products are required.");
     }
     if (!startTime || !endTime) {
-      error += "Please provide start and end time.\n";
+      check.push("Please provide start and end time.");
     }
 
-    if (error) {
-      console.log("Error found:", error);
-      setErrorMessageSnackbar(error);
-      setShowErrorSnackbar(true);
+    if (check.length > 0) {
+      console.log("Errors found:", check);
+      setIsOpenA(true);
+      setStatusA("error");
+      setMessageA(check.join("\n"));
     } else {
       console.log("No errors found. Proceeding...");
-      // Logic to create project when all conditions are met
-      // Here you can add your logic to proceed with creating the project
-      // This part will execute when all validations pass
+      setIsOpenA(true);
+      setStatusA("success");
+      setMessageA(" Project created successfully!");
+      // setTimeout(() => {
+      //   navigate("/đường dẫn");
+      // }, 1000);
     }
   };
 
@@ -683,16 +682,20 @@ function CreateProject() {
       </Box>
 
       <Snackbar
-        open={showErrorSnackbar}
-        autoHideDuration={5000}
-        onClose={() => setShowErrorSnackbar(false)}
+        open={isOpenA}
+        autoHideDuration={6000}
+        onClose={(event, reason) => {
+          if (reason === "clickaway") {
+            setIsOpenA(false);
+          }
+        }}
         anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
+          vertical: "top",
+          horizontal: "right",
         }}
       >
-        <Alert severity="error" variant="filled" sx={{ width: "100%" }}>
-          {errorMessageSnackbar}
+        <Alert severity={statusA} variant="filled" sx={{ width: "100%" }}>
+          {messageA}
         </Alert>
       </Snackbar>
     </Box>

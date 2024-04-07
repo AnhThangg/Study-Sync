@@ -1,14 +1,31 @@
+import React, { useState } from "react";
 import {
   Box,
-  Icon,
   Typography,
-  Input,
-  IconButton,
+  TextField,
   Button,
+  FormControl,
+  InputLabel,
+  Select,
+  OutlinedInput,
 } from "@mui/material";
-import React from "react";
 import { FileUpload, RecentActors } from "@mui/icons-material";
+
 function Profile() {
+  const [showAddress, setShowAddress] = useState(true);
+
+  const toggleAddress = () => {
+    setShowAddress(!showAddress);
+  };
+
+  const inforUser = {
+    userName: "Duong Nguyen Cong Luan",
+    studentCode: "26211236334",
+    sex: "Male",
+    dateOfBirth: "10/08/2002",
+    email: "duongnguyencongluan@gmail.com",
+  };
+
   return (
     <Box sx={{ margin: "50px 0 0 50px" }}>
       <Box
@@ -80,12 +97,12 @@ function Profile() {
             }}
           >
             <Typography sx={{ fontWeight: "bold" }}>
-              Duong Nguyen Cong Luan
+              {inforUser.userName}
             </Typography>
-            <Typography>26211236334</Typography>
-            <Typography>Male</Typography>
-            <Typography>10/08/2002</Typography>
-            <Typography>duongncongluan@gmail.com</Typography>
+            <Typography>{inforUser.studentCode}</Typography>
+            <Typography>{inforUser.sex}</Typography>
+            <Typography>{inforUser.dateOfBirth}</Typography>
+            <Typography>{inforUser.email}</Typography>
           </Box>
         </Box>
         <Box
@@ -109,18 +126,9 @@ function Profile() {
             }}
           >
             <label htmlFor="upload-file">
-              <IconButton
-                component="span"
-                aria-label="upload-picture"
-                sx={{
-                  width: "100px",
-                  height: "100px",
-                }}
-              >
-                <FileUpload fontSize="large" />
-              </IconButton>
+              <FileUpload fontSize="large" />
             </label>
-            <Input id="upload-file" type="file" sx={{ display: "none" }} />
+            <input id="upload-file" type="file" style={{ display: "none" }} />
           </Box>
         </Box>
       </Box>
@@ -142,52 +150,166 @@ function Profile() {
         </Typography>
       </Box>
 
-      <Box
-        sx={{
-          display: "flex",
-          padding: "30px 50px 20px 60px",
-        }}
-      >
+      {showAddress && (
         <Box
-          className="Information_User"
+          className="address"
           sx={{
             display: "flex",
+            padding: "30px 50px 20px 60px",
           }}
         >
           <Box
-            className="Infor_Left"
             sx={{
-              textAlign: "right",
+              display: "flex",
             }}
           >
-            <Typography sx={{ fontWeight: "bold" }}>
-              Address/Group/Village:
-            </Typography>
-            <Typography sx={{ fontWeight: "bold" }}>Wards:</Typography>
-            <Typography sx={{ fontWeight: "bold" }}>District:</Typography>
-            <Typography sx={{ fontWeight: "bold" }}>City:</Typography>
-            <Typography sx={{ fontWeight: "bold" }}>Nation:</Typography>
-            <Typography sx={{ fontWeight: "bold" }}>Phone:</Typography>
-            <Typography sx={{ fontWeight: "bold" }}>Email(Orther):</Typography>
-          </Box>
-          <Box
-            className="Infor_Right"
-            sx={{
-              paddingLeft: "20px",
-            }}
-          >
-            <Typography>
-              Tổ 4, thôn Tân Hạnh, xã Hòa Phước, huyện Hòa vang, Tp Đà Nẵng
-            </Typography>
-            <Typography>Hòa Phước</Typography>
-            <Typography>Hòa Vang</Typography>
-            <Typography>Đà Nẵng</Typography>
-            <Typography>Việt Nam</Typography>
-            <Typography>0796053172</Typography>
-            <Typography>duongnguyencongluan@gmail.com</Typography>
+            <Box
+              className="address_Left"
+              sx={{
+                textAlign: "right",
+              }}
+            >
+              <Typography sx={{ fontWeight: "bold" }}>
+                Address/Group/Village:
+              </Typography>
+              <Typography sx={{ fontWeight: "bold" }}>Wards:</Typography>
+              <Typography sx={{ fontWeight: "bold" }}>District:</Typography>
+              <Typography sx={{ fontWeight: "bold" }}>City:</Typography>
+              <Typography sx={{ fontWeight: "bold" }}>Nation:</Typography>
+              <Typography sx={{ fontWeight: "bold" }}>Phone:</Typography>
+              <Typography sx={{ fontWeight: "bold" }}>
+                Email(Orther):
+              </Typography>
+            </Box>
+            <Box
+              className="address_Right"
+              sx={{
+                paddingLeft: "20px",
+              }}
+            >
+              <Typography>
+                Tổ 4, thôn Tân Hạnh, xã Hòa Phước, huyện Hòa vang, Tp Đà Nẵng
+              </Typography>
+              <Typography>Hòa Phước</Typography>
+              <Typography>Hòa Vang</Typography>
+              <Typography>Đà Nẵng</Typography>
+              <Typography>Việt Nam</Typography>
+              <Typography>0796053172</Typography>
+              <Typography>duongnguyencongluan@gmail.com</Typography>
+            </Box>
           </Box>
         </Box>
-      </Box>
+      )}
+
+      {/* Edit Address */}
+      {!showAddress && (
+        <Box className="editAddress">
+          <Box
+            sx={{
+              display: "flex",
+              padding: "30px 50px 20px 60px",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+              }}
+            >
+              <Box
+                className="address_Left"
+                sx={{
+                  textAlign: "right",
+                }}
+              >
+                <Typography sx={{ fontWeight: "bold" }}>
+                  Address/Group/Village:
+                </Typography>
+                <Typography sx={{ fontWeight: "bold" }}>Wards:</Typography>
+                <Typography sx={{ fontWeight: "bold" }}>District:</Typography>
+                <Typography sx={{ fontWeight: "bold" }}>City:</Typography>
+                <Typography sx={{ fontWeight: "bold" }}>Nation:</Typography>
+                <Typography sx={{ fontWeight: "bo3ld" }}>Phone:</Typography>
+                <Typography sx={{ fontWeight: "bold" }}>
+                  Email(Orther):
+                </Typography>
+              </Box>
+              <Box
+                className="address_Right"
+                sx={{
+                  paddingLeft: "20px",
+                  "& .MuiFormControl-root": {
+                    marginBottom: "5px", // Khoảng cách giữa các input
+                    width: "60%", // Độ rộng của input
+                  },
+                  "& .MuiInputBase-input, .MuiSelect-root": {
+                    padding: "2px 0 0 5px", // Padding của input và select
+                  },
+                }}
+              >
+                <FormControl variant="outlined">
+                  {/* <InputLabel htmlFor="outlined-adornment-address">
+                    Address/Group/Village
+                  </InputLabel> */}
+                  <OutlinedInput
+                    id="outlined-adornment-address"
+                    // label="Address/Group/Village"
+                    labelWidth={160}
+                  />
+                </FormControl>
+                <FormControl variant="outlined">
+                  {/* <InputLabel htmlFor="outlined-adornment-wards">
+                    Wards
+                  </InputLabel> */}
+                  <Select native id="outlined-adornment-wards" >
+                    <option aria-label="None" value="" />
+                    <option value="ward1">Ward 1</option>
+                    <option value="ward2">Ward 2</option>
+                    <option value="ward3">Ward 3</option>
+                  </Select>
+                </FormControl>
+                <FormControl variant="outlined">
+                  <Select native id="outlined-adornment-wards">
+                    <option aria-label="None" value="" />
+                    <option value="ward1">Ward 1</option>
+                    <option value="ward2">Ward 2</option>
+                    <option value="ward3">Ward 3</option>
+                  </Select>
+                </FormControl>
+                <FormControl variant="outlined">
+                  <Select native id="outlined-adornment-wards">
+                    <option aria-label="None" value="" />
+                    <option value="ward1">Ward 1</option>
+                    <option value="ward2">Ward 2</option>
+                    <option value="ward3">Ward 3</option>
+                  </Select>
+                </FormControl>
+                <FormControl variant="outlined">
+                  <Select native id="outlined-adornment-wards">
+                    <option aria-label="None" value="" />
+                    <option value="ward1">Ward 1</option>
+                    <option value="ward2">Ward 2</option>
+                    <option value="ward3">Ward 3</option>
+                  </Select>
+                </FormControl>
+                <FormControl variant="outlined">
+                  <OutlinedInput
+                    id="outlined-adornment-address"
+                    // label="Address/Group/Village"
+                    labelWidth={160}
+                  />
+                </FormControl>
+                <FormControl variant="outlined">
+                  <OutlinedInput
+                    id="outlined-adornment-address"
+                    // label="Address/Group/Village"
+                    labelWidth={160}
+                  />
+                </FormControl>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+      )}
 
       <Box
         sx={{
@@ -197,6 +319,7 @@ function Profile() {
         }}
       >
         <Button
+          onClick={toggleAddress}
           sx={{
             backgroundColor: "#D9D9D9",
             border: "5px solid #D82C2C",
@@ -213,7 +336,7 @@ function Profile() {
             },
           }}
         >
-          Update
+          {showAddress ? "Edit" : "Update"}
         </Button>
       </Box>
     </Box>
