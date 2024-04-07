@@ -18,11 +18,9 @@ const authenMiddleware = async (req, res, next) => {
                 userName: data.userName,
             }
         })
-
         if(!findAccount){
             return res.status(404).json('Account has been deleted');
         }
-
         req.account = findAccount;
         return next();
 

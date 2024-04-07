@@ -1,21 +1,63 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet, NavLink, useLocation } from 'react-router-dom';
+import { Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Box, Typography, TextField, Button } from '@mui/material';
 import logoDTU from '../../assets/Logo-DuyTan.png';
 import imgLogin from '../../assets/imageLogin.png';
-import {login} from '../../api/authApi';
+import { login } from '../../api/authApi';
+import { getRole } from '../../api/personalApi';
 
 const Check = () => {
 
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  const checkRole = async () => {
+    const role = await getRole();
+    return role;
+  }
+  useEffect(() => {
+    if (localStorage.getItem('accessToken')) {
+      checkRole()
+        .then(role => {
+          if (role === 'admin') {
+            navigate('/admin/homepage')
+          } else if (role === 'univer') {
+            navigate('/univer/dashboard/faculty')
+          } else if (role === 'faculty') {
+            navigate('/faculty/mentor')
+          } else if (role === 'mentor') {
+            navigate('/mentor/mentorhomepage/mentorproject')
+          } else if (role === 'student') {
+            navigate('/student/project')
+          }
+        })
+        .catch(e => {
+          console.log(e);
+        })
+    }
+  }, []);
   const onLogin = async () => {
-    const res = login({
+    const res = await login({
       userName,
       password
     });
-    console.log(res);
-  } 
+    if (res.status === 200) {
+      localStorage.setItem('accessToken', JSON.stringify(res.data.accessToken));
+      if (res.data.role === 'admin') {
+        navigate('/admin/homepage')
+      } else if (res.data.role === 'univer') {
+        navigate('/univer/dashboard/faculty')
+      } else if (res.data.role === 'faculty') {
+        navigate('/faculty/mentor')
+      } else if (res.data.role === 'mentor') {
+        navigate('/mentor/mentorhomepage/mentorproject')
+      } else if (res.data.role === 'student') {
+        navigate('/student/project')
+      }
+    } else {
+      setErrorMessage('Sai mật khẩu hoặc tài khoản');
+    }
+  }
   return (
     <Box className="contain" sx={{
       height: '100vh',
@@ -99,7 +141,7 @@ const Check = () => {
                     label='Enter username'
                     type='text'
                     size='small'
-                    onChange={(e)=>setUserName(e.target.value)}
+                    onChange={(e) => setUserName(e.target.value)}
                     sx={{
                       width: '380px'
                     }}
@@ -119,7 +161,7 @@ const Check = () => {
                     label='Enter password'
                     type='password'
                     size='small'
-                    onChange={(e)=>setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     sx={{
                       width: '380px'
                     }}
@@ -129,20 +171,20 @@ const Check = () => {
 
 
             </Box>
-            <Button 
-            onClick={onLogin}
-            sx={{
-              width: '200px',
-              height: '40px',
-              background: '#D82C2C',
-              color: '#fff',
-              marginTop: '28px',
-              '&:hover': {
-                background: '#fff',
-                color: '#D82C2C',
-                border: '1px solid #999'
-              }
-            }}>Login</Button>
+            <Button
+              onClick={onLogin}
+              sx={{
+                width: '200px',
+                height: '40px',
+                background: '#D82C2C',
+                color: '#fff',
+                marginTop: '28px',
+                '&:hover': {
+                  background: '#fff',
+                  color: '#D82C2C',
+                  border: '1px solid #999'
+                }
+              }}>Login</Button>
           </Box>
         </Box>
         <Box className="rightForm" sx={{

@@ -1,9 +1,19 @@
 import axios from "axios";
 
 const httpRequest = axios.create({
-    baseURL: 'https://localhost:2109'
+    baseURL: 'http://localhost:2109'
 })
-
+httpRequest.interceptors.request.use(config => {
+    // Lấy access token từ local storage hoặc nơi khác
+    const accessToken = JSON.parse(localStorage.getItem('accessToken'));
+    // Nếu có access token, thêm vào phần header của yêu cầu
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  }, error => {
+    return Promise.reject(error);
+  });
 export const get = async (path, options = {}) => {
     try {
         const response = await httpRequest.get(path, options)
@@ -16,10 +26,9 @@ export const get = async (path, options = {}) => {
 export const post = async (path, data, options = {}) => {
     try {
         const response = await httpRequest.post(path, data, options);
-        return response.data;
+        return response;
     } catch (error) {
-        console.log(error);
-        return error.response.data;
+        return error.response;
     }
 };
 
@@ -40,17 +49,5 @@ export const del = async (path, options = {}) => {
         return error.response.data;
     }
 };
-
-httpRequest.interceptors.request.use(function (config) {
-    const token = "Bearer " + JSON.parse(localStorage.getItem("token"))?.token;
-    if (token) {
-        config.headers.Authorization = token;
-    }
-    config.headers = {
-        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-        "Access-Control-Allow-Origin": "*",
-    }
-    return config;
-});
 
 export default httpRequest;

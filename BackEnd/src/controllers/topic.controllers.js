@@ -1,16 +1,30 @@
-const { Topic, Document, Team, StudentTeam} = require('../database/database');
+const { Topic, Document, Team, StudentTeam, Mentor, Student, sequelize } = require('../database/database');
+const { Sequelize } = require('sequelize');
 const { v4: uuid } = require('uuid');
 
-const getTopics = async (req,res) => {
+
+const getTopics = async (req, res) => {
     try {
-        const projects = await Topic.findAll({
+        console.log(req.account);
+        const studentsdf = await Student.findOne({
             where: {
-                
-            },
-            raw: true
-        });
-        return res.status(200).json(projects);
+                accountId: req.account.accountId
+            }
+        })
+        //console.log(studentsdf)
+        sequelize.query(`select topics.topicCode, topics.topicName, students.studentFullname, mentors.mentorFullname 
+        from students 
+        inner join student_teams on students.studentCode = student_teams.studentCode
+        inner join teams on student_teams.teamCode = teams.teamCode
+        inner join topics on teams.teamCode = topics.teamCode 
+        inner join mentors on topics.mentorCode = mentors.mentorCode 
+        where Students.studentCode = '${studentsdf.studentCode}' `,{type: Sequelize.QueryTypes.SELECT})
+        .then(result => {
+            // console.log(result)
+            return res.status(200).json(result);
+        })
     } catch (e) {
+        console.log(e)
         return res.status(500).json(e);
     }
 }
@@ -57,11 +71,11 @@ const createTopic = async (req, res) => {
             });
             return res.status(200).json('Create Project Successfully')
         } catch (e) {
-            if(document || team) {
+            if (document || team) {
                 await document.destroy();
                 await team.destroy();
             }
-            
+
             return res.status(500).json(e);
         }
 

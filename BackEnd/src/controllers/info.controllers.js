@@ -14,12 +14,20 @@ const getInfoPersonal = async (req, res) => {
         const account =  req.account;
         const info = await findInfo(account.role, account.accountId);
         return res.status(200).json(info)
-        
+    } catch (e) {
+        return res.status(500).json(e);
+    }
+}
+
+const getRole = async (req, res) => {
+    try {
+        return res.status(200).json(req.account.role)
     } catch (e) {
         return res.status(500).json(e);
     }
 }
 
 module.exports = {
-    getInfoPersonal
+    getInfoPersonal,
+    getRole
 }

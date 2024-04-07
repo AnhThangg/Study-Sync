@@ -1,5 +1,5 @@
 const express = require('express');
-const {getAccount, createAccount, editAccount, deleteAccount} = require('../controllers/account.controllers')
+const {getAllAccount, getAccount, createAccount, editAccount, deleteAccount} = require('../controllers/account.controllers')
 const {authorMiddleware} = require('../middlewares/author.middleware');
 const {authenMiddleware} = require('../middlewares/authen.middleware');
 const accountRoute = express.Router();
