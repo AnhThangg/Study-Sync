@@ -9,6 +9,7 @@ import {
   TableHead,
   TableRow,
   Typography,
+  colors,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -51,16 +52,16 @@ function Project() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ fontSize: "20px", fontWeight: "bold" }}>
+                <TableCell sx={{ fontSize: "20px", fontWeight: "bold", color:"#707070" }}>
                   No.
                 </TableCell>
-                <TableCell sx={{ fontSize: "20px", fontWeight: "bold" }}>
+                <TableCell sx={{ fontSize: "20px", fontWeight: "bold",color:"#707070" }}>
                   Project Code
                 </TableCell>
-                <TableCell sx={{ fontSize: "20px", fontWeight: "bold" }}>
+                <TableCell sx={{ fontSize: "20px", fontWeight: "bold",color:"#707070" }}>
                   Project Name
                 </TableCell>
-                <TableCell sx={{ fontSize: "20px", fontWeight: "bold" }}>
+                <TableCell sx={{ fontSize: "20px", fontWeight: "bold",color:"#707070" }}>
                   Leader
                 </TableCell>
               </TableRow>

@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { React, useEffect, useState } from "react";
 import { FileUpload, RecentActors } from "@mui/icons-material";
-import {getInfo } from '../../../api/infoApi';
+import { getInfo } from '../../../api/infoApi';
 
 
 function Profile() {

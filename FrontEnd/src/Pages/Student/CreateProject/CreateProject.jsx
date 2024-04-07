@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import "./CreateProject.scss";
 import { Delete } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 function CreateProject() {
   const InfoItem = ({ label, value }) => (
@@ -38,6 +39,9 @@ function CreateProject() {
     { label: "Dr. Nguyen Duc Man", value: 3 },
   ];
 
+  const [projectName, setProjectName] = useState("");
+  const [goalOfSubject, setGoalOfSubject] = useState("");
+  const [researchProducts, setResearchProducts] = useState("");
   const [studentCode, setStudentCode] = useState("");
   const [showInfo, setShowInfo] = useState(false);
   const [members, setMembers] = useState([]);
@@ -54,7 +58,10 @@ function CreateProject() {
   const handleStudentCodeChange = (event) => {
     const code = event.target.value;
     setStudentCode(code);
-    if (event.target.value === "26211329003" || event.target.value === "26211236334") {
+    if (
+      event.target.value === "26211329003" ||
+      event.target.value === "26211236334"
+    ) {
       setShowInfo(true);
     } else {
       setShowInfo(false);
@@ -68,7 +75,7 @@ function CreateProject() {
       setIsOpenA(true);
       return;
     }
-  
+
     const newMember = {
       id: nextId,
       studentCode: studentCode,
@@ -78,7 +85,6 @@ function CreateProject() {
     setStudentCode("");
     console.log("Add Member: ", newMember);
   };
-  
 
   const handleDeleteMember = (id) => {
     const updatedMembers = members.filter((member) => member.id !== id);
@@ -90,7 +96,6 @@ function CreateProject() {
     }
     setMembers(updatedMembers);
   };
-  
 
   const handleSelectMentor = (event, newValue) => {
     const isValidMentor = options.some(
@@ -113,7 +118,9 @@ function CreateProject() {
       setStartTime(inputStartTime);
 
       const threeMonthsFromStart = new Date(
-        new Date(inputStartTime).setMonth(new Date(inputStartTime).getMonth() + 3)
+        new Date(inputStartTime).setMonth(
+          new Date(inputStartTime).getMonth() + 3
+        )
       );
       if (!endTime || new Date(endTime) > threeMonthsFromStart) {
         setEndTime(threeMonthsFromStart.toISOString().split("T")[0]);
@@ -173,6 +180,59 @@ function CreateProject() {
     mentorAddress: "Biệt thự 5 đứa con Đà Nẵng",
   };
 
+  const handleProjectNameChange = (event) => {
+    setProjectName(event.target.value);
+  };
+
+  const handleGoalOfSubjectChange = (event) => {
+    setGoalOfSubject(event.target.value);
+  };
+
+  const handleResearchProductsChange = (event) => {
+    setResearchProducts(event.target.value);
+  };
+
+  const usenavigate = useNavigate();
+
+  const handleCreateProject = () => {
+    let check = [];
+
+    if (!projectName) {
+      check.push("Project Name is required.");
+    }
+    if (members.length < 1) {
+      check.push("Please add at least one member.");
+    }
+    if (!selectedMentor) {
+      check.push("Please select a mentor.");
+    }
+    if (!goalOfSubject.trim()) {
+      check.push("The Goal Of The Subject is required.");
+    }
+    if (!researchProducts.trim()) {
+      check.push("Expected research products are required.");
+    }
+    if (!startTime || !endTime) {
+      check.push("Please provide start and end time.");
+    }
+
+    if (check.length > 0) {
+      console.log("Errors found:", check);
+      setIsOpenA(true);
+      setStatusA("error");
+      setMessageA(check.join("\n"));
+    } else {
+      console.log("No errors found. Proceeding...");
+      setIsOpenA(true);
+      setStatusA("success");
+      setMessageA(" Project created successfully!");
+      // setTimeout(() => {
+      //   navigate("/đường dẫn");
+      // }, 1000);
+      usenavigate("/student/Project");
+    }
+  };
+
   return (
     <Box sx={{ margin: "50px 0 0 50px" }}>
       <Box
@@ -195,6 +255,8 @@ function CreateProject() {
         <TextField
           size="medium"
           label="Project Name"
+          value={projectName}
+          onChange={handleProjectNameChange}
           sx={{
             marginTop: "50px",
             width: "95%",
@@ -284,16 +346,19 @@ function CreateProject() {
                     handleStudentCodeChange(e);
                     setMembers(
                       members.map((m) =>
-                        m.id === member.id ? { ...m, studentCode: e.target.value } : m
+                        m.id === member.id
+                          ? { ...m, studentCode: e.target.value }
+                          : m
                       )
                     );
                   }}
                   sx={{
                     width: "170px",
-                    '& .MuiInputBase-input[type="number"]::-webkit-inner-spin-button, & .MuiInputBase-input[type="number"]::-webkit-outer-spin-button': {
-                      "-webkit-appearance": "none",
-                      margin: 0,
-                    },
+                    '& .MuiInputBase-input[type="number"]::-webkit-inner-spin-button, & .MuiInputBase-input[type="number"]::-webkit-outer-spin-button':
+                      {
+                        "-webkit-appearance": "none",
+                        margin: 0,
+                      },
                     '& .MuiInputBase-input[type="number"]': {
                       "-moz-appearance": "textfield",
                     },
@@ -322,7 +387,10 @@ function CreateProject() {
                       marginBottom: "5px",
                     }}
                   >
-                    <InfoItem label="Student Code" value={addMembers.memberCode} />
+                    <InfoItem
+                      label="Student Code"
+                      value={addMembers.memberCode}
+                    />
                     <InfoItem label="Class" value={addMembers.memberClass} />
                   </Box>
                   <Box
@@ -335,7 +403,10 @@ function CreateProject() {
                     <InfoItem label="Phone" value={addMembers.memberPhone} />
                     <InfoItem label="Email" value={addMembers.memberEmail} />
                   </Box>
-                  <InfoItem label="Department" value={addMembers.memberDepartment} />
+                  <InfoItem
+                    label="Department"
+                    value={addMembers.memberDepartment}
+                  />
                   <InfoItem label="Address" value={addMembers.memberAddress} />
                 </Box>
               )}
@@ -416,7 +487,10 @@ function CreateProject() {
                     marginBottom: "5px",
                   }}
                 >
-                  <InfoItem label="Scientific Name" value={mentor.scientificName} />
+                  <InfoItem
+                    label="Scientific Name"
+                    value={mentor.scientificName}
+                  />
                   <InfoItem label="Degree" value={mentor.degree} />
                 </Box>
                 <Box
@@ -426,7 +500,7 @@ function CreateProject() {
                     marginBottom: "5px",
                   }}
                 >
-                  <InfoItem label="Phone" value={mentor.mentorPhone}/>
+                  <InfoItem label="Phone" value={mentor.mentorPhone} />
                   <InfoItem label="Email" value={mentor.mentorEmail} />
                 </Box>
                 <InfoItem label="Department" value={mentor.mentorDepartment} />
@@ -459,6 +533,8 @@ function CreateProject() {
             }}
           >
             <TextareaAutosize
+              value={goalOfSubject}
+              onChange={handleGoalOfSubjectChange}
               style={{
                 width: "850px",
                 height: "250px",
@@ -494,6 +570,8 @@ function CreateProject() {
             }}
           >
             <TextareaAutosize
+              value={researchProducts}
+              onChange={handleResearchProductsChange}
               style={{
                 width: "850px",
                 height: "250px",
@@ -586,6 +664,7 @@ function CreateProject() {
           }}
         >
           <Button
+            onClick={handleCreateProject}
             sx={{
               backgroundColor: "#D82C2C",
               borderRadius: "10px",
@@ -608,11 +687,15 @@ function CreateProject() {
 
       <Snackbar
         open={isOpenA}
-        autoHideDuration={5000}
+        autoHideDuration={6000}
         onClose={(event, reason) => {
           if (reason === "clickaway") {
             setIsOpenA(false);
           }
+        }}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
         }}
       >
         <Alert severity={statusA} variant="filled" sx={{ width: "100%" }}>

@@ -13,7 +13,7 @@ const { topicModel } = require('../models/topic.model');
 const host = 'localhost';
 const port = 3306;
 const user = 'root';
-const password = '123456';
+const password = '1008';
 
 const databaseName = 'StudySync';
 
