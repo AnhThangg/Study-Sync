@@ -105,10 +105,7 @@ const AddAccountStudent = () => {
         console.log(!ward)
         console.log(!address)
 
-        console.log(province.name + ', ' +
-            district.name + ', ' +
-            ward.name + ', ' +
-            address)
+        console.log(address + ', ' + ward.name + ', ' + district.name + ', ' + province.name)
     }
     return (
         <>

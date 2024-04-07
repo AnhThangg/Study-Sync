@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Box, Typography, TextField, Button } from '@mui/material';
+import { Outlet, NavLink, useLocation, useNavigate, } from 'react-router-dom';
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Snackbar,
+  Alert,
+  Stack
+} from '@mui/material';
+import 'animate.css';
 import logoDTU from '../../assets/Logo-DuyTan.png';
 import imgLogin from '../../assets/imageLogin.png';
 import { login } from '../../api/authApi';
@@ -10,7 +19,10 @@ const Check = () => {
 
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
+  const [isCheckAlert, setIsCheckAlert] = useState(false);
   const navigate = useNavigate();
+
   const checkRole = async () => {
     const role = await getRole();
     return role;
@@ -55,8 +67,16 @@ const Check = () => {
         navigate('/student/project')
       }
     } else {
-      setErrorMessage('Sai mật khẩu hoặc tài khoản');
+      setMessage('Wrong Username or Password');
+      (!userName && password) && setMessage('Please fill in your Username');
+      (userName && !password) && setMessage('Please fill in your Password');
+      (!userName && !password) && setMessage('Please fill in your Username and Password');
+      setIsCheckAlert(true);
+      setTimeout(() => {
+        setIsCheckAlert(false);
+      }, 4000)
     }
+
   }
   return (
     <Box className="contain" sx={{
@@ -69,7 +89,7 @@ const Check = () => {
       alignItems: 'center',
     }}>
       <Box className="loginForm" sx={{
-        height: '560px',
+        height: '70vh',
         width: '80%',
         background: '#fff',
         boxShadow: '0 7px 25px rgb(0 0 0 / 29%)',
@@ -78,7 +98,7 @@ const Check = () => {
         flexDirection: 'row',
       }}>
         <Box className="leftForm" sx={{
-          width: '50%',
+          width: '45%',
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
@@ -100,6 +120,7 @@ const Check = () => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            marginTop: '30px',
             gap: '10px'
           }}>
             <Box className="loginFormInfo" sx={{
@@ -137,13 +158,20 @@ const Check = () => {
                     fontWeight: 'bold',
                     color: '#999'
                   }}>Username</Typography>
+                  <Box className="textFieldAndWarning" sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: '10px',
+                  }}>
+
+                  </Box>
                   <TextField
                     label='Enter username'
                     type='text'
                     size='small'
                     onChange={(e) => setUserName(e.target.value)}
                     sx={{
-                      width: '380px'
+                      width: '80%'
                     }}
                   />
                 </Box>
@@ -163,18 +191,16 @@ const Check = () => {
                     size='small'
                     onChange={(e) => setPassword(e.target.value)}
                     sx={{
-                      width: '380px'
+                      width: '80%'
                     }}
                   />
                 </Box>
               </Box>
-
-
             </Box>
             <Button
               onClick={onLogin}
               sx={{
-                width: '200px',
+                width: '30%',
                 height: '40px',
                 background: '#D82C2C',
                 color: '#fff',
@@ -188,7 +214,7 @@ const Check = () => {
           </Box>
         </Box>
         <Box className="rightForm" sx={{
-          width: '50%',
+          width: '55%',
           height: '100%',
           background: '#fcf6f6',
           display: 'flex',
@@ -199,6 +225,15 @@ const Check = () => {
           <img width='90%' src={imgLogin} alt='Study-Sync' />
         </Box>
       </Box>
+      {/* {(!check) && < Stack >
+        <Alert severity="success">This is a success Alert.</Alert>
+        <Alert severity="info">This is an info Alert.</Alert>
+        <Alert severity="warning">This is a warning Alert.</Alert>
+        <Alert severity="error">This is an error Alert.</Alert>
+      </Stack>} */}
+      <Snackbar open={isCheckAlert}>
+        <Alert variant="outlined" severity="error">{message}</Alert>
+      </Snackbar>
     </Box>
   )
 }
