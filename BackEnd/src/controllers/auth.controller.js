@@ -34,6 +34,7 @@ const login = async (req, res) => {
         )
         return res.status(200).json({
             accessToken,
+            role: findAccount.role,
             message: 'Login Successfully'
         })
 

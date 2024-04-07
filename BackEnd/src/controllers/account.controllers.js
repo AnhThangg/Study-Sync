@@ -1,14 +1,27 @@
 const { v4: uuid } = require('uuid');
 const bcrypt = require("bcrypt")
-const { AccountUser, Univer, Faculty, Mentor, Student } = require('../database/database');
+const { AccountUser, Univer, Faculty, Mentor, Student, sequelize} = require('../database/database');
+
+
 
 const getAccount = async (req, res) => {
     try {
         const { id: categoryAccount } = req.params;
         if (categoryAccount === "all") {
-            const listAccount = await AccountUser.findAll({
-                raw: true
-            })
+            const listAccount = await sequelize.query(`
+                WITH result AS (
+                    SELECT studentCode AS roleCode, accountId FROM students
+                    UNION
+                    SELECT mentorCode AS roleCode, accountId FROM mentors
+                    UNION
+                    SELECT univerCode AS roleCode, accountId FROM univers
+                    UNION
+                    SELECT facultyCode AS roleCode, accountId FROM faculties
+                )
+                SELECT * FROM result
+                INNER JOIN accountUsers ON result.accountId = accountUsers.accountId;`, 
+                { type: sequelize.QueryTypes.SELECT });
+                return res.status(200).json(listAccount);
             const memoryListAccount = listAccount.map(account => {
                 const { password, ...data } = account
                 return data
@@ -116,14 +129,14 @@ const createAccount = async (req, res) => {
                             univerEmail: info.univerEmail,
                             accountId,
                         });
-                        if(newInfoUniver) {
+                        if (newInfoUniver) {
                             return res.status(200).json('Account Create Successully');
                         }
                     } catch (e) {
                         await newInfoAccount.destroy();
                         return res.status(500).json(e);
                     }
-                    
+
                 }
 
                 break;
@@ -150,14 +163,14 @@ const createAccount = async (req, res) => {
                             univerCode: info.univerCode,
                             accountId,
                         });
-                        if(newInfoFaculty) {
+                        if (newInfoFaculty) {
                             return res.status(200).json('Account Create Successully');
                         }
                     } catch (e) {
                         await newInfoAccount.destroy();
                         return res.status(500).json(e);
                     }
-                    
+
                 }
                 break;
             }
@@ -186,14 +199,14 @@ const createAccount = async (req, res) => {
                             facultyCode: info.facultyCode,
                             accountId,
                         });
-                        if(newInfoMentor) {
+                        if (newInfoMentor) {
                             return res.status(200).json('Account Create Successully');
                         }
                     } catch (e) {
-                        await newInfoAccount.destroy(); 
+                        await newInfoAccount.destroy();
                         return res.status(500).json(e);
                     }
-                    
+
                 }
 
                 break;
@@ -223,14 +236,14 @@ const createAccount = async (req, res) => {
                             facultyCode: info.facultyCode,
                             accountId,
                         });
-                        if(newInfoStudent) {
+                        if (newInfoStudent) {
                             return res.status(200).json('Account Create Successully');
                         }
                     } catch (e) {
-                        await newInfoAccount.destroy(); 
+                        await newInfoAccount.destroy();
                         return res.status(500).json(e);
                     }
-                    
+
                 }
                 break;
             }
