@@ -8,7 +8,7 @@ const Chart_Faculty = () => {
       id: "basic-bar"
     },
     xaxis: {
-      categories: ['CNPM', 'Cơ Khí', 'Du Lịch', 'Ngân Hàng', 'Tiếng Trung', 'IT']
+      categories: ['CNPM', 'Cơ Khí', 'Du Lịch', 'Ngân Hàng', 'Tiếng Trung', 'IT','Điện tử']
     },
     colors: ['#DC143C'],
     fill: {
@@ -35,7 +35,7 @@ const Chart_Faculty = () => {
   const [series] = useState([
     {
       name: "Sinh Viên",
-      data: [30, 12, 25, 41, 51, 62]
+      data: [30, 12, 25, 41, 51, 62,17]
     }
   ]);
 
@@ -47,7 +47,8 @@ const Chart_Faculty = () => {
             options={options}
             series={series}
             type="bar"
-            width="600"
+            width="900"
+            height="450"
           />
         </div>
       </div>

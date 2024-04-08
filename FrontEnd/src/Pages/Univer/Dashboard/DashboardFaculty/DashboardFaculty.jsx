@@ -22,14 +22,15 @@ const DashboardFaculty = () => {
       <Box sx={{
         marginTop:'20px',
         width:'100%',
-        height:'500px',
+        height:'700px',
         display:'flex',
-        justifyContent:'center',
+        alignItems:'center',
+        flexDirection:'column'
     }}>
         <Box className="Chart" sx={{
             marginTop:'30px',
             width:'72%',
-            height:'90%',
+            height:'100%',
             background:'#FFFFFF',
             border:'2px solid #999999',
             borderRadius:'10px',
@@ -40,6 +41,18 @@ const DashboardFaculty = () => {
           <Chart_Faculty>
             
           </Chart_Faculty>
+        </Box>
+        <Box sx={{
+          width:'70%',
+          height:'80px',
+          display:'flex',
+          alignItems:'center',
+          justifyContent:'center'
+        }}>
+          <Typography sx={{
+            fontSize:'26px',
+            color:'#999999'
+          }}>Statistical chart of students of each faculty</Typography>
         </Box>
       </Box>
     </div>

@@ -36,7 +36,7 @@ const Dashboard_Detail = () => {
                 <Box ClassName="list_Faculty" sx={{
                     marginTop:'70px',
                     width:'80%',
-                    height:'500px',
+                    height:'700px',
                 }}>
                     <StickyHeadTable></StickyHeadTable>
                 </Box>
