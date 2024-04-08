@@ -127,6 +127,7 @@ const createAccount = async (req, res) => {
                             univerName: info.univerName,
                             univerPhone: info.univerPhone,
                             univerEmail: info.univerEmail,
+                            univerAvatar: 'avatarDefault.png',
                             accountId,
                         });
                         if (newInfoUniver) {

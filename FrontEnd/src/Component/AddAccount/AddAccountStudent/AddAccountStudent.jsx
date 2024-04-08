@@ -7,8 +7,6 @@ import {
     TextField,
     MenuItem,
     Alert,
-    AlertTitle,
-    Stack,
     Snackbar
 } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
@@ -16,16 +14,15 @@ import { Edit, Delete } from "@mui/icons-material";
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { getDistricts, getProvinces, getWards } from '../../../api/unitVietNamApi';
+import { createAccount } from '../../../api/adminApi';
 
 const AddAccountStudent = () => {
     const [provinces, setProvinces] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [wards, setWards] = useState([]);
-
     const [province, setProvince] = useState();
     const [district, setDistrict] = useState();
     const [ward, setWard] = useState();
-
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
@@ -38,10 +35,9 @@ const AddAccountStudent = () => {
     const [fullname, setFullname] = useState('');
     const [address, setAddress] = useState('');
     const [check, setCheck] = useState(true);
-
-    // const [openSnackbar, setOpenSnackbar] = useState(false);
-
-
+    const [message, setMessage] = useState('');
+    const [isCheckAlert, setIsCheckAlert] = useState(false);
+    const role = 'student';
     const sex = [
         {
             value: '1',
@@ -82,30 +78,54 @@ const AddAccountStudent = () => {
             })
     }, [district]);
 
-    const checkTextField = () => {
+    const checkTextField = async () => {
+        setMessage('Please fill out all information in the fields marked with !');
         if (!username || !password || !email || !faculty ||
             !studentClass || !studentCode || !phone ||
             !studentSex || !birthday || !fullname ||
             !province || !district || !ward || !address) {
             console.log('cc');
             setCheck(false);
+            setIsCheckAlert(true);
+            setTimeout(() => {
+                setIsCheckAlert(false);
+            }, 4000)
+        } else {
+            setMessage('Please fill out all information in the fields marked with !');
+            const res = await createAccount('student', {
+                userName: username,
+                password: password,
+                role: 'student',
+                studentClass: studentClass,
+                studentCode: studentCode,
+                studentFullname: fullname,
+                studentSex: (studentSex === '1') ? true : false,
+                studentBirthday: birthday,
+                studentEmail: email,
+                studentAddress: address + ', ' + ward.name + ', ' + district.name + ', ' + province.name,
+                studentPhone: phone,
+                facultyCode: faculty
+            })
         }
-        console.log(!username)
-        console.log(!password)
-        console.log(!email)
-        console.log(!faculty)
-        console.log(!studentClass)
-        console.log(!studentCode)
-        console.log(!phone)
-        console.log(!studentSex)
-        console.log(!birthday)
-        console.log(!fullname)
-        console.log(!province)
-        console.log(!district)
-        console.log(!ward)
-        console.log(!address)
-
-        console.log(address + ', ' + ward.name + ', ' + district.name + ', ' + province.name)
+        setIsCheckAlert(true);
+        setTimeout(() => {
+            setIsCheckAlert(false);
+        }, 4000)
+        // console.log(username)
+        // console.log(password)
+        // console.log(email)
+        // console.log(faculty)
+        // console.log(studentClass)
+        // console.log(studentCode)
+        // console.log(phone)
+        // console.log(studentSex)
+        // console.log(birthday)
+        // console.log(fullname)
+        // console.log(province)
+        // console.log(district)
+        // console.log(ward)
+        // console.log(address)
+        // console.log(address + ', ' + ward.name + ', ' + district.name + ', ' + province.name)
     }
     return (
         <>
@@ -738,16 +758,7 @@ const AddAccountStudent = () => {
                     </Box>
                 </Box>
                 <Box className="containerFinal">
-
                 </Box>
-                {/* <Snackbar open={openSnackbar} autoHideDuration={1000} onClose={handleClose}>
-                <Stack>
-                    <Alert severity="info" onClose={handleClose}>
-                        <AlertTitle>Info</AlertTitle>
-                        This is an info Alert with an informative title.
-                    </Alert>
-                </Stack>
-            </Snackbar> */}
             </Box>
             <Box className="btnAdd" sx={{
                 marginTop: '30px',
@@ -772,6 +783,9 @@ const AddAccountStudent = () => {
                     }}>
                     Add Student
                 </Button>
+                <Snackbar open={isCheckAlert} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+                    <Alert variant="outlined" severity="error" >{message}</Alert>
+                </Snackbar>
             </Box>
         </>
         //

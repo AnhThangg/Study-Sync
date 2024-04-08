@@ -225,12 +225,7 @@ const Check = () => {
           <img width='90%' src={imgLogin} alt='Study-Sync' />
         </Box>
       </Box>
-      {/* {(!check) && < Stack >
-        <Alert severity="success">This is a success Alert.</Alert>
-        <Alert severity="info">This is an info Alert.</Alert>
-        <Alert severity="warning">This is a warning Alert.</Alert>
-        <Alert severity="error">This is an error Alert.</Alert>
-      </Stack>} */}
+      
       <Snackbar open={isCheckAlert}>
         <Alert variant="outlined" severity="error">{message}</Alert>
       </Snackbar>

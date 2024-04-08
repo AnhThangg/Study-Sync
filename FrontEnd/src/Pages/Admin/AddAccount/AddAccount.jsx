@@ -49,7 +49,7 @@ const AddAccount = () => {
           color: "#D82C2C",
           fontWeight: "bold",
         }}>
-        HomePage
+        Add Account
       </Typography>
 
       <Box className="addContainer">
