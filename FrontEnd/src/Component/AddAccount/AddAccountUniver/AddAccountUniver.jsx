@@ -92,7 +92,7 @@ const AddAccountUniver = () => {
       setOpenDialog(true);
     }
   }
-  const onAddStudent = async () => {
+  const onAddAccount = async () => {
     const res = await createAccount('univer', {
       userName,
       password,
@@ -280,6 +280,7 @@ const AddAccountUniver = () => {
               />
             </Box>
           </Box>
+
           <Box className="row" sx={{
             display: 'flex',
             flexDirection: 'row'
@@ -315,6 +316,7 @@ const AddAccountUniver = () => {
               />
             </Box>
           </Box>
+
           <Box className="row" sx={{
             display: 'flex',
             flexDirection: 'row'
@@ -611,7 +613,7 @@ const AddAccountUniver = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenDialog(false)}>Disagree</Button>
-          <Button autoFocus onClick={onAddStudent}>
+          <Button autoFocus onClick={onAddAccount}>
             Agree
           </Button>
         </DialogActions>
