@@ -226,7 +226,7 @@ const Check = () => {
         </Box>
       </Box>
       
-      <Snackbar open={isCheckAlert}>
+      <Snackbar open={isCheckAlert} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
         <Alert variant="outlined" severity="error">{message}</Alert>
       </Snackbar>
     </Box>

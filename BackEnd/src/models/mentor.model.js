@@ -39,6 +39,10 @@ const mentorModel = (sequelize, DataTypes) =>{
                 type: DataTypes.STRING,
                 allowNull: false
             },
+            mentorAddress: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
             facultyCode: {
                 type: DataTypes.STRING,
                 allowNull: false

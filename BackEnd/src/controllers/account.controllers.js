@@ -196,6 +196,7 @@ const createAccount = async (req, res) => {
                             mentorDegree: info.mentorDegree,
                             mentorScientificName: info.mentorScientificName,
                             mentorAvatar: 'avatarDefault.png',
+                            mentorAddress: info.mentorAddress,
                             facultyCode: info.facultyCode,
                             accountId,
                         });

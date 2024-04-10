@@ -20,7 +20,6 @@ import { getAllCodeUniver } from '../../../api/univerApi'
 import { createAccount } from '../../../api/adminApi';
 
 const AddAccountFaculty = () => {
-
   const [universCode, setUniversCode] = useState([]);
   const [univerCode, setUniverCode] = useState([]);
   const [provinces, setProvinces] = useState([]);
@@ -42,6 +41,7 @@ const AddAccountFaculty = () => {
   const [alertType, setAlertType] = useState('error');
   const [openDialog, setOpenDialog] = useState(false);
   const [key, setKey] = useState(0);
+
   useEffect(() => {
     getAllCodeUniver()
       .then(data => {
@@ -61,7 +61,7 @@ const AddAccountFaculty = () => {
         console.log(e);
       })
   }, []);
-
+  console.log(province);
   useEffect(() => {
     getDistricts(province?.code)
       .then(data => {
@@ -86,9 +86,9 @@ const AddAccountFaculty = () => {
     return emailPattern.test(email);
   };
 
-  const isValidPhoneNumber = (phoneNumber) => {
-    const phoneRegex = /^\d{10}$/;
-    return phoneRegex.test(phoneNumber);
+  const validPhoneNumber = (phoneNumber) => {
+    const phonePattern = /^\d{10}$/;
+    return phonePattern.test(phoneNumber);
   }
 
   const checkTextField = () => {
@@ -97,7 +97,7 @@ const AddAccountFaculty = () => {
     (!ward) && setMessage('Please fill in information in Ward');
     (!district) && setMessage('Please fill in information in District');
     (!province) && setMessage('Please fill in information in Province');
-    (!isValidPhoneNumber(facultyPhone)) && setMessage('Invalid Phone Number');
+    (!validPhoneNumber(facultyPhone)) && setMessage('Invalid Phone Number');
     (!facultyPhone) && setMessage('Please fill in information in Faculty Phone');
     (!validateEmail(facultyEmail)) && setMessage('Invalid email');
     (!facultyEmail) && setMessage('Please fill in information in Faculty Email');
@@ -106,7 +106,7 @@ const AddAccountFaculty = () => {
     (univerCode.length === 0) && setMessage('Please fill in information in University');
     (!password) && setMessage('Please fill in information in Password');
     (!userName) && setMessage('Please fill in information in Username');
-    if (!univerCode || !address || !ward || !district || !province || !facultyPhone || !facultyEmail || !facultyCode || !facultyName || !password || !userName || !validateEmail(facultyEmail) || !isValidPhoneNumber(facultyPhone)) {
+    if (!univerCode || !address || !ward || !district || !province || !facultyPhone || !facultyEmail || !facultyCode || !facultyName || !password || !userName || !validateEmail(facultyEmail) || !validPhoneNumber(facultyPhone)) {
       setAlertType('error');
       setIsCheckAlert(true);
       setTimeout(() => {
@@ -361,6 +361,7 @@ const AddAccountFaculty = () => {
               />
             </Box>
           </Box>
+
           <Box className="row" sx={{
             display: 'flex',
             flexDirection: 'row'
