@@ -1,8 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import "./Chart_Falculty.scss"
+import { getDashboardForUniver } from "../../../../../api/univerApi";
 
 const Chart_Faculty = () => {
+
+  const [quocAnh, setQuocAnh] = useState();
+  const [user, setUser] = useState();
+
+  // useEffect(() => {
+  //   getInfo()
+  //     .then((data) => {
+  //       setUser(data)
+  //     })
+  //     .catch((e) => {
+  //       console.log(e);
+  //     })
+  // },[])
+
+  console.log(user);
+
   const [options] = useState({
     chart: {
       id: "basic-bar"
