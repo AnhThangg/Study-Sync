@@ -34,6 +34,7 @@ import MentorProposeIdea from './Pages/Mentor/MentorProposeIdea/MentorProposeIde
 import MentorProject from './Pages/Mentor/MentorProject/MentorProject.jsx'
 import MentorWaitting from './Pages/Mentor/MentorWaitting/MentorWaitting.jsx'
 import MentorInformation from './Pages/Mentor/MentorInformation/MentorInformation.jsx'
+import MentorProjectInformation from './Pages/Mentor/MentorProjectInformation/MentorProjectInformation.jsx'
 
 const router = createBrowserRouter([
 
@@ -147,6 +148,10 @@ const router = createBrowserRouter([
       {
         path: '/Mentor/MentorInformation',
         element: <MentorInformation />
+      },
+      {
+        path: '/Mentor/MentorProjectInformation',
+        element: <MentorProjectInformation />,
       }
     ]
   },
