@@ -73,6 +73,24 @@ function Project() {
                 <TableCell>Quản lí đồ án nghiên cứu khoa học</TableCell>
                 <TableCell>Nguyễn Trần Anh Thắng</TableCell>
               </TableRow>
+              <TableRow>
+                <TableCell>1</TableCell>
+                <TableCell>KCKH01</TableCell>
+                <TableCell>Quản lí đồ án nghiên cứu khoa học</TableCell>
+                <TableCell>Nguyễn Trần Anh Thắng</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>1</TableCell>
+                <TableCell>KCKH01</TableCell>
+                <TableCell>Quản lí đồ án nghiên cứu khoa học</TableCell>
+                <TableCell>Nguyễn Trần Anh Thắng</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>1</TableCell>
+                <TableCell>KCKH01</TableCell>
+                <TableCell>Quản lí đồ án nghiên cứu khoa học</TableCell>
+                <TableCell>Nguyễn Trần Anh Thắng</TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>

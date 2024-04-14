@@ -5,7 +5,6 @@ const mentorRoute = express.Router();
 mentorRoute
     .route('/:id')
     .get(
-      authenMiddleware ,
       getMentor
     );
     

@@ -1,5 +1,6 @@
-const { Topic, Document, Team, StudentTeam, Mentor, Student, sequelize } = require('../database/database');
-const { Sequelize } = require('sequelize');
+const { raw } = require('body-parser');
+const { Topic, Document, Team, StudentTeam, Mentor, Student, sequelize, Faculty } = require('../database/database');
+const { Sequelize, where } = require('sequelize');
 const { v4: uuid } = require('uuid');
 
 
@@ -18,11 +19,11 @@ const getTopics = async (req, res) => {
         inner join teams on student_teams.teamCode = teams.teamCode
         inner join topics on teams.teamCode = topics.teamCode 
         inner join mentors on topics.mentorCode = mentors.mentorCode 
-        where Students.studentCode = '${studentsdf.studentCode}' `,{type: Sequelize.QueryTypes.SELECT})
-        .then(result => {
-            // console.log(result)
-            return res.status(200).json(result);
-        })
+        where Students.studentCode = '${studentsdf.studentCode}' `, { type: Sequelize.QueryTypes.SELECT })
+            .then(result => {
+                // console.log(result)
+                return res.status(200).json(result);
+            })
     } catch (e) {
         console.log(e)
         return res.status(500).json(e);
@@ -33,10 +34,28 @@ const createTopic = async (req, res) => {
         const { body: infoTopic } = req;
         const documentCode = uuid();
         const teamCode = uuid();
-        const topicCode = uuid();
         let document;
         let team;
         let student_team;
+        const univerCode = await Faculty.findOne({
+            where: {
+                facultyCode: infoTopic.facultyCode
+            },
+            attributes: ['univerCode'],
+            raw: true
+        });
+        const listTopic = await Topic.findAll({
+            where: {
+                facultyCode: infoTopic.facultyCode
+            },
+            raw: true
+        })
+
+
+        const topicCode = univerCode.univerCode + infoTopic.facultyCode +
+            ((listTopic.length + 1) <= 9 ? ('0' + (listTopic.length + 1)) : listTopic.length + 1);
+        // return res.json(topicCode);
+
         try {
             document = await Document.create({
                 documentCode,
@@ -53,6 +72,7 @@ const createTopic = async (req, res) => {
                     teamCode
                 })
             })
+
             await Topic.create({
                 topicCode,
                 topicName: infoTopic.topicName,

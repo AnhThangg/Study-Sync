@@ -37,7 +37,7 @@ const AddAccountMentor = () => {
   const [password, setPassword] = useState('');
   const [mentorCode, setMentorCode] = useState('');
   const [mentorFullname, setMentorFullname] = useState('');
-  const [mentorSex, setMentorSex] = useState('');
+  const [mentorSex, setMentorSex] = useState('1');
   const [mentorBirthday, setMentorBirthday] = useState('');
   const [mentorPhone, setMentorPhone] = useState('');
   const [mentorEmail, setMentorEmail] = useState('');
@@ -140,7 +140,7 @@ const AddAccountMentor = () => {
     (univerCode.length === 0) && setMessage('Please fill in information in University');
     (!password) && setMessage('Please fill in information in Password');
     (!userName) && setMessage('Please fill in information in Username');
-    if (!univerCode || !facultyCode || !address || !ward || !district || !province || !mentorPhone || !mentorEmail || !mentorScientificName || !mentorDegree || !mentorBirthday || !mentorSex || !mentorCode || !mentorFullname || !password || !userName || !validateEmail(mentorEmail) || !validPhoneNumber(mentorPhone)) {
+    if (!univerCode || !facultyCode || !address || !ward || !district || !province || !mentorPhone || !mentorEmail || !mentorScientificName || !mentorDegree || !mentorBirthday  || !mentorCode || !mentorFullname || !password || !userName || !validateEmail(mentorEmail) || !validPhoneNumber(mentorPhone) || !mentorSex) {
       setAlertType('error');
       setIsCheckAlert(true);
       setTimeout(() => {
@@ -151,7 +151,7 @@ const AddAccountMentor = () => {
       setOpenDialog(true);
     }
   }
-
+  console.log(mentorSex);
   const onAddAccount = async () => {
     const res = await createAccount('mentor', {
       userName,
@@ -271,7 +271,7 @@ const AddAccountMentor = () => {
                 Password:
               </Typography>
             </Box>
-            <Box className="rowRight" sx={{
+            <Box className="rowRight" sx={{   
               width: '65%'
             }}>
               <TextField
@@ -940,7 +940,7 @@ const AddAccountMentor = () => {
               <Typography>Faculty: {facultyCode?.name + ' (' + facultyCode?.code + ')'}</Typography>
               <Typography>Mentor Name: {mentorFullname}</Typography>
               <Typography>Mentor Code: {mentorCode}</Typography>
-              <Typography>Sex: {mentorSex ? 'Female' : 'Male'}</Typography>
+              <Typography>Sex: {(mentorSex==='1') ? 'Female' : 'Male'}</Typography>
               <Typography>Birthday: {mentorBirthday}</Typography>
               <Typography>Mentor Degree: {mentorDegree}</Typography>
               <Typography>Mentor Scientific Name: {mentorScientificName}</Typography>

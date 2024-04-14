@@ -6,7 +6,7 @@ app.use(cors());
 app.use(bodyParser.json());
 const { accountRoute } = require('./src/routes/account.route');
 const { authRoute } = require('./src/routes/auth.route');
-const { perInfoRoute } = require('./src/routes/perInfo.route')
+const { infoRoute } = require('./src/routes/info.route')
 const { studentRoute } = require('./src/routes/student.route');
 const { mentorRoute } = require('./src/routes/mentor.route');
 const { topicRoute } = require('./src/routes/topic.route');
@@ -16,12 +16,12 @@ const { facultyRoute } = require('./src/routes/faculty.route');
 
 app.use("/account", accountRoute);
 app.use("/auth", authRoute);
-app.use("/info", perInfoRoute);
+app.use("/info", infoRoute);
 app.use("/student", studentRoute);
 app.use("/mentor", mentorRoute);
 app.use("/topic", topicRoute);
 app.use("/unitvietnam", unitVietNamRoute);
-app.use("/univerAllCode", univerRoute);
+app.use("/univer", univerRoute);
 app.use("/facultyAllCodeForUniver", facultyRoute);
 app.get('/', (req, res) => {
     res.json('Study-Sync')
