@@ -1,13 +1,18 @@
 const express = require('express');
-const { getAllUniverCode } = require('../controllers/univer.controllers');
+const { getAllUniverCode, getDashboardForUniver } = require('../controllers/univer.controllers');
 
 const univerRoute = express.Router();
 
 
 univerRoute
-    .route('/')
+    .route('/getAllUniverCode')
     .get(
         getAllUniverCode,
+    )
+univerRoute
+    .route('/dashboardForUniver/:id')
+    .get(
+        getDashboardForUniver,
     )
 
 module.exports = { univerRoute }

@@ -5,16 +5,29 @@ import logoDTU from "../../../assets/Logo-DuyTan.png";
 import avatar from "../../../assets/QN.jpg";
 import "./Univer.scss";
 import { CardMembership, SpaceDashboard, Dashboard, Logout } from "@mui/icons-material";
+import { getInfo } from '../../../api/infoApi'
 
 const Univer = () => {
 
     const { pathname: url } = useLocation();
     const navigate = useNavigate();
+    const [user, setUser] = useState();
+
 
     useEffect(() => {
         if (!localStorage.getItem('accessToken')) {
             navigate('/')
         }
+    }, [])
+
+    useEffect(() => {
+        getInfo()
+            .then(data => {
+                setUser(data)
+            })
+            .catch(e => {
+                console.log(e);
+            })
     }, [])
 
     useEffect(() => {
@@ -204,7 +217,7 @@ const Univer = () => {
                         }}
                     >
                         <Box className="avatar">
-                            <img className="avatar" src={avatar} alt="avatar" width="50px" />
+                            <img className="avatar" src={`http://localhost:2109/info/avatar/${user?.accountId}_univer`} alt="avatar" width="50px" />
                         </Box>
                         <Box
                             className="infor"
@@ -221,7 +234,7 @@ const Univer = () => {
                                         fontWeight: "bold",
                                     }}
                                 >
-                                    {userInfo.userName}
+                                    {user?.univerName}
                                 </Typography>
                             </Box>
                             <Box className="userEmail">
@@ -231,7 +244,7 @@ const Univer = () => {
                                         fontWeight: "bold",
                                     }}
                                 >
-                                    {userInfo.userEmail}
+                                    {user?.univerEmail}
                                 </Typography>
                             </Box>
                         </Box>

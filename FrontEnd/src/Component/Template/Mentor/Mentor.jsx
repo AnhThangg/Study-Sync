@@ -2,19 +2,30 @@ import React, { useEffect, useState } from "react";
 import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button, Box, Typography } from "@mui/material";
 import logoDTU from "../../../assets/Logo-DuyTan.png";
-import avatar from "../../../assets/avt.jpg";
 import "./Mentor.scss";
 import { TipsAndUpdates, Home, Logout } from "@mui/icons-material";
+import { getInfo } from '../../../api/infoApi'
 
 const Mentor = () => {
 
     const { pathname: url } = useLocation();
     const navigate = useNavigate();
+    const [user, setUser] = useState();
 
     useEffect(() => {
         if (!localStorage.getItem('accessToken')) {
             navigate('/');
         }
+    }, [])
+
+    useEffect(() => {
+        getInfo()
+            .then(data => {
+                setUser(data)
+            })
+            .catch(e => {
+                console.log(e);
+            })
     }, [])
 
     useEffect(() => {
@@ -32,10 +43,6 @@ const Mentor = () => {
         window.location.href = "/mentor/mentorhomepage/mentorproject";
     };
 
-    const userInfo = {
-        userName: "Vũ Như Cẩn",
-        userEmail: "vunhucan247@gmail.com"
-    };
     const logOut = () => {
         localStorage.removeItem('accessToken');
         navigate('/');
@@ -177,7 +184,7 @@ const Mentor = () => {
                         }}
                         >
                             <Box className="avatar">
-                                <img className="avatar" src={avatar} alt="avatar" width="50px" />
+                                <img className="avatar" src={`http://localhost:2109/info/avatar/${user?.accountId}_mentor`} alt="avatar" width="50px" />
                             </Box>
                             <Box
                                 className="infor"
@@ -194,7 +201,7 @@ const Mentor = () => {
                                             fontWeight: "bold",
                                         }}
                                     >
-                                        {userInfo.userName}
+                                        {user?.mentorFullname}
                                     </Typography>
                                 </Box>
                                 <Box className="userEmail">
@@ -204,7 +211,7 @@ const Mentor = () => {
                                             fontWeight: "bold",
                                         }}
                                     >
-                                        {userInfo.userEmail}
+                                        {user?.mentorEmail}
                                     </Typography>
                                 </Box>
                             </Box>

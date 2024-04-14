@@ -8,3 +8,12 @@ export const getInfo = () => {
         console.log(e);
     }
 }
+
+export const getNameMentor = (id) => {
+    try {
+        const res = request.get(`/info/nameMentor/${id}`)
+        return res
+    } catch (e) {
+        console.log(e);
+    }
+}
