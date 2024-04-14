@@ -8,5 +8,3 @@ export const getRole = () => {
         console.log(e);
     }
 }
-
-

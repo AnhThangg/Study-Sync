@@ -36,7 +36,6 @@ const EditAccount = () => {
         setSelectedFile(file);
         // Bạn có thể thực hiện các xử lý khác với file ở đây, như gửi file lên server
     };
-    console.log(selectedFile)
     return (
         <Box className="container" sx={{ width: '100%', height: '100vh', padding: "50px 0 0 50px" }}>
             <Typography

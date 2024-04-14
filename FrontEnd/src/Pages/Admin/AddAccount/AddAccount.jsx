@@ -37,7 +37,6 @@ const role = [
 const AddAccount = () => {
 
   const [roleSelect, setRoleSelect] = useState('student');
-
   const handleSelectRole = (e) => {
     setRoleSelect(e.target.value)
   }
@@ -49,7 +48,7 @@ const AddAccount = () => {
           color: "#D82C2C",
           fontWeight: "bold",
         }}>
-        HomePage
+        Add Account
       </Typography>
 
       <Box className="addContainer">
@@ -58,7 +57,7 @@ const AddAccount = () => {
           select
           size='medium'
           label="Select Role"
-          defaultValue="student"
+          value={roleSelect}
           helperText="Please select your role"
           sx={{ width: '300px', marginTop: '50px' }}
           onChange={handleSelectRole}

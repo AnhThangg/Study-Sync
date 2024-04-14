@@ -18,6 +18,7 @@ const documentModel = (sequelize, DataTypes) =>{
         }
     )
 }
+// 
 module.exports = {
     documentModel
 }
