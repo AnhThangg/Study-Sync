@@ -31,7 +31,8 @@ const getInfoPersonal = async (req, res) => {
             }
             return res.status(200).json(info)
         }
-        
+        return res.status(200).json(info)
+
     } catch (e) {
         return res.status(500).json(e);
     }
