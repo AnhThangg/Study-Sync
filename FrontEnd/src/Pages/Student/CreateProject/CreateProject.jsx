@@ -6,10 +6,14 @@ import {
   TextField,
   Typography,
   TextareaAutosize,
-  Autocomplete,
   Snackbar,
   Alert,
+  MenuItem,
 } from "@mui/material";
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
 import "./CreateProject.scss";
 import { Delete } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -46,7 +50,8 @@ function CreateProject() {
   const [researchProducts, setResearchProducts] = useState("");
   const [studentCode, setStudentCode] = useState("");
   const [showInfo, setShowInfo] = useState(false);
-  const [members, setMembers] = useState([]);
+  const [member, setMember] = useState();
+  const [members, setMembers] = useState([undefined]);
   const [selectedMentor, setSelectedMentor] = useState(null);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -55,6 +60,9 @@ function CreateProject() {
   const [alertType, setAlertType] = useState('error');
   const [leader, setLeader] = useState();
   const [listMentor, setListMentor] = useState([]);
+  const [mentor, setMentor] = useState('')
+  const currentDate = new Date().toISOString().split('T')[0]; // Lấy ngày hiện tại
+
 
 
   useEffect(() => {
@@ -77,11 +85,46 @@ function CreateProject() {
       })
   }, [leader])
 
-  const onSearchMember = async (id) => {
-    const cc = await getStudent(id)
-    console.log(cc)
+
+  const onSearchMember = async (id, index) => {
+    if (id !== '') {
+      const res = await getStudent(id);
+
+      if (res.status === 'success') {
+        if ((members.find(item => item?.studentCode === res.student.studentCode))) {
+          setMessage('This student is already on the member list');
+          setAlertType('error');
+          setIsCheckAlert(true);
+          setTimeout(() => {
+            setIsCheckAlert(false);
+          }, 4000)
+        }
+        else if (res.student.studentCode === leader.studentCode) {
+          setMessage('You are the Leader, do not enter your Student Code');
+          setAlertType('error');
+          setIsCheckAlert(true);
+          setTimeout(() => {
+            setIsCheckAlert(false);
+          }, 4000)
+        }
+        else {
+          const newMembers = [...members];
+          newMembers[index] = res.student;
+          setMembers(newMembers);
+        }
+      } else {
+        const newMembers = [...members];
+        newMembers[index] = undefined;
+        setMembers(newMembers);
+      }
+    }
+
+    // if (memberSearch) {
+    //   setMember(memberSearch)
+    // }
   }
 
+  console.log(members)
 
   const onCreateTopic = () => {
     (!researchProducts) && setMessage('Applicability cannot be left blank');
@@ -189,85 +232,68 @@ function CreateProject() {
               Team Members
             </Typography>
           </Box>
-          <Box className="member">
-            <Box
-              className="id_student"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                marginLeft: "20px",
-                gap: '10px'
-              }}
-            >
-              <TextField
-                type="number"
-                size="small"
 
-                onChange={(e) => onSearchMember(e.target.value)}
-                // value={'26211329003'}
-                // onChange={(e) => {
-                //   handleStudentCodeChange(e);
-                //   setMembers(
-                //     members.map((m) =>
-                //       m.id === member.id
-                //         ? { ...m, studentCode: e.target.value }
-                //         : m
-                //     )
-                //   );
-                // }}
-                sx={{
-                  width: "170px",
-                  '& .MuiInputBase-input[type="number"]::-webkit-inner-spin-button, & .MuiInputBase-input[type="number"]::-webkit-outer-spin-button':
-                  {
-                    "-webkit-appearance": "none",
-                    margin: 0,
-                  },
-                  '& .MuiInputBase-input[type="number"]': {
-                    "-moz-appearance": "textfield",
-                  },
-                }}
-              />
-              <IconButton>
-                <Delete />
-              </IconButton>
-            </Box>
-            {(!members) && <Box
-              className="infoMember"
-              sx={{
-                margin: "10px 50px 20px 20px",
-                color: "#818181",
-              }}
-            >
-              <InfoItem label="Full Name" value={'Dương Nguyễn Công Luận'} />
+
+
+
+          {members.map((item, index) => (
+            <Box className="member">
               <Box
+                className="id_student"
                 sx={{
                   display: "flex",
                   flexDirection: "row",
-                  marginBottom: "5px",
+                  marginLeft: "20px",
+                  gap: '10px'
                 }}
               >
-                <InfoItem
-                  label="Student Code"
+                <TextField
+                  type="number"
+                  size="small"
+
+                  onChange={(e) => onSearchMember(e.target.value, index)}
+                  sx={{
+                    width: "170px",
+                    '& .MuiInputBase-input[type="number"]::-webkit-inner-spin-button, & .MuiInputBase-input[type="number"]::-webkit-outer-spin-button':
+                    {
+                      "-webkit-appearance": "none",
+                      margin: 0,
+                    },
+                    '& .MuiInputBase-input[type="number"]': {
+                      "-moz-appearance": "textfield",
+                    },
+                  }}
                 />
-                <InfoItem label="Class" value={'TPM 04'} />
+                <IconButton>
+                  <Delete />
+                </IconButton>
               </Box>
-              <Box
+              {(item) && <Box
+                className="infoMember"
                 sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  marginBottom: "5px",
+                  margin: "10px 50px 20px 20px",
+                  color: "#818181",
                 }}
               >
-                <InfoItem label="Phone" value={'0869132529'} />
-                <InfoItem label="Email" value={'duongnguyencongluan@gmail.com'} />
-              </Box>
-              <InfoItem
-                label="Department"
-                value={'Công Nghệ Phần Mềm Chuẩn CMU'}
-              />
-              <InfoItem label="Address" value={'Gầm Cầu'} />
-            </Box>}
-          </Box>
+                {console.log(item)}
+                <InfoItem label="Full Name" value={item.studentFullname} />
+                <InfoItem label="Student Code" value={item.studentCode} />
+                <InfoItem label="Class" value={item.studentClass} />
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginBottom: "5px",
+                  }}
+                >
+                </Box>
+                <InfoItem
+                  label="Department"
+                  value={item.facultyName}
+                />
+              </Box>}
+            </Box>
+          ))}
           <Box
             className="addMember"
             sx={{
@@ -288,6 +314,7 @@ function CreateProject() {
                 fontSize: "16px",
                 textTransform: "none",
               }}
+              onClick={() => { setMembers([...members, undefined]) }}
             >
               + Add Member
             </Button>
@@ -312,29 +339,47 @@ function CreateProject() {
           </Box>
           <Box
             className="nameMentor"
-            sx={{ display: "flex", flexDirection: "row", marginLeft: "20px" }}
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              marginLeft: "20px",
+              width: '20%'
+            }}
           >
-            <Autocomplete
-              disablePortal
-              size="small"
-              id="combo-box-demo"
-              options={options}
-              getOptionLabel={(option) => option.label}
-              value={selectedMentor}
-              // onChange={handleSelectMentor}
-              sx={{ width: 300 }}
-              renderInput={(params) => <TextField {...params} />}
-            />
+            <TextField
+              size='small'
+              select
+              sx={{
+                width: '100%',
+              }}
+            >
+              {listMentor.map((option) => (
+                <MenuItem
+                  key={option.mentorCode}
+                  value={option.mentorCode}
+                  onClick={() => {
+                    setMentor({
+                      code: option.mentorCode,
+                      name: option.mentorScientificName
+                    })
+                  }}
+                >
+                  {option.mentorScientificName}
+                </MenuItem>
+              ))}
+            </TextField>
           </Box>
+          {console.log(mentor)}
+
           <Box
             sx={{
               margin: "10px 50px 20px 20px",
               color: "#818181",
             }}
           >
-            {selectedMentor && (
+            {member && (
               <>
-                <InfoItem label="Full Name" value={mentor.mentorName} />
+                <InfoItem label="Full Name" value={'mentor.mentorName'} />
                 <Box
                   sx={{
                     display: "flex",
@@ -344,9 +389,9 @@ function CreateProject() {
                 >
                   <InfoItem
                     label="Scientific Name"
-                    value={mentor.scientificName}
+                    value={'mentor.scientificName'}
                   />
-                  <InfoItem label="Degree" value={mentor.degree} />
+                  <InfoItem label="Degree" value={'mentor.degree'} />
                 </Box>
                 <Box
                   sx={{
@@ -355,11 +400,11 @@ function CreateProject() {
                     marginBottom: "5px",
                   }}
                 >
-                  <InfoItem label="Phone" value={mentor.mentorPhone} />
-                  <InfoItem label="Email" value={mentor.mentorEmail} />
+                  <InfoItem label="Phone" value={'mentor.mentorPhone'} />
+                  <InfoItem label="Email" value={'mentor.mentorEmail'} />
                 </Box>
-                <InfoItem label="Department" value={mentor.mentorDepartment} />
-                <InfoItem label="Address" value={mentor.mentorAddress} />
+                <InfoItem label="Department" value={'mentor.mentorDepartment'} />
+                <InfoItem label="Address" value={'mentor.mentorAddress'} />
               </>
             )}
           </Box>
@@ -459,53 +504,14 @@ function CreateProject() {
             sx={{
               margin: "10px 50px 20px 20px",
               color: "#818181",
+              width: '50%'
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                marginBottom: "5px",
-              }}
-            >
-              <Box
-                className="startTime"
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <InfoItem label="Start Time" />
-                <TextField
-                  type="date"
-                  size="small"
-                  value={startTime}
-                  // onChange={handleStartTimeChange}
-                  inputProps={{
-                    inputMode: "numeric",
-                    pattern: "\\d{4}-\\d{2}-\\d{2}",
-                  }}
-                />
-              </Box>
-              <Box
-                className="endTime"
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginLeft: "100px",
-                }}
-              >
-                <InfoItem label="End Time" />
-                <TextField
-                  type="date"
-                  size="small"
-                  value={endTime}
-                // onChange={handleEndTimeChange}
-                />
-              </Box>
-            </Box>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimeRangePicker
+                calendars={5}
+              />
+            </LocalizationProvider>
           </Box>
         </Box>
 

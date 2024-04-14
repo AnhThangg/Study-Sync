@@ -10,7 +10,10 @@ const getStudent = async (req, res) => {
             raw: true
         })
         if (!student) {
-            return res.status(404).json('Student does not exist')
+            return res.status(404).json({
+                status: 'Fail',
+                message: 'Student Does not Exist!'
+            })
         }
         const faculty = await Faculty.findOne({
             where: {
@@ -19,7 +22,10 @@ const getStudent = async (req, res) => {
         });
         student.facultyName = faculty.facultyName;
         const { studentEmail,studentBirthday,studentAddress,studentPhone,accountId,facultyCode, ...data } = student;
-        return res.status(200).send(data);
+        return res.status(200).send({
+            status: 'success',
+            student: data
+        });
 
     } catch (e) {
         return res.status(500).json(e);
