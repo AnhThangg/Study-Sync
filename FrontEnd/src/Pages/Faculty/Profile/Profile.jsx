@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { React } from "react";
 import { Box, Typography, Input, IconButton, Button } from "@mui/material";
 import { RecentActors } from "@mui/icons-material";
 import "./Profile.scss";
