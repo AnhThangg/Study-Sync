@@ -366,7 +366,7 @@ function CreateProject() {
                 />
                 <IconButton
                   onClick={() => handleDeleteMember(member.id)}
-                  sx={{ position: "absolute", left: "500px" }}
+                  sx={{ position: "absolute", left: "30%" }}
                 >
                   <Delete />
                 </IconButton>

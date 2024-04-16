@@ -34,6 +34,8 @@ import MentorProposeIdea from './Pages/Mentor/MentorProposeIdea/MentorProposeIde
 import MentorProject from './Pages/Mentor/MentorProject/MentorProject.jsx'
 import MentorWaitting from './Pages/Mentor/MentorWaitting/MentorWaitting.jsx'
 import MentorInformation from './Pages/Mentor/MentorInformation/MentorInformation.jsx'
+// import Approve from './Pages/Faculty/Approve/Approve.jsx'
+// import AcceptProject from './Pages/Faculty/AcceptProject/AcceptProject.jsx'
 
 const router = createBrowserRouter([
 
@@ -167,6 +169,14 @@ const router = createBrowserRouter([
       },
       {
         path: "/faculty/profile",
+        element: <ProfileOfFaculty />,
+      },
+      {
+        path: "/faculty/approve",
+        element: <ProfileOfFaculty />,
+      },
+      {
+        path: "/faculty/acceptProject",
         element: <ProfileOfFaculty />,
       },
       //
