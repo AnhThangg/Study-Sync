@@ -142,7 +142,7 @@ function CreateProject() {
       setOpenDialog(true);
     }
   };
-  
+
 
 
   const onSubmitTopic = async () => {
@@ -156,8 +156,9 @@ function CreateProject() {
       facultyCode: leader.facultyCode,
       mentorCode: mentor.code,
       leader: leader.studentCode,
-      listMember
+      listMember,
     })
+
     if (res.status === 200) {
       setOpenDialog(false);
       setAlertType('success');
