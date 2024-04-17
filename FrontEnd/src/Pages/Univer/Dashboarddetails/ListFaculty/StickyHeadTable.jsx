@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material';
+import { NavLink } from 'react-router-dom';
 
 const columns = [
   { id: 'no', label: 'No', minWidth: 50 },
@@ -60,7 +61,7 @@ export default function StickyHeadTable() {
   }
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
+      <TableContainer sx={{ maxHeight: 640 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
@@ -79,7 +80,8 @@ export default function StickyHeadTable() {
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.no}>
+                
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.no}>
                   {columns.map((column) => {
                     const value = row[column.id];
                     return (
@@ -95,6 +97,8 @@ export default function StickyHeadTable() {
                     );
                   })}
                 </TableRow>
+                
+                
               ))}
           </TableBody>
         </Table>

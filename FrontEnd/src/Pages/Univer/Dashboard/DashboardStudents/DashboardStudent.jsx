@@ -18,7 +18,7 @@ const DashboardStudent = () => {
             <Box sx={{
                 marginTop: '20px',
                 width: '100%',
-                height: '500px',
+                height: '700px',
                 display: 'flex',
                 justifyContent: 'center',
             }}>
@@ -49,9 +49,10 @@ const DashboardStudent = () => {
                     <Box className="Arrange" sx={{
                         marginTop: '20px',
                         width: '90%',
-                        height: '280px',
+                        height: '70%',
                         display: 'flex',
-                        flexDirection: 'column'
+                        flexDirection: 'column',
+                        justifyContent:'center'
                     }}>
                         <Box sx={{
                             width: '100%',
@@ -63,7 +64,7 @@ const DashboardStudent = () => {
                             <Box className="Dashboard_Item"
                                 sx={{
                                     width: '30%',
-                                    height: '100px',
+                                    height: '70%',
                                     borderRadius: '8px',
                                     display: 'flex',
                                     background: '#FFFFFF',
@@ -80,12 +81,12 @@ const DashboardStudent = () => {
                                     justifyContent: 'center',
                                 }}>
                                     <Typography sx={{
-                                        fontSize: '25px',
+                                        fontSize: '35px',
                                         fontWeight: 'bold',
                                         color: '#D82C2C',
                                     }}>62</Typography>
                                     <Typography sx={{
-                                        fontSize: '16px',
+                                        fontSize: '20px',
                                         fontWeight: 'bold',
                                         color: '#999999',
                                         lineHeight: '0.8'
@@ -98,7 +99,7 @@ const DashboardStudent = () => {
                                         display: 'flex',
                                         alignItems: 'center',
                                     }}>
-                                    <WorkspacePremium fontSize="inherit" sx={{ color: "#FEE101", fontSize: "3rem" }} />
+                                    <WorkspacePremium fontSize="inherit" sx={{ color: "#FEE101", fontSize: "3.5rem" }} />
 
                                 </Box>
                             </Box>
@@ -113,7 +114,7 @@ const DashboardStudent = () => {
                             <Box className="Dashboard_Item"
                                 sx={{
                                     width: '30%',
-                                    height: '100px',
+                                    height: '70%',
                                     borderRadius: '8px',
                                     display: 'flex',
                                     background: '#FFFFFF',
@@ -130,12 +131,12 @@ const DashboardStudent = () => {
                                     justifyContent: 'center',
                                 }}>
                                     <Typography sx={{
-                                        fontSize: '25px',
+                                        fontSize: '35px',
                                         fontWeight: 'bold',
                                         color: '#D82C2C',
                                     }}>137</Typography>
                                     <Typography sx={{
-                                        fontSize: '16px',
+                                        fontSize: '20px',
                                         fontWeight: 'bold',
                                         color: '#999999',
                                         lineHeight: '0.8'
@@ -148,14 +149,14 @@ const DashboardStudent = () => {
                                         display: 'flex',
                                         alignItems: 'center',
                                     }}>
-                                    <WorkspacePremium fontSize="inherit" sx={{ color: "#A7A7AD", fontSize: "3rem" }} />
+                                    <WorkspacePremium fontSize="inherit" sx={{ color: "#A7A7AD", fontSize: "3.5rem" }} />
 
                                 </Box>
                             </Box>
                             <Box className="Dashboard_Item"
                                 sx={{
                                     width: '30%',
-                                    height: '100px',
+                                    height: '70%',
                                     borderRadius: '8px',
                                     display: 'flex',
                                     background: '#FFFFFF',
@@ -172,12 +173,12 @@ const DashboardStudent = () => {
                                     justifyContent: 'center',
                                 }}>
                                     <Typography sx={{
-                                        fontSize: '25px',
+                                        fontSize: '35px',
                                         fontWeight: 'bold',
                                         color: '#D82C2C',
                                     }}>312</Typography>
                                     <Typography sx={{
-                                        fontSize: '16px',
+                                        fontSize: '20px',
                                         fontWeight: 'bold',
                                         color: '#999999',
                                         lineHeight: '0.8'
@@ -190,7 +191,7 @@ const DashboardStudent = () => {
                                         display: 'flex',
                                         alignItems: 'center',
                                     }}>
-                                    <WorkspacePremium fontSize="inherit" sx={{ color: "#A77044", fontSize: "3rem" }} />
+                                    <WorkspacePremium fontSize="inherit" sx={{ color: "#A77044", fontSize: "3.5rem" }} />
 
                                 </Box>
                             </Box>
@@ -211,10 +212,10 @@ const DashboardStudent = () => {
                             alignItems: 'center',
                             justifyContent: 'center'
                         }}>
-                            <WorkspacePremium fontSize="inherit" sx={{ color: "#FEE101", fontSize: "1.5rem" }} />
+                            <WorkspacePremium fontSize="inherit" sx={{ color: "#FEE101", fontSize: "2rem" }} />
                             <Typography sx={{
                                 marginLeft: '10px',
-                                fontSize: '16px',
+                                fontSize: '20px',
                                 fontWeight: 'bold',
                                 color: '#999999',
                             }}>Students achieve Excellent grades</Typography>
@@ -235,10 +236,10 @@ const DashboardStudent = () => {
                                 alignItems: 'center',
                                 justifyContent: 'center'
                             }}>
-                                <WorkspacePremium fontSize="inherit" sx={{ color: "#A7A7AD", fontSize: "1.5rem" }} />
+                                <WorkspacePremium fontSize="inherit" sx={{ color: "#A7A7AD", fontSize: "2rem" }} />
                                 <Typography sx={{
                                     marginLeft: '10px',
-                                    fontSize: '16px',
+                                    fontSize: '20px',
                                     fontWeight: 'bold',
                                     color: '#999999',
                                 }}>Students achieve Good grades</Typography>
@@ -251,10 +252,10 @@ const DashboardStudent = () => {
                                 alignItems: 'center',
                                 justifyContent: 'center'
                             }}>
-                                <WorkspacePremium fontSize="inherit" sx={{ color: "#A77044", fontSize: "1.5rem" }} />
+                                <WorkspacePremium fontSize="inherit" sx={{ color: "#A77044", fontSize: "2rem" }} />
                                 <Typography sx={{
                                     marginLeft: '10px',
-                                    fontSize: '16px',
+                                    fontSize: '20px',
                                     fontWeight: 'bold',
                                     color: '#999999',
                                 }}>Number of students passing</Typography>

@@ -34,7 +34,7 @@ import MentorProposeIdea from './Pages/Mentor/MentorProposeIdea/MentorProposeIde
 import MentorProject from './Pages/Mentor/MentorProject/MentorProject.jsx'
 import MentorWaitting from './Pages/Mentor/MentorWaitting/MentorWaitting.jsx'
 import MentorInformation from './Pages/Mentor/MentorInformation/MentorInformation.jsx'
-
+import UniverCetificate from './Pages/Univer/UniverCetificate/UniverCetificate.jsx'
 const router = createBrowserRouter([
 
   { path: '*', element: <Page404 /> },
@@ -80,6 +80,7 @@ const router = createBrowserRouter([
       },
     ]
   },
+  //
   {
     element: <Univer />,
     children: [
@@ -118,7 +119,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/Univer/Certificate',
-        element: <div>Certificate</div>
+        element: <UniverCetificate />
       }
     ]
 

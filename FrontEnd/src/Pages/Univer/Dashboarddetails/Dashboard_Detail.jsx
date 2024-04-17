@@ -5,6 +5,7 @@ import "./Dashboar_Detail.scss";
 import ComboBox from './Search/ComboBox';
 import StickyHeadTable from './ListFaculty/StickyHeadTable';
 import ListProject from './ListProject';
+import InforProject from './InfoProject/InforProject';
 
 
 
@@ -36,9 +37,11 @@ const Dashboard_Detail = () => {
                 <Box ClassName="list_Faculty" sx={{
                     marginTop:'70px',
                     width:'80%',
-                    height:'500px',
+                    height:'700px',
                 }}>
                     <StickyHeadTable></StickyHeadTable>
+                    <ListProject></ListProject>
+                    <InforProject></InforProject>
                 </Box>
             </Box>
         </div>
