@@ -27,16 +27,16 @@ const getDashboardForUniver = async (req, res) => {
         if (!univer) {
             return res.status(404).json('Univer not found');
         }
-        const facultyCount = univer.faculties.length;
-        let studentCount = 0;
-        univer.faculties.forEach(faculty => {
-            studentCount += faculty.students.length;
-        });
+
+        // Tạo một mảng chứa thông tin về từng khoa và số lượng sinh viên của từng khoa
+        const facultyData = univer.faculties.map(faculty => ({
+            facultyName: faculty.facultyName,
+            studentCount: faculty.students.length
+        }));
 
         return res.status(200).json({
             univerName: univer.univerName,
-            facultyCount,
-            studentCount
+            facultyData: facultyData
         });
     } catch (e) {
         return res.status(500).json(e);

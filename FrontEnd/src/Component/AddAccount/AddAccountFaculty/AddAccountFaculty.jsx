@@ -5,8 +5,6 @@ import {
   Typography,
   TextField,
   MenuItem,
-  Input,
-  IconButton,
   Snackbar,
   Alert,
   Dialog,
@@ -668,7 +666,6 @@ const AddAccountFaculty = () => {
       </Box>
       <Dialog
         open={openDialog}
-        // onClose=''
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Button,
@@ -9,17 +9,23 @@ import {
   Snackbar,
   Alert,
   MenuItem,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
 } from "@mui/material";
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import dayjs from 'dayjs';
 import "./CreateProject.scss";
 import { Delete } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { getInfo, getNameMentor } from '../../../api/infoApi';
 import { getStudent } from "../../../api/studentApi";
-
+import { v4 as uuid } from 'uuid';
+import { createTopic } from "../../../api/topicsApi";
 function CreateProject() {
   const InfoItem = ({ label, value }) => (
     <Box
@@ -39,32 +45,21 @@ function CreateProject() {
     </Box>
   );
 
-  const options = [
-    { label: "Dr. Tran Thi Thuy Trinh", value: 1 },
-    { label: "Dr. Nguyen Dinh Huy", value: 2 },
-    { label: "Dr. Nguyen Duc Man", value: 3 },
-  ];
-
   const [topicName, setTopicName] = useState("");
   const [goalOfSubject, setGoalOfSubject] = useState("");
   const [researchProducts, setResearchProducts] = useState("");
-  const [studentCode, setStudentCode] = useState("");
-  const [showInfo, setShowInfo] = useState(false);
   const [member, setMember] = useState();
   const [members, setMembers] = useState([undefined]);
-  const [selectedMentor, setSelectedMentor] = useState(null);
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const [leader, setLeader] = useState();
+  const [listMentor, setListMentor] = useState([]);
+  const [mentor, setMentor] = useState('');
+  const [startDate, setStartDate] = useState(dayjs().add(7, 'day'));
+  const [endDate, setEndDate] = useState(dayjs().add(3, 'month').add(7, 'day'));
   const [message, setMessage] = useState('');
   const [isCheckAlert, setIsCheckAlert] = useState(false);
   const [alertType, setAlertType] = useState('error');
-  const [leader, setLeader] = useState();
-  const [listMentor, setListMentor] = useState([]);
-  const [mentor, setMentor] = useState('')
-  const currentDate = new Date().toISOString().split('T')[0]; // Lấy ngày hiện tại
-
-
-
+  const [openDialog, setOpenDialog] = useState(false);
+  const [key, setKey] = useState(uuid());
   useEffect(() => {
     getInfo()
       .then(data => {
@@ -85,57 +80,98 @@ function CreateProject() {
       })
   }, [leader])
 
-
   const onSearchMember = async (id, index) => {
-    if (id !== '') {
-      const res = await getStudent(id);
-
-      if (res.status === 'success') {
-        if ((members.find(item => item?.studentCode === res.student.studentCode))) {
-          setMessage('This student is already on the member list');
-          setAlertType('error');
-          setIsCheckAlert(true);
-          setTimeout(() => {
-            setIsCheckAlert(false);
-          }, 4000)
-        }
-        else if (res.student.studentCode === leader.studentCode) {
-          setMessage('You are the Leader, do not enter your Student Code');
-          setAlertType('error');
-          setIsCheckAlert(true);
-          setTimeout(() => {
-            setIsCheckAlert(false);
-          }, 4000)
-        }
-        else {
-          const newMembers = [...members];
-          newMembers[index] = res.student;
-          setMembers(newMembers);
-        }
-      } else {
+    const res = await getStudent(id);
+    if (res.status === 'success') {
+      if ((members.find(item => item?.studentCode === res.student.studentCode))) {
+        setMessage('This student is already on the member list');
+        setAlertType('error');
+        setIsCheckAlert(true);
+        setTimeout(() => {
+          setIsCheckAlert(false);
+        }, 4000)
+      }
+      else if (res.student.studentCode === leader.studentCode) {
+        setMessage('You are the Leader, do not enter your Student Code');
+        setAlertType('error');
+        setIsCheckAlert(true);
+        setTimeout(() => {
+          setIsCheckAlert(false);
+        }, 4000)
+      }
+      else {
         const newMembers = [...members];
-        newMembers[index] = undefined;
+        newMembers[index] = res.student;
         setMembers(newMembers);
       }
+    } else {
+      const newMembers = [...members];
+      newMembers[index] = undefined;
+      setMembers(newMembers);
     }
-
-    // if (memberSearch) {
-    //   setMember(memberSearch)
-    // }
   }
 
-  console.log(members)
+  const onDeleteMember = async (index) => {
+    if (members.length > 1) {
+      const newMembers = [...members];
+      newMembers.splice(index, 1);
+      setMembers(newMembers);
+      setKey(uuid());
+    }
+  }
 
+  const onAddMember = () => {
+    if (members[members.length - 1]) {
+      setMembers([...members, undefined])
+    }
+  }
   const onCreateTopic = () => {
+    if (endDate.diff(startDate, 'month') < 3) { setMessage('The duration of the project must be more than 3 months'); }
     (!researchProducts) && setMessage('Applicability cannot be left blank');
     (!goalOfSubject) && setMessage('Goal Of The Subject cannot be left blank');
+    (!mentor) && setMessage('Please choose a mentor to guide you');
+    (!members[0]) && setMessage('must have at least one member');
     (!topicName) && setMessage('TopicName cannot be left blank');
-    setAlertType('error');
+    if (!researchProducts || !goalOfSubject || !topicName || (endDate.diff(startDate, 'month') < 3) || !mentor || (!members[0])) {
+      setAlertType('error');
+      setIsCheckAlert(true);
+      setTimeout(() => {
+        setIsCheckAlert(false);
+      }, 4000)
+    } else {
+      setOpenDialog(true);
+    }
+  };
+  
+
+
+  const onSubmitTopic = async () => {
+    const listMember = members.map(member => member.studentCode);
+    const res = await createTopic({
+      topicName,
+      topicGoalSubject: goalOfSubject,
+      topicExpectedResearch: researchProducts,
+      topicDateStart: startDate?.$y + '-' + (startDate?.$d.getMonth() + 1) + "-" + startDate?.$D,
+      topicDateEnd: endDate?.$y + '-' + (endDate?.$d.getMonth() + 1) + "-" + endDate?.$D,
+      facultyCode: leader.facultyCode,
+      mentorCode: mentor.code,
+      leader: leader.studentCode,
+      listMember
+    })
+    if (res.status === 200) {
+      setOpenDialog(false);
+      setAlertType('success');
+      setMessage(res.data);
+    } else {
+      setOpenDialog(false)
+      setAlertType('error');
+      setMessage(res.data);
+    }
     setIsCheckAlert(true);
     setTimeout(() => {
       setIsCheckAlert(false);
     }, 4000)
-  };
+  }
 
   return (
     <Box sx={{ margin: "50px 0 0 50px" }}>
@@ -183,7 +219,6 @@ function CreateProject() {
               Leader
             </Typography>
           </Box>
-
           <Box
             sx={{
               margin: "10px 50px 20px 20px",
@@ -232,12 +267,8 @@ function CreateProject() {
               Team Members
             </Typography>
           </Box>
-
-
-
-
           {members.map((item, index) => (
-            <Box className="member">
+            <Box className="member" key={key + item?.studentCode}>
               <Box
                 className="id_student"
                 sx={{
@@ -248,10 +279,17 @@ function CreateProject() {
                 }}
               >
                 <TextField
+                  className="textFieldMember"
                   type="number"
                   size="small"
-
-                  onChange={(e) => onSearchMember(e.target.value, index)}
+                  disabled={(index < members.length - 1) ? true : false}
+                  defaultValue={(item) ? item.studentCode : ''}
+                  onChange={(e) => {
+                    if (e.target.value.length > 11) {
+                      e.target.value = e.target.value.slice(0, -1);
+                    }
+                    onSearchMember(e.target.value, index)
+                  }}
                   sx={{
                     width: "170px",
                     '& .MuiInputBase-input[type="number"]::-webkit-inner-spin-button, & .MuiInputBase-input[type="number"]::-webkit-outer-spin-button':
@@ -264,7 +302,7 @@ function CreateProject() {
                     },
                   }}
                 />
-                <IconButton>
+                <IconButton onClick={() => onDeleteMember(index)}>
                   <Delete />
                 </IconButton>
               </Box>
@@ -275,7 +313,6 @@ function CreateProject() {
                   color: "#818181",
                 }}
               >
-                {console.log(item)}
                 <InfoItem label="Full Name" value={item.studentFullname} />
                 <InfoItem label="Student Code" value={item.studentCode} />
                 <InfoItem label="Class" value={item.studentClass} />
@@ -314,7 +351,7 @@ function CreateProject() {
                 fontSize: "16px",
                 textTransform: "none",
               }}
-              onClick={() => { setMembers([...members, undefined]) }}
+              onClick={onAddMember}
             >
               + Add Member
             </Button>
@@ -332,6 +369,7 @@ function CreateProject() {
               sx={{
                 fontWeight: "bold",
                 color: "#818181",
+                paddingBottom: '10px',
               }}
             >
               Mentor
@@ -340,8 +378,6 @@ function CreateProject() {
           <Box
             className="nameMentor"
             sx={{
-              display: "flex",
-              flexDirection: "row",
               marginLeft: "20px",
               width: '20%'
             }}
@@ -349,6 +385,7 @@ function CreateProject() {
             <TextField
               size='small'
               select
+              label='Select Mentor'
               sx={{
                 width: '100%',
               }}
@@ -369,7 +406,6 @@ function CreateProject() {
               ))}
             </TextField>
           </Box>
-          {console.log(mentor)}
 
           <Box
             sx={{
@@ -508,13 +544,19 @@ function CreateProject() {
             }}
           >
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimeRangePicker
-                calendars={5}
+              <DateRangePicker
+                calendars={3}
+                value={[startDate, endDate]}
+                onChange={(newDates) => {
+                  setStartDate(newDates[0]);
+                  setEndDate(newDates[1]);
+                }}
+                minDate={dayjs().add(7, 'day')}
+                maxDate={dayjs().add(1, 'year')}
               />
             </LocalizationProvider>
           </Box>
         </Box>
-
         <Box
           className="btnCreate"
           sx={{
@@ -545,7 +587,156 @@ function CreateProject() {
           </Button>
         </Box>
       </Box>
+      <Dialog
+        open={openDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Use Google's location service?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <Box className="dialogContain" sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '20px'
+            }}>
+              {/* Topic Name */}
+              <Box>
+                <Typography sx={{ fontWeight: 'bold', color: '#D82C2C' }}>Topic Name: </Typography>
+                <Typography sx={{ marginLeft: '10px', fontWeight: 'bold' }}>{topicName}</Typography>
+              </Box>
+              <Box>
+                <Typography sx={{ fontWeight: 'bold', color: '#D82C2C' }}>Faculty: </Typography>
+                <Typography sx={{ marginLeft: '10px', fontWeight: 'bold' }}>{leader?.facultyName}</Typography>
+              </Box>
+              <Box>
+                <Typography sx={{ fontWeight: 'bold', color: '#D82C2C' }}>Leader: </Typography>
+                <Box sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  marginLeft: '10px'
+                }}>
+                  <Typography sx={{ fontWeight: 'bold' }}>Full Name: </Typography>
+                  <Typography sx={{ marginLeft: '10px' }}>{leader?.studentFullname}</Typography>
+                </Box>
 
+                <Box sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  marginLeft: '10px'
+                }}>
+                  <Typography sx={{ fontWeight: 'bold' }}>Student Code: </Typography>
+                  <Typography sx={{ marginLeft: '10px' }}>{leader?.studentCode}</Typography>
+                </Box>
+
+                <Box sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  marginLeft: '10px'
+                }}>
+                  <Typography sx={{ fontWeight: 'bold' }}>Class: </Typography>
+                  <Typography sx={{ marginLeft: '10px' }}>{leader?.studentClass}</Typography>
+                </Box>
+
+                <Box sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  marginLeft: '10px'
+                }}>
+                  <Typography sx={{ fontWeight: 'bold' }}>Faculty: </Typography>
+                  <Typography sx={{ marginLeft: '10px' }}>{leader?.facultyName}</Typography>
+                </Box>
+
+              </Box>
+
+              {/* team member */}
+              <Box>
+                <Typography sx={{ fontWeight: 'bold', color: '#D82C2C' }}>Team Members: </Typography>
+                {members.map((item, index) => (
+                  <Box sx={{ marginLeft: '10px' }}>
+                    <Typography sx={{ fontWeight: 'bold', marginTop: '5px', color: '#ff6666' }}>+ Member {index + 1}</Typography>
+                    <Box sx={{ marginLeft: '10px', }}>
+                      <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        marginLeft: '10px'
+                      }}>
+                        <Typography sx={{ fontWeight: 'bold' }}>Full Name: </Typography>
+                        <Typography sx={{ marginLeft: '10px' }}>{item?.studentFullname}</Typography>
+                      </Box>
+
+                      <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        marginLeft: '10px'
+                      }}>
+                        <Typography sx={{ fontWeight: 'bold' }}>Student Code: </Typography>
+                        <Typography sx={{ marginLeft: '10px' }}>{item?.studentCode}</Typography>
+                      </Box>
+
+                      <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        marginLeft: '10px'
+                      }}>
+                        <Typography sx={{ fontWeight: 'bold' }}>Class: </Typography>
+                        <Typography sx={{ marginLeft: '10px' }}>{item?.studentClass}</Typography>
+                      </Box>
+
+                      <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        marginLeft: '10px'
+                      }}>
+                        <Typography sx={{ fontWeight: 'bold' }}>Faculty: </Typography>
+                        <Typography sx={{ marginLeft: '10px' }}>{item?.facultyName}</Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                ))}
+              </Box>
+
+
+              {/* Instructor Name */}
+              <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#D82C2C' }}>Instructor: </Typography>
+                <Typography sx={{ marginLeft: '10px', fontWeight: 'bold' }}>{mentor.name}</Typography>
+              </Box>
+
+              {/* Goal Of The Subject */}
+              <Box>
+                <Typography sx={{ fontWeight: 'bold', color: '#D82C2C' }}>The Goal Of The Subject:</Typography>
+                <Typography sx={{ marginLeft: '10px' }}>{goalOfSubject}</Typography>
+              </Box>
+
+              {/* Expected research products */}
+              <Box>
+                <Typography sx={{ fontWeight: 'bold', color: '#D82C2C' }}>Expected research products of the topic and applicability:</Typography>
+                <Typography sx={{ marginLeft: '10px' }}>{researchProducts}</Typography>
+              </Box>
+              {/* Topic Date Start */}
+              <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#D82C2C' }}>Topic Date Start: </Typography>
+                <Typography sx={{ marginLeft: '10px' }}>{startDate?.$D + "/" + (startDate?.$d.getMonth() + 1) + "/" + startDate?.$y}</Typography>
+              </Box>
+
+              {/* Topic Date End */}
+              <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#D82C2C' }}>Topic Date End: </Typography>
+                <Typography sx={{ marginLeft: '10px' }}>{endDate?.$D + "/" + (endDate.$d.getMonth() + 1) + "/" + endDate?.$y}</Typography>
+              </Box>
+            </Box>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)}>Disagree</Button>
+          <Button autoFocus onClick={onSubmitTopic}>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Snackbar open={isCheckAlert} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
         <Alert variant="filled" severity={alertType}>{message}</Alert>
       </Snackbar>
