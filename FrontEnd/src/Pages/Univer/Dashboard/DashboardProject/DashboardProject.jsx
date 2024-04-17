@@ -19,9 +19,10 @@ const DashboardProject = () => {
             <Box sx={{
                 marginTop: '20px',
                 width: '100%',
-                height: '500px',
+                height: '700px',
                 display: 'flex',
-                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column'
             }}>
                 <Box className="Chart" sx={{
                     marginTop: '30px',
@@ -40,7 +41,7 @@ const DashboardProject = () => {
                         <Typography sx={{
                             marginLeft: '30px',
                             color: '#D82C2C',
-                            fontSize: '20px',
+                            fontSize: '26px',
                             fontWeight: 'bold'
                         }}>Project</Typography>
                     </Box>
@@ -53,21 +54,21 @@ const DashboardProject = () => {
                         <Box className="Chart_Project" sx={{
                             width: '60%',
                             height: '100%',
-                            display:'flex',
-                            justifyContent:'center',
-                            alignItems:'center',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
                             marginLeft: '30px',
                         }}>
                             <BasicPie></BasicPie>
                         </Box>
                         <Box sx={{
-                            marginTop:'20px',
+                            marginTop: '20px',
                             width: '40%',
                             height: '70%',
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
-                            justifyContent:'space-evenly'
+                            justifyContent: 'space-evenly'
                         }}>
                             <Box sx={{
                                 width: '90%',
@@ -143,6 +144,20 @@ const DashboardProject = () => {
                             </Box>
                         </Box>
                     </Box>
+                </Box>
+                <Box sx={{
+                    width: '70%',
+                    height: '80px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                    <Typography sx={{
+                        fontSize: '26px',
+                        color: '#999999'
+                    }}>
+                        Statistical ranking of scientific research projects
+                    </Typography>
                 </Box>
             </Box>
         </div>

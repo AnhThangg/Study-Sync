@@ -8,3 +8,12 @@ export const getAllCodeUniver = () => {
         console.log(e);
     }
 }
+
+export const getDashboardForUniver = (id) => {
+    try {
+        const res = request.get(`/univer/dashboardForUniver/${id}`)
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}
