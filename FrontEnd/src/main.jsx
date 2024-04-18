@@ -37,6 +37,7 @@ import MentorInformation from './Pages/Mentor/MentorInformation/MentorInformatio
 import UniverCetificate from './Pages/Univer/UniverCetificate/UniverCetificate.jsx'
 // import Approve from './Pages/Faculty/Approve/Approve.jsx'
 import AcceptProject from './Pages/Faculty/AcceptProject/AcceptProject.jsx'
+import MentorProjectInformation from './Pages/Mentor/MentorProjectInformation/MentorProjectInformation.jsx'
 
 const router = createBrowserRouter([
 
@@ -151,6 +152,10 @@ const router = createBrowserRouter([
       {
         path: '/Mentor/MentorInformation',
         element: <MentorInformation />
+      },
+      {
+        path: '/Mentor/MentorProjectInformation',
+        element: <MentorProjectInformation />,
       }
     ]
   },

@@ -50,7 +50,7 @@ const MentorHomepage = () => {
           justifyContent: 'space-around'
         }}>
           <NavLink to={"/Mentor/MentorHomepage/MentorProject"} className="homePageContain">
-            <Box className="customItems" sx={{
+            <Box className="customItem" sx={{
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
@@ -60,9 +60,6 @@ const MentorHomepage = () => {
               borderRadius: '30px',
               border: '1px solid #999',
               transition: 'background 0.3s',
-              '&:hover': {
-                background: '#D9D9D9'
-              }
             }}>
               <Box sx={{
                 display: 'flex',
@@ -72,14 +69,14 @@ const MentorHomepage = () => {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <Typography className="customText" sx={{
+                <Typography sx={{
                   fontSize: '40px',
                   color: '#D82C2C',
                   fontWeight: 'bold'
                 }}>
                   7
                 </Typography>
-                <Typography className="customText" sx={{
+                <Typography sx={{
                   fontSize: '20px',
                   color: '#999'
                 }}>
@@ -93,13 +90,13 @@ const MentorHomepage = () => {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <Groups className="customIcon" fontSize="large" sx={{ color: "#999" }} />
+                <Groups className="customIcon" fontSize="inherit" sx={{ color: "#D82C2C", fontSize : "3rem" }} />
               </Box>
             </Box>
           </NavLink>
 
           <NavLink to={"/Mentor/MentorHomepage/MentorWaitting"} className="homePageContain">
-            <Box className="customItems" sx={{
+            <Box className="customItem" sx={{
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
@@ -109,9 +106,6 @@ const MentorHomepage = () => {
               borderRadius: '30px',
               border: '1px solid #999',
               transition: 'background 0.3s',
-              '&:hover': {
-                background: '#D9D9D9'
-              }
             }}>
               <Box sx={{
                 display: 'flex',
@@ -121,14 +115,14 @@ const MentorHomepage = () => {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <Typography className="customText" sx={{
+                <Typography sx={{
                   fontSize: '40px',
                   color: '#D82C2C',
                   fontWeight: 'bold'
                 }}>
                   4
                 </Typography>
-                <Typography className="customText" sx={{
+                <Typography sx={{
                   fontSize: '20px',
                   color: '#999'
                 }}>
@@ -142,7 +136,7 @@ const MentorHomepage = () => {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <AccessAlarms className="customIcon" fontSize="large" sx={{ color: "#999" }} />
+                <AccessAlarms className="customIcon" fontSize="inherit" sx={{ color: "#D82C2C", fontSize: "3rem" }} />
               </Box>
             </Box>
           </NavLink>
