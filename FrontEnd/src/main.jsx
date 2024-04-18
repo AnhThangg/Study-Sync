@@ -35,6 +35,9 @@ import MentorProject from './Pages/Mentor/MentorProject/MentorProject.jsx'
 import MentorWaitting from './Pages/Mentor/MentorWaitting/MentorWaitting.jsx'
 import MentorInformation from './Pages/Mentor/MentorInformation/MentorInformation.jsx'
 import UniverCetificate from './Pages/Univer/UniverCetificate/UniverCetificate.jsx'
+// import Approve from './Pages/Faculty/Approve/Approve.jsx'
+import AcceptProject from './Pages/Faculty/AcceptProject/AcceptProject.jsx'
+
 const router = createBrowserRouter([
 
   { path: '*', element: <Page404 /> },
@@ -169,6 +172,10 @@ const router = createBrowserRouter([
       {
         path: "/faculty/profile",
         element: <ProfileOfFaculty />,
+      },
+      {
+        path: "/faculty/acceptproject",
+        element: <AcceptProject />,
       },
       //
     ],
