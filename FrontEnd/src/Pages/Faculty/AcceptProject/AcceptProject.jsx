@@ -204,7 +204,7 @@ function AcceptProject() {
           display: "flex",
           alignItems: "center",
           justifyContent: "end",
-          margin: "10px 0 20px 0",
+          margin: "20px 90px 20px 0",
         //   minHeight: "100%"
         }}
       >
