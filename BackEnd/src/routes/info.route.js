@@ -26,8 +26,4 @@ infoRoute
     getNameMentor
   )
 
-
-// .post(
-//     login
-// );
 module.exports = { infoRoute }

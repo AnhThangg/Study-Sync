@@ -13,8 +13,4 @@ topicRoute
       createTopic
     );
     
-
-    // .post(
-    //     login
-    // );
 module.exports = { topicRoute }

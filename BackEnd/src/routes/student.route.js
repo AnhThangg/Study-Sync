@@ -9,8 +9,4 @@ studentRoute
       getStudent
     );
     
-
-    // .post(
-    //     login
-    // );
 module.exports = { studentRoute }
