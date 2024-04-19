@@ -204,6 +204,7 @@ const AddAccountMentor = () => {
       display: 'flex',
       flexDirection: 'column',
       gap: '25px',
+      marginBottom: '20px'
     }}>
       <Box key={key} className="containerTop" sx={{
         display: 'flex',
