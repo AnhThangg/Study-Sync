@@ -14,6 +14,7 @@ import logoDTU from '../../assets/Logo-DuyTan.png';
 import imgLogin from '../../assets/imageLogin.png';
 import { login } from '../../api/authApi';
 import { getRole } from '../../api/personalApi';
+import './check.scss'
 
 const Check = () => {
 
@@ -83,6 +84,7 @@ const Check = () => {
       height: '100vh',
       width: '100%',
       background: '#F6E6E6',
+      background: 'linear-gradient(#FFC5C5,#F6E6E6)',
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'center',
@@ -198,6 +200,7 @@ const Check = () => {
               </Box>
             </Box>
             <Button
+              className='btnLogin'
               onClick={onLogin}
               sx={{
                 width: '30%',
@@ -205,12 +208,15 @@ const Check = () => {
                 background: '#D82C2C',
                 color: '#fff',
                 marginTop: '28px',
+                border: '1px solid #D82C2C ',
                 '&:hover': {
                   background: '#fff',
                   color: '#D82C2C',
-                  border: '1px solid #999'
+                  boxShadow: '0 0 5px #FFC5C5, 0 0 25px #FFC5C5, 0 0 50px #FFC5C5, 0 0 100px #FFC5C5'
                 }
-              }}>Login</Button>
+              }}>
+              Login
+            </Button>
           </Box>
         </Box>
         <Box className="rightForm" sx={{
@@ -225,7 +231,7 @@ const Check = () => {
           <img width='90%' src={imgLogin} alt='Study-Sync' />
         </Box>
       </Box>
-      
+
       <Snackbar open={isCheckAlert} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
         <Alert variant="outlined" severity="error">{message}</Alert>
       </Snackbar>

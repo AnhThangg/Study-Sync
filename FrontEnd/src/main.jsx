@@ -38,6 +38,7 @@ import UniverCetificate from './Pages/Univer/UniverCetificate/UniverCetificate.j
 // import Approve from './Pages/Faculty/Approve/Approve.jsx'
 import AcceptProject from './Pages/Faculty/AcceptProject/AcceptProject.jsx'
 import MentorProjectInformation from './Pages/Mentor/MentorProjectInformation/MentorProjectInformation.jsx'
+import UnconfirmedTopicForMentor from './Pages/Mentor/UnconfirmedTopicForMentor/UnconfirmedTopicForMentor.jsx'
 
 const router = createBrowserRouter([
 
@@ -156,6 +157,10 @@ const router = createBrowserRouter([
       {
         path: '/Mentor/MentorProjectInformation',
         element: <MentorProjectInformation />,
+      },
+      {
+        path: '/Mentor/unconfirmedtopicformentor',
+        element: <UnconfirmedTopicForMentor />
       }
     ]
   },
