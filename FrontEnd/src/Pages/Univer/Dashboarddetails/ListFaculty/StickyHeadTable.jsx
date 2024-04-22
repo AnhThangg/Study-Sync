@@ -57,8 +57,11 @@ export default function StickyHeadTable() {
   };
 
   const homeClick = () => {
-    window.location.href = "/Univer/DashboadDetail/Project"
+    window.location.href = "/Univer/ListProject"
   }
+  // const homeClick = () => {
+  //   window.location.href = "/Univer/Inforproject"
+  // }
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
       <TableContainer sx={{ maxHeight: 640 }}>
@@ -80,8 +83,8 @@ export default function StickyHeadTable() {
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => (
-                
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.no}>
+
+                <TableRow hover role="checkbox" tabIndex={-1} key={row.no}>
                   {columns.map((column) => {
                     const value = row[column.id];
                     return (
@@ -90,15 +93,15 @@ export default function StickyHeadTable() {
                           component="div"
                           style={{ cursor: 'pointer' }}
                           onClick={homeClick}
-                          >
+                        >
                           {column.format && typeof value === 'number' ? column.format(value) : value}
                         </Typography>
                       </TableCell>
                     );
                   })}
                 </TableRow>
-                
-                
+
+
               ))}
           </TableBody>
         </Table>

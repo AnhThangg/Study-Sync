@@ -112,15 +112,27 @@ const router = createBrowserRouter([
         element: <Dashboard_Detail />,
         children: [
           {
-            path: '/Univer/DashboadDetail/Project',
-            element: <ListProjects />
+            path: '/Univer/DashboadDetail/ListFaculty',
+            element: <StickyHeadTable />
           },
-          {
-            path: '/Univer/DashboadDetail/Inforproject',
-            element: <DashboardProject />
-          },
+          // {
+          //   path: '/Univer/DashboadDetail/ListProject',
+          //   element: <ListProjects />
+          // },
+          // {
+          //   path: '/Univer/DashboadDetail/Inforproject',
+          //   element: <InforProject />
+          // },
           //
         ]
+      },
+      {
+        path: '/Univer/Inforproject',
+        element: <InforProject />
+      },
+      {
+        path: '/Univer/ListProject',
+        element: <ListProjects />
       },
       {
         path: '/Univer/Certificate',

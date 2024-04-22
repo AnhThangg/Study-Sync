@@ -129,7 +129,8 @@ const UnconfirmedTopicForMentor = () => {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'start',
-                        justifyContent: 'start'
+                        justifyContent: 'start',
+                        marginTop: '50px',
                     }}>
                         <Box ClassName="Describle" sx={{
                             width: '95%',
@@ -211,6 +212,46 @@ const UnconfirmedTopicForMentor = () => {
                             }}>
                                 Other tools : Postman, trello,github...
                             </Typography>
+                        </Box>
+
+                        <Box className="function" sx={{
+                            // background: 'red',
+                            // height: '300px',
+                            width: '90%',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'end',
+                            gap: '50px',
+                            paddingTop: '50px'
+                        }}>
+                            <Button className="reject" sx={{
+                                background: '#fff',
+                                border: '1px solid #D82C2C',
+                                borderRadius: '10px',
+                                fontSize: '20px',
+                                color: '#D82C2C',
+                                width: '200px',
+                                '&:hover': {
+                                    background: '#D82C2C',
+                                    color: '#fff',
+                                }
+                            }}>
+                                Reject
+                            </Button>
+                            <Button className="approve" sx={{
+                                background: '#fff',
+                                border: '1px solid #41B06E',
+                                borderRadius: '10px',
+                                fontSize: '20px',
+                                color: '#41B06E',
+                                width: '200px',
+                                '&:hover': {
+                                    background: '#41B06E',
+                                    color: '#fff',
+                                }
+                            }}>
+                                Approve
+                            </Button>
                         </Box>
                     </Box>
 
