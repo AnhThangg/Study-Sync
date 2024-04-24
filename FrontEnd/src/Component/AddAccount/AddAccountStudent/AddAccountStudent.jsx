@@ -368,7 +368,7 @@ const AddAccountStudent = () => {
                                     width: '100%',
                                 }}
                             >
-                                {facultiesCode.map((option) => (
+                                {facultiesCode?.map((option) => (
                                     <MenuItem
                                         key={option.facultyCode}
                                         value={option.facultyCode}
@@ -883,8 +883,8 @@ const AddAccountStudent = () => {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <DialogTitle id="alert-dialog-title">
-                    {"Use Google's location service?"}
+                <DialogTitle id="alert-dialog-title" sx={{ color: '#D82C2C', fontWeight: 'bold', fontSize: '20px' }}>
+                    {"Read the information carefully before adding an account!"}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">

@@ -80,7 +80,7 @@ const router = createBrowserRouter([
         element: <InformationProject />,
       },
       {
-        path: "/student/createProject",
+        path: "/student/project/createProject",
         element: <CreateProject />,
       },
     ]

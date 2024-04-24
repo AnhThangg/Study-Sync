@@ -591,8 +591,8 @@ const AddAccountUniver = () => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-          {"Use Google's location service?"}
+        <DialogTitle id="alert-dialog-title" sx={{ color: '#D82C2C', fontWeight: 'bold', fontSize: '20px' }}>
+          {"Read the information carefully before adding an account!"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -601,13 +601,67 @@ const AddAccountUniver = () => {
               flexDirection: 'column',
               gap: '20px'
             }}>
-              <Typography>Username: {userName}</Typography>
-              <Typography>Password: {password}</Typography>
-              <Typography>University Name: {univerName}</Typography>
-              <Typography>Univer Code: {univerCode}</Typography>
-              <Typography>Univer Email: {univerEmail}</Typography>
-              <Typography>Univer Phone: {univerPhone}</Typography>
-              <Typography>Address: {univerAddress}</Typography>
+              {/* userName */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row'
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d' }}>Username: </Typography>
+                <Typography sx={{ marginLeft: '10px', fontWeight: 'bold', color: '#718199' }}>{userName}</Typography>
+              </Box>
+              
+              {/* password */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row'
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d' }}>Password: </Typography>
+                <Typography sx={{ marginLeft: '10px', fontWeight: 'bold', color: '#718199' }}>{password}</Typography>
+              </Box>
+
+              {/* University Name */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row'
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d' }}>University Name: </Typography>
+                <Typography sx={{ marginLeft: '10px', fontWeight: 'bold', color: '#718199' }}>{univerName}</Typography>
+              </Box>
+              {/* University Code */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row'
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d' }}>Univer Code: </Typography>
+                <Typography sx={{ marginLeft: '10px', fontWeight: 'bold', color: '#718199' }}>{univerCode}</Typography>
+              </Box>
+
+              {/* University Email */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row'
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d' }}>Univer Email: </Typography>
+                <Typography sx={{ marginLeft: '10px', fontWeight: 'bold', color: '#718199' }}>{univerEmail}</Typography>
+              </Box>
+              
+              {/* University Phone */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row'
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d' }}>Univer Phone: </Typography>
+                <Typography sx={{ marginLeft: '10px', fontWeight: 'bold', color: '#718199' }}>{univerPhone}</Typography>
+              </Box>
+
+              {/* Address */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row'
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d' }}>Address: </Typography>
+                <Typography sx={{ marginLeft: '10px', fontWeight: 'bold', color: '#718199' }}>{univerAddress}</Typography>
+              </Box>
             </Box>
           </DialogContentText>
         </DialogContent>

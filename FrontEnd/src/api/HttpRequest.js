@@ -8,12 +8,23 @@ httpRequest.interceptors.request.use(config => {
     const accessToken = JSON.parse(localStorage.getItem('accessToken'));
     // Nếu có access token, thêm vào phần header của yêu cầu
     if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+        config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
-  }, error => {
+}, error => {
     return Promise.reject(error);
-  });
+});
+
+httpRequest.interceptors.response.use(response => {
+    if(response.status===401){
+        window.location('/');
+    }
+    return response;
+}, error => {
+    // Xử lý lỗi ở đây nếu có
+    return Promise.reject(error); // Trả về lỗi để được xử lý ở thành phần khác
+});
+
 export const get = async (path, options = {}) => {
     try {
         const response = await httpRequest.get(path, options)

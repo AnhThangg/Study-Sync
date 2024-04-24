@@ -140,7 +140,7 @@ const AddAccountMentor = () => {
     (univerCode.length === 0) && setMessage('Please fill in information in University');
     (!password) && setMessage('Please fill in information in Password');
     (!userName) && setMessage('Please fill in information in Username');
-    if (!univerCode || !facultyCode || !address || !ward || !district || !province || !mentorPhone || !mentorEmail || !mentorScientificName || !mentorDegree || !mentorBirthday  || !mentorCode || !mentorFullname || !password || !userName || !validateEmail(mentorEmail) || !validPhoneNumber(mentorPhone) || !mentorSex) {
+    if (!univerCode || !facultyCode || !address || !ward || !district || !province || !mentorPhone || !mentorEmail || !mentorScientificName || !mentorDegree || !mentorBirthday || !mentorCode || !mentorFullname || !password || !userName || !validateEmail(mentorEmail) || !validPhoneNumber(mentorPhone) || !mentorSex) {
       setAlertType('error');
       setIsCheckAlert(true);
       setTimeout(() => {
@@ -272,7 +272,7 @@ const AddAccountMentor = () => {
                 Password:
               </Typography>
             </Box>
-            <Box className="rowRight" sx={{   
+            <Box className="rowRight" sx={{
               width: '65%'
             }}>
               <TextField
@@ -374,7 +374,7 @@ const AddAccountMentor = () => {
                   width: '100%',
                 }}
               >
-                {facultiesCode.map((option) => (
+                {facultiesCode?.map((option) => (
                   <MenuItem
                     key={option.facultyCode}
                     value={option.facultyCode}
@@ -924,8 +924,8 @@ const AddAccountMentor = () => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-          {"Use Google's location service?"}
+        <DialogTitle id="alert-dialog-title" sx={{ color: '#D82C2C', fontWeight: 'bold', fontSize: '20px' }}>
+          {"Read the information carefully before adding an account!"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -934,20 +934,135 @@ const AddAccountMentor = () => {
               flexDirection: 'column',
               gap: '20px'
             }}>
+              {/* userName */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '10px',
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d' }}>Username: </Typography>
+                <Typography sx={{ fontWeight: 'bold', color: '#718199' }}>{userName}</Typography>
+              </Box>
 
-              <Typography>Username: {userName}</Typography>
-              <Typography>Password: {password}</Typography>
-              <Typography>University: {univerCode?.name + ' (' + univerCode?.code + ')'}</Typography>
-              <Typography>Faculty: {facultyCode?.name + ' (' + facultyCode?.code + ')'}</Typography>
-              <Typography>Mentor Name: {mentorFullname}</Typography>
-              <Typography>Mentor Code: {mentorCode}</Typography>
-              <Typography>Sex: {(mentorSex==='1') ? 'Female' : 'Male'}</Typography>
-              <Typography>Birthday: {mentorBirthday}</Typography>
-              <Typography>Mentor Degree: {mentorDegree}</Typography>
-              <Typography>Mentor Scientific Name: {mentorScientificName}</Typography>
-              <Typography>Mentor Email: {mentorEmail}</Typography>
-              <Typography>Mentor Phone: {mentorPhone}</Typography>
-              <Typography>Address: {mentorAddress}</Typography>
+              {/* password */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '10px',
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d' }}>Password: </Typography>
+                <Typography sx={{ fontWeight: 'bold', color: '#718199' }}>{password}</Typography>
+              </Box>
+
+              {/* University */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '10px',
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d' }}>University: </Typography>
+                <Typography sx={{ fontWeight: 'bold', color: '#718199' }}>{univerCode?.name + ' (' + univerCode?.code + ')'}</Typography>
+              </Box>
+
+              {/* Faculty */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '10px',
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d' }}>Faculty: </Typography>
+                <Typography sx={{ fontWeight: 'bold', color: '#718199' }}>{facultyCode?.name + ' (' + facultyCode?.code + ')'}</Typography>
+              </Box>
+
+              {/* Mentor Name */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '10px',
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d' }}>Mentor Name: </Typography>
+                <Typography sx={{ fontWeight: 'bold', color: '#718199' }}>{mentorFullname}</Typography>
+              </Box>
+
+              {/* Mentor Code */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '10px',
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d' }}>Mentor Code: </Typography>
+                <Typography sx={{ fontWeight: 'bold', color: '#718199' }}>{mentorCode}</Typography>
+              </Box>
+
+              {/* Sex */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '10px',
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d' }}>Sex: </Typography>
+                <Typography sx={{ fontWeight: 'bold', color: '#718199' }}>{(mentorSex === '1') ? 'Female' : 'Male'}</Typography>
+              </Box>
+
+              {/* Birthday */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '10px',
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d' }}>Birthday: </Typography>
+                <Typography sx={{ fontWeight: 'bold', color: '#718199' }}>{mentorBirthday}</Typography>
+              </Box>
+
+              {/* Mentor Degree */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '10px',
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d' }}>Mentor Degree: </Typography>
+                <Typography sx={{ fontWeight: 'bold', color: '#718199' }}>{mentorDegree}</Typography>
+              </Box>
+
+              {/* Mentor Scientific Name */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '10px',
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d' }}>Mentor Scientific Name: </Typography>
+                <Typography sx={{ fontWeight: 'bold', color: '#718199' }}>{mentorScientificName}</Typography>
+              </Box>
+
+              {/* Mentor Email */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '10px',
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d' }}>Mentor Email: </Typography>
+                <Typography sx={{ fontWeight: 'bold', color: '#718199' }}>{mentorEmail}</Typography>
+              </Box>
+
+              {/* Mentor Phone */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '10px',
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d' }}>Mentor Phone: </Typography>
+                <Typography sx={{ fontWeight: 'bold', color: '#718199' }}>{mentorPhone}</Typography>
+              </Box>
+
+              {/* Address */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '10px',
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d' }}>Address: </Typography>
+                <Typography sx={{ fontWeight: 'bold', color: '#718199' }}>{mentorAddress}</Typography>
+              </Box>
             </Box>
           </DialogContentText>
         </DialogContent>

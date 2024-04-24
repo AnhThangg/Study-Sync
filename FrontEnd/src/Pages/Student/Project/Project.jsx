@@ -17,7 +17,7 @@ function Project() {
   const usenavigate = useNavigate();
 
   const handleCreateProject = () => {
-    usenavigate("/student/createProject");
+    usenavigate("/student/project/createProject");
   };
 
   const columns = [
