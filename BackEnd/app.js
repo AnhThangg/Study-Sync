@@ -22,7 +22,7 @@ app.use("/mentor", mentorRoute);
 app.use("/topic", topicRoute);
 app.use("/unitvietnam", unitVietNamRoute);
 app.use("/univer", univerRoute);
-app.use("/facultyAllCodeForUniver", facultyRoute);
+app.use("/faculty", facultyRoute);
 app.get('/', (req, res) => {
     res.json('Study-Sync')
 })

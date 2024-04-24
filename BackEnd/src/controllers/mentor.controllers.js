@@ -50,10 +50,8 @@ const getUnconfirmedTopicsForMentor = async (req, res) => {
             ],
             attributes: ['topicCode', 'topicName'] // Chọn chỉ trường topicCode và topicName
         });
-
-        // Tạo một mảng mới chỉ chứa các trường cần thiết
-        const simplifiedTopics = topics.map((topic,index) => ({
-            no: index+1,
+        const simplifiedTopics = topics.map((topic, index) => ({
+            no: index + 1,
             topicCode: topic.topicCode,
             topicName: topic.topicName,
             leader: topic.student.studentFullname
@@ -66,7 +64,31 @@ const getUnconfirmedTopicsForMentor = async (req, res) => {
     }
 }
 
+const approveTopicForMentor = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const topic = await Topic.findOne({
+            where: {
+                topicCode: id,
+                topicStatus: 'Waiting for Mentor Approval'
+            }
+        });
+        if (!topic) {
+            return res.status(404).json('Topic not Found');
+        }
+        await Topic.update(
+            { topicStatus: 'Waiting for Faculty Approval' },
+            { where: { topicCode: id } }
+        );
+        return res.status(200).json('Topic approval was successful, awaiting Faculty approval')
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json(e);
+    }
+}
+
 module.exports = {
     getMentor,
-    getUnconfirmedTopicsForMentor
+    getUnconfirmedTopicsForMentor,
+    approveTopicForMentor
 }
