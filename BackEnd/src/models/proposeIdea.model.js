@@ -13,19 +13,19 @@ const proposeIdeaModel = (sequelize, DataTypes) => {
                 unique: true
             },
             ideaDescription: {
-                type: DataTypes.BOOLEAN,
+                type: DataTypes.TEXT,
                 allowNull: false
             },
             ideaGoalSubject: {
-                type: DataTypes.DATE,
+                type: DataTypes.TEXT,
                 allowNull: false
             },
             ideaExpectedResearch: {
-                type: DataTypes.STRING,
+                type: DataTypes.TEXT,
                 allowNull: false
             },
             otherNotes: {
-                type: DataTypes.STRING,
+                type: DataTypes.TEXT,
                 allowNull: false
             },
             mentorCode: {

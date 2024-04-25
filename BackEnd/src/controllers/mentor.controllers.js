@@ -1,6 +1,8 @@
 const { Model } = require('sequelize');
-const { Mentor, Student, Faculty, Topic } = require('../database/database');
+const { Mentor, Student, Faculty, Topic, ProposeIdea, AccountUser } = require('../database/database');
 const { Sequelize, where } = require('sequelize');
+const { v4: uuid } = require('uuid');
+
 
 
 const getMentor = async (req, res) => {
@@ -90,5 +92,5 @@ const approveTopicForMentor = async (req, res) => {
 module.exports = {
     getMentor,
     getUnconfirmedTopicsForMentor,
-    approveTopicForMentor
+    approveTopicForMentor,
 }

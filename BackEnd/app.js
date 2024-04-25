@@ -13,6 +13,7 @@ const { topicRoute } = require('./src/routes/topic.route');
 const { unitVietNamRoute } = require('./src/routes/unitVietNam.route')
 const { univerRoute } = require('./src/routes/univer.route');
 const { facultyRoute } = require('./src/routes/faculty.route');
+const { proposeIdea } = require('./src/routes/proposeIdea.route')
 
 app.use("/account", accountRoute);
 app.use("/auth", authRoute);
@@ -23,6 +24,7 @@ app.use("/topic", topicRoute);
 app.use("/unitvietnam", unitVietNamRoute);
 app.use("/univer", univerRoute);
 app.use("/faculty", facultyRoute);
+app.use("/proposeIdea", proposeIdea);
 app.get('/', (req, res) => {
     res.json('Study-Sync')
 })

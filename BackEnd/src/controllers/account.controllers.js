@@ -94,7 +94,6 @@ const findRoleCode = async (role, roleCode, code) => {
 const createAccount = async (req, res) => {
     try {
         const { id: categoryAccount } = req.params;
-        // console.log(req.body);
         const { body: info } = req;
         const accountId = uuid();
         const salt = bcrypt.genSaltSync(10);

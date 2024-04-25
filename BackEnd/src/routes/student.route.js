@@ -1,7 +1,14 @@
 const express = require('express');
-const { getStudent, getTopicApprovedForStudent } = require('../controllers/student.controllers')
+const { getStudent, getTopicApprovedForStudent, acceptMentorIdea } = require('../controllers/student.controllers')
 const { authenMiddleware } = require('../middlewares/authen.middleware');
 const studentRoute = express.Router();
+
+studentRoute
+  .route('/acceptmentoridea/:id')
+  .post(
+    authenMiddleware,
+    acceptMentorIdea
+  );
 
 studentRoute
   .route('/TopicApprovedForStudent')
