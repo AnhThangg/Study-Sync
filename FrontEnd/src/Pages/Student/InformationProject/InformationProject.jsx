@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { useParams } from "react-router-dom"
 import {
   Box,
   Icon,
@@ -20,6 +21,7 @@ import {
 } from "@mui/icons-material";
 
 function InformationProject() {
+  const topicCode = useParams().id;
   const InfoItem = ({ label, value }) => (
     <Box
       sx={{
@@ -102,7 +104,7 @@ function InformationProject() {
           sx={{ display: "flex", flexDirection: "row" }}
         >
           <Typography sx={{ fontSize: "24px" }}>
-           {project.projectName}
+            {project.projectName}
           </Typography>
         </Box>
       </Box>

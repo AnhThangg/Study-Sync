@@ -144,6 +144,14 @@ function CreateProject() {
   };
 
 
+  const fortmartDate = (year, month, date) => {
+    const formattedMonth = month < 9 ? `0${month + 1}` : month + 1;
+    const formattedDate = date < 10 ? `0${date}` : date;
+    return `${year}-${formattedMonth}-${formattedDate}`;
+  }
+
+  console.log(fortmartDate(startDate?.$y, startDate?.$d.getMonth(), startDate?.$D))
+
 
   const onSubmitTopic = async () => {
     const listMember = members.map(member => member.studentCode);
@@ -151,14 +159,13 @@ function CreateProject() {
       topicName,
       topicGoalSubject: goalOfSubject,
       topicExpectedResearch: researchProducts,
-      topicDateStart: startDate?.$y + '-' + (startDate?.$d.getMonth() + 1) + "-" + startDate?.$D,
-      topicDateEnd: endDate?.$y + '-' + (endDate?.$d.getMonth() + 1) + "-" + endDate?.$D,
+      topicDateStart: fortmartDate(startDate?.$y, startDate?.$d.getMonth(), startDate?.$D),
+      topicDateEnd: fortmartDate(endDate?.$y, endDate?.$d.getMonth(), endDate?.$D),
       facultyCode: leader.facultyCode,
       mentorCode: mentor.code,
       leader: leader.studentCode,
       listMember,
     })
-
     if (res.status === 200) {
       setOpenDialog(false);
       setAlertType('success');
@@ -166,7 +173,7 @@ function CreateProject() {
     } else {
       setOpenDialog(false)
       setAlertType('error');
-      setMessage(res.data);
+      setMessage('Thêm không thành công');
     }
     setIsCheckAlert(true);
     setTimeout(() => {
@@ -709,13 +716,13 @@ function CreateProject() {
               {/* Goal Of The Subject */}
               <Box>
                 <Typography sx={{ fontWeight: 'bold', color: '#D82C2C' }}>The Goal Of The Subject:</Typography>
-                <Typography sx={{ marginLeft: '10px' }}>{goalOfSubject}</Typography>
+                <Typography sx={{ marginLeft: '10px', whiteSpace: 'pre-line' }}>{goalOfSubject}</Typography>
               </Box>
 
               {/* Expected research products */}
               <Box>
                 <Typography sx={{ fontWeight: 'bold', color: '#D82C2C' }}>Expected research products of the topic and applicability:</Typography>
-                <Typography sx={{ marginLeft: '10px' }}>{researchProducts}</Typography>
+                <Typography sx={{ marginLeft: '10px', whiteSpace: 'pre-line' }}>{researchProducts}</Typography>
               </Box>
               {/* Topic Date Start */}
               <Box sx={{ display: 'flex', flexDirection: 'row' }}>
