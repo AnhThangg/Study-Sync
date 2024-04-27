@@ -17,3 +17,12 @@ export const createAccount = (role, info) => {
         console.log(e);
     }
 }
+
+export const deleteAccount = (id) => {
+    try {
+        const res = request.del(`account/${id}`)
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}

@@ -1,28 +1,29 @@
 const express = require('express');
-const { getInfoPersonal, getRole, getAvatar } = require('../controllers/info.controllers')
+const { getInfoPersonal, getRole, getAvatar, getNameMentor } = require('../controllers/info.controllers')
 const { authenMiddleware } = require('../middlewares/authen.middleware');
-const perInfoRoute = express.Router();
-perInfoRoute
+const infoRoute = express.Router();
+infoRoute
   .route('/')
   .get(
     authenMiddleware,
     getInfoPersonal
   );
-perInfoRoute
+infoRoute
   .route('/role')
   .get(
     authenMiddleware,
     getRole
   );
-perInfoRoute
+infoRoute
   .route('/avatar/:id')
   .get(
     getAvatar
   );
 
+infoRoute
+  .route('/nameMentor/:facultyCode')
+  .get(
+    getNameMentor
+  )
 
-
-// .post(
-//     login
-// );
-module.exports = { perInfoRoute }
+module.exports = { infoRoute }

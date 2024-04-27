@@ -1,19 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button, Box, Typography } from "@mui/material";
-import { AccountBox, AccountTree, Logout} from "@mui/icons-material";
+import { AccountBox, AccountTree, Logout } from "@mui/icons-material";
+import { getInfo } from '../../../api/infoApi'
 import logoDTU from "../../../assets/Logo-DuyTan.png";
-import avatar from "../../../assets/Avatar.png";
 import "./Student.scss";
 
 const Student = () => {
   const { pathname: url } = useLocation();
   const navigate = useNavigate();
 
+  const [user, setUser] = useState();
+
   useEffect(() => {
     if (!localStorage.getItem('accessToken')) {
       navigate('/')
     }
+  }, [])
+
+  useEffect(() => {
+    getInfo()
+      .then(data => {
+        setUser(data)
+      })
+      .catch(e => {
+        console.log(e);
+      })
   }, [])
 
   useEffect(() => {
@@ -29,11 +41,6 @@ const Student = () => {
 
   const homeClick = () => {
     window.location.href = "/student/Project";
-  };
-
-  const userInfo = {
-    userName: "Nguyễn Trần Anh Thắng",
-    userEmail: "anhthang2529@gmail.com",
   };
 
   const logOut = () => {
@@ -184,7 +191,7 @@ const Student = () => {
             }}
           >
             <Box className="avatar">
-              <img className="avatar" src={avatar} alt="avatar" width="50px" />
+              <img className="avatar" src={`http://localhost:2109/info/avatar/${user?.accountId}_student`} alt="avatar" width="50px" />
             </Box>
             <Box
               className="infor"
@@ -201,7 +208,7 @@ const Student = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  {userInfo.userName}
+                  {user?.studentFullname}
                 </Typography>
               </Box>
               <Box className="userEmail">
@@ -211,7 +218,7 @@ const Student = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  {userInfo.userEmail}
+                  {user?.studentEmail}
                 </Typography>
               </Box>
             </Box>

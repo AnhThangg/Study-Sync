@@ -34,8 +34,11 @@ import MentorProposeIdea from './Pages/Mentor/MentorProposeIdea/MentorProposeIde
 import MentorProject from './Pages/Mentor/MentorProject/MentorProject.jsx'
 import MentorWaitting from './Pages/Mentor/MentorWaitting/MentorWaitting.jsx'
 import MentorInformation from './Pages/Mentor/MentorInformation/MentorInformation.jsx'
+import UniverCetificate from './Pages/Univer/UniverCetificate/UniverCetificate.jsx'
 // import Approve from './Pages/Faculty/Approve/Approve.jsx'
- import AcceptProject from './Pages/Faculty/AcceptProject/AcceptProject.jsx'
+import AcceptProject from './Pages/Faculty/AcceptProject/AcceptProject.jsx'
+import MentorProjectInformation from './Pages/Mentor/MentorProjectInformation/MentorProjectInformation.jsx'
+import UnconfirmedTopicForMentor from './Pages/Mentor/UnconfirmedTopicForMentor/UnconfirmedTopicForMentor.jsx'
 
 const router = createBrowserRouter([
 
@@ -77,11 +80,12 @@ const router = createBrowserRouter([
         element: <InformationProject />,
       },
       {
-        path: "/student/createProject",
+        path: "/student/project/createProject",
         element: <CreateProject />,
       },
     ]
   },
+  //
   {
     element: <Univer />,
     children: [
@@ -108,19 +112,31 @@ const router = createBrowserRouter([
         element: <Dashboard_Detail />,
         children: [
           {
-            path: '/Univer/DashboadDetail/Project',
-            element: <ListProjects />
+            path: '/Univer/DashboadDetail/ListFaculty',
+            element: <StickyHeadTable />
           },
-          {
-            path: '/Univer/DashboadDetail/Inforproject',
-            element: <DashboardProject />
-          },
+          // {
+          //   path: '/Univer/DashboadDetail/ListProject',
+          //   element: <ListProjects />
+          // },
+          // {
+          //   path: '/Univer/DashboadDetail/Inforproject',
+          //   element: <InforProject />
+          // },
           //
         ]
       },
       {
+        path: '/Univer/Inforproject',
+        element: <InforProject />
+      },
+      {
+        path: '/Univer/ListProject',
+        element: <ListProjects />
+      },
+      {
         path: '/Univer/Certificate',
-        element: <div>Certificate</div>
+        element: <UniverCetificate />
       }
     ]
 
@@ -149,6 +165,14 @@ const router = createBrowserRouter([
       {
         path: '/Mentor/MentorInformation',
         element: <MentorInformation />
+      },
+      {
+        path: '/Mentor/MentorProjectInformation',
+        element: <MentorProjectInformation />,
+      },
+      {
+        path: '/Mentor/unconfirmedtopicformentor',
+        element: <UnconfirmedTopicForMentor />
       }
     ]
   },

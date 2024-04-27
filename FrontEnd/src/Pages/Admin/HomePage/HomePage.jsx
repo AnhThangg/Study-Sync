@@ -4,110 +4,116 @@ import {
     Button,
     Box,
     Typography,
+    Snackbar,
+    Alert,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle
 } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 import { Edit, Delete } from "@mui/icons-material";
 import { useEffect } from 'react';
-import { getAccount } from '../../../api/adminApi';
+import { deleteAccount, getAccount } from '../../../api/adminApi';
 import { useState } from 'react';
-
-const columns = [
-    {
-        field: 'id',
-        headerName: 'No.',
-        width: 120,
-        // renderCell: (params) => {
-        //     return (
-        //         <NavLink to={`/detail/${params.row.id}`}>Chi tiết</NavLink>
-        //     );
-        // },
-    },
-    { field: 'role', headerName: 'Role', width: 200 },
-    { field: 'username', headerName: 'User Name', width: 350 },
-    { field: 'roleCode', headerName: 'Role Code', width: 300, },
-    {
-        field: 'action',
-        headerName: 'Action',
-        description: 'This column has edit and delete functions and cannot be sorted',
-        sortable: false,
-        width: 300,
-        headerAlign: 'center',
-        align: 'center',
-        renderCell: (params) => {
-            return (
-                <div>
-                    <Button
-                        onClick={() => handleEdit(params.row.id)}
-                        sx={{
-                            color: '#707070',
-                            '&:hover': {
-                                background: 'none',
-                                color: '#D82C2C'
-                            }
-                        }}>
-                        <Edit fontSize='large' />
-                    </Button>
-                    <Button
-                        onClick={() => handleDelete(params.row.id)}
-                        sx={{
-                            color: '#707070',
-                            '&:hover': {
-                                background: 'none',
-                                color: '#D82C2C'
-                            }
-                        }}>
-                        <Delete fontSize='large' />
-                    </Button>
-                </div>
-            );
-        },
-    },
-];
-
-// const rows = [
-//     { id: 1, role: 'univer', username: 'truongdulich', roleCode: 'DTDL' },
-//     { id: 2, role: 'univer', username: 'truongdaotao', roleCode: 'DTQT' },
-//     { id: 3, role: 'faculty', username: 'nguyentanhthang', roleCode: '26211329003' },
-//     { id: 4, role: 'student', username: 'duongnguyencongluan', roleCode: '26211329003' },
-//     { id: 5, role: 'student', username: 'nguyenhoangquocanh', roleCode: '26211329003' },
-//     { id: 6, role: 'student', username: 'nguyenquocnhat', roleCode: '26211329003' },
-//     { id: 7, role: 'student', username: 'nguyenxuanvang', roleCode: '26211329003' },
-//     { id: 8, role: 'student', username: 'nguyentanhdo', roleCode: '26211329003' },
-//     { id: 9, role: 'student', username: 'trancongtri', roleCode: '26211329003' },
-//     { id: 10, role: 'univer', username: 'truongdulich', roleCode: 'DTDL' },
-//     { id: 11, role: 'univer', username: 'truongdaotao', roleCode: 'DTQT' },
-//     { id: 12, role: 'faculty', username: 'nguyentanhthang', roleCode: '26211329003' },
-//     { id: 13, role: 'student', username: 'duongnguyencongluan', roleCode: '26211329003' },
-//     { id: 14, role: 'student', username: 'nguyenhoangquocanh', roleCode: '26211329003' },
-//     { id: 15, role: 'student', username: 'nguyenquocnhat', roleCode: '26211329003' },
-//     { id: 16, role: 'student', username: 'nguyenxuanvang', roleCode: '26211329003' },
-//     { id: 17, role: 'student', username: 'nguyentanhdo', roleCode: '26211329003' },
-//     { id: 18, role: 'student', username: 'trancongtri', roleCode: '26211329003' },
-//     { id: 19, role: 'student', username: 'nguyentanhdo', roleCode: '26211329003' },
-//     {
-//         id: 20
-//         , role: 'student', username: 'trancongtri', roleCode: '26211329003'
-//     },
-// ];
 
 const HomePage = () => {
     const [listAccount, setListAccount] = useState([]);
+    const [message, setMessage] = useState('');
+    const [isCheckAlert, setIsCheckAlert] = useState(false);
+    const [alertType, setAlertType] = useState('error');
+    const [openDialog, setOpenDialog] = useState(false);
+    const [idDelete, setIdDelete] = useState('');
+    const [infoAccount, setInfoAccount] = useState({});
+
     useEffect(() => {
         getAccount('all')
             .then(list => {
                 setListAccount(list);
             })
     }, []);
-    console.log(listAccount);
 
-    const rows = listAccount.map((item,index) => {
+    const columns = [
+        {
+            field: 'id',
+            headerName: 'No.',
+            width: 120,
+        },
+        { field: 'role', headerName: 'Role', width: 200 },
+        { field: 'username', headerName: 'User Name', width: 350 },
+        { field: 'roleCode', headerName: 'Role Code', width: 300, },
+        {
+            field: 'action',
+            headerName: 'Action',
+            description: 'This column has edit and delete functions and cannot be sorted',
+            sortable: false,
+            width: 300,
+            headerAlign: 'center',
+            align: 'center',
+            renderCell: (params) => {
+                return (
+                    <div>
+                        <Button
+                            onClick={() => handleEdit(params.row.accountId)}
+                            sx={{
+                                color: '#707070',
+                                '&:hover': {
+                                    background: 'none',
+                                    color: '#D82C2C'
+                                }
+                            }}>
+                            <Edit fontSize='large' />
+                        </Button>
+                        <Button
+                            onClick={() => onDeleteAccount(params.row.accountId)}
+                            sx={{
+                                color: '#707070',
+                                '&:hover': {
+                                    background: 'none',
+                                    color: '#D82C2C'
+                                }
+                            }}>
+                            <Delete fontSize='large' />
+                        </Button>
+                    </div>
+                );
+            },
+        },
+    ];
+
+    const rows = listAccount.map((item, index) => {
         return {
-            id: index+1, 
-            role: item.role, 
-            username: item.userName, 
-            roleCode: item.roleCode
+            id: index + 1,
+            role: item.role,
+            username: item.userName,
+            roleCode: item.roleCode,
+            accountId: item.accountId,
+            userName: item.userName,
         }
     })
+    const onDeleteAccount = async (id) => {
+        // console.log(listAccount.find(item => item.accountId === id));
+        const getInfoAccount = await listAccount.find(item => item.accountId === id);
+        setInfoAccount(getInfoAccount);
+        setIdDelete(id);
+        setOpenDialog(true);
+    }
+
+    const onConfirmDeleteAccount = async () => {
+        const res = await deleteAccount(idDelete);
+        if (res.status === 200) {
+            const newList = listAccount.filter(item => item.accountId !== idDelete);
+            setListAccount(newList);
+            setOpenDialog(false)
+            setAlertType('success');
+            setMessage(res.data);
+            setIsCheckAlert(true);
+            setTimeout(() => {
+                setIsCheckAlert(false);
+            }, 4000)
+        }
+    }
 
     return (
         <Box className="container" sx={{ margin: "50px 0 0 50px" }}>
@@ -130,6 +136,7 @@ const HomePage = () => {
                 <DataGrid
                     autoHeight
                     rows={rows}
+                    onCellClick={()=>console.log('cc')}
                     columns={columns}
                     initialState={{
                         pagination: {
@@ -159,6 +166,33 @@ const HomePage = () => {
                     }}
                 />
             </Box>
+            <Dialog
+                open={openDialog}
+                // onClose=''
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {`Do you want to delete Account: '${infoAccount.userName}'`}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        <span>Username: </span>
+                        <span>{infoAccount.userName}</span>
+                        <br />
+                        Role: {infoAccount.role}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenDialog(false)}>Disagree</Button>
+                    <Button autoFocus onClick={onConfirmDeleteAccount}>
+                        Agree
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Snackbar open={isCheckAlert} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+                <Alert variant="outlined" severity={alertType}>{message}</Alert>
+            </Snackbar>
         </Box>
     )
 }

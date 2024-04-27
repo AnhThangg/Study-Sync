@@ -8,3 +8,12 @@ export const getRole = () => {
         console.log(e);
     }
 }
+
+export const getInfo = () => {
+    try {
+        const res = request.get('/info');
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}

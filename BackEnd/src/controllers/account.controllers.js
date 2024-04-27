@@ -1,8 +1,6 @@
 const { v4: uuid } = require('uuid');
 const bcrypt = require("bcrypt")
-const { AccountUser, Univer, Faculty, Mentor, Student, sequelize} = require('../database/database');
-
-
+const { AccountUser, Univer, Faculty, Mentor, Student, sequelize } = require('../database/database');
 
 const getAccount = async (req, res) => {
     try {
@@ -19,9 +17,9 @@ const getAccount = async (req, res) => {
                     SELECT facultyCode AS roleCode, accountId FROM faculties
                 )
                 SELECT * FROM result
-                INNER JOIN accountUsers ON result.accountId = accountUsers.accountId;`, 
+                INNER JOIN accountUsers ON result.accountId = accountUsers.accountId;`,
                 { type: sequelize.QueryTypes.SELECT });
-                return res.status(200).json(listAccount);
+            return res.status(200).json(listAccount);
             const memoryListAccount = listAccount.map(account => {
                 const { password, ...data } = account
                 return data
@@ -96,7 +94,6 @@ const findRoleCode = async (role, roleCode, code) => {
 const createAccount = async (req, res) => {
     try {
         const { id: categoryAccount } = req.params;
-        // console.log(req.body);
         const { body: info } = req;
         const accountId = uuid();
         const salt = bcrypt.genSaltSync(10);
@@ -128,6 +125,7 @@ const createAccount = async (req, res) => {
                             univerPhone: info.univerPhone,
                             univerEmail: info.univerEmail,
                             univerAvatar: 'avatarDefault.png',
+                            univerAddress: info.univerAddress,
                             accountId,
                         });
                         if (newInfoUniver) {
@@ -197,6 +195,7 @@ const createAccount = async (req, res) => {
                             mentorDegree: info.mentorDegree,
                             mentorScientificName: info.mentorScientificName,
                             mentorAvatar: 'avatarDefault.png',
+                            mentorAddress: info.mentorAddress,
                             facultyCode: info.facultyCode,
                             accountId,
                         });
@@ -330,6 +329,7 @@ const deleteAccount = async (req, res) => {
         return res.status(500).json(e);
     }
 }
+
 
 module.exports = {
     getAccount,

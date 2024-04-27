@@ -1,17 +1,26 @@
-.homePageContain {
-    text-decoration: none;
-}
+.customItem:hover{
+    background: #D82C2C;
 
-.isClick {
-    .customItems {
-        background: #D82C2C;
-    }
-
-    .customText {
+    p {
         color: #fff;
     }
 
     .customIcon {
-        color: #FFF;
+        color: #fff;
+    }
+}
+
+.homePageContain {
+    text-decoration: none;
+    .isClick{
+        background: #D82C2C;
+
+        p {
+            color: #fff;
+        }
+
+        .customIcon {
+            color: #fff;
+        }
     }
 }

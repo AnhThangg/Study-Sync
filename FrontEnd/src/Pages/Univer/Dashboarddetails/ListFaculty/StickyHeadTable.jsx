@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material';
+import { NavLink } from 'react-router-dom';
 
 const columns = [
   { id: 'no', label: 'No', minWidth: 50 },
@@ -56,11 +57,14 @@ export default function StickyHeadTable() {
   };
 
   const homeClick = () => {
-    window.location.href = "/Univer/DashboadDetail/Project"
+    window.location.href = "/Univer/ListProject"
   }
+  // const homeClick = () => {
+  //   window.location.href = "/Univer/Inforproject"
+  // }
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
+      <TableContainer sx={{ maxHeight: 640 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
@@ -79,6 +83,7 @@ export default function StickyHeadTable() {
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => (
+
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.no}>
                   {columns.map((column) => {
                     const value = row[column.id];
@@ -88,13 +93,15 @@ export default function StickyHeadTable() {
                           component="div"
                           style={{ cursor: 'pointer' }}
                           onClick={homeClick}
-                          >
+                        >
                           {column.format && typeof value === 'number' ? column.format(value) : value}
                         </Typography>
                       </TableCell>
                     );
                   })}
                 </TableRow>
+
+
               ))}
           </TableBody>
         </Table>

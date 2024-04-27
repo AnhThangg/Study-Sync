@@ -188,14 +188,11 @@ const MentorInformation = () => {
                     </Box>
                 </Box>
             </Box>
-
             <Box
                 sx={{
                     display: "flex",
-                    flexDirection: 'row',
                     alignItems: "center",
                     justifyContent: "center",
-                    gap: '50px'
                 }}
             >
                 <Button
@@ -208,23 +205,14 @@ const MentorInformation = () => {
                         color: "#000",
                         fontWeight: "bold",
                         fontSize: "20px",
+                        "&:hover": {
+                            background: "#D82C2C",
+                            color: "#fff",
+                            border: "5px solid #999",
+                        },
                     }}
                 >
                     Update
-                </Button>
-                <Button
-                    sx={{
-                        backgroundColor: "#D9D9D9",
-                        border: "5px solid #D82C2C",
-                        borderRadius: "20px",
-                        width: "150px",
-                        height: "50px",
-                        color: "#000",
-                        fontWeight: "bold",
-                        fontSize: "20px",
-                    }}
-                >
-                    Logout
                 </Button>
             </Box>
         </Box>

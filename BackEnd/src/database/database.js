@@ -9,11 +9,12 @@ const { teamModel } = require('../models/team.model');
 const { student_teamModel } = require('../models/student_team.model');
 const { documentModel } = require('../models/document.model');
 const { topicModel } = require('../models/topic.model');
+const {proposeIdeaModel} = require('../models/proposeIdea.model');
 
 const host = 'localhost';
 const port = 3306;
 const user = 'root';
-const password = '1008';
+const password = '123456';
 
 const databaseName = 'StudySync';
 
@@ -42,6 +43,7 @@ const Team = teamModel(sequelize, DataTypes);
 const StudentTeam = student_teamModel(sequelize, DataTypes);
 const Document = documentModel(sequelize, DataTypes);
 const Topic = topicModel(sequelize, DataTypes);
+const ProposeIdea = proposeIdeaModel(sequelize, DataTypes);
 
 sequelize.sync({
     force: false,
@@ -85,6 +87,10 @@ Topic.belongsTo(Team, { foreignKey: "teamCode" });
 // documentModel 1-1 to topicModel
 Topic.belongsTo(Document, { foreignKey: "documentCode" });
 
+// mentorModel 1-n to proposeIdea
+Mentor.hasMany(ProposeIdea, { foreignKey: "mentorCode" });
+ProposeIdea.belongsTo(Mentor, { foreignKey: "mentorCode" });
+
 module.exports = {
     sequelize,
     AccountUser,
@@ -95,5 +101,6 @@ module.exports = {
     Team,
     StudentTeam,
     Document,
-    Topic
+    Topic,
+    ProposeIdea
 };

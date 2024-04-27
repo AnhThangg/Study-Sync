@@ -1,42 +1,59 @@
-const { Topic, Document, Team, StudentTeam, Mentor, Student, sequelize } = require('../database/database');
-const { Sequelize } = require('sequelize');
+const { raw } = require('body-parser');
+const { Topic, Document, Team, StudentTeam, Mentor, Student, sequelize, Faculty } = require('../database/database');
+const { Sequelize, where } = require('sequelize');
 const { v4: uuid } = require('uuid');
 
 
 const getTopics = async (req, res) => {
     try {
-        console.log(req.account);
-        const studentsdf = await Student.findOne({
+        const students = await Student.findOne({
             where: {
                 accountId: req.account.accountId
             }
         })
-        //console.log(studentsdf)
         sequelize.query(`select topics.topicCode, topics.topicName, students.studentFullname, mentors.mentorFullname 
         from students 
         inner join student_teams on students.studentCode = student_teams.studentCode
         inner join teams on student_teams.teamCode = teams.teamCode
         inner join topics on teams.teamCode = topics.teamCode 
         inner join mentors on topics.mentorCode = mentors.mentorCode 
-        where Students.studentCode = '${studentsdf.studentCode}' `,{type: Sequelize.QueryTypes.SELECT})
-        .then(result => {
-            // console.log(result)
-            return res.status(200).json(result);
-        })
+        where Students.studentCode = '${students?.studentCode}' `, { type: Sequelize.QueryTypes.SELECT })
+            .then(result => {
+                return res.status(200).json(result);
+            })
     } catch (e) {
         console.log(e)
         return res.status(500).json(e);
     }
 }
+
 const createTopic = async (req, res) => {
     try {
         const { body: infoTopic } = req;
         const documentCode = uuid();
         const teamCode = uuid();
-        const topicCode = uuid();
         let document;
         let team;
         let student_team;
+        const univerCode = await Faculty.findOne({
+            where: {
+                facultyCode: infoTopic.facultyCode
+            },
+            attributes: ['univerCode'],
+            raw: true
+        });
+        const listTopic = await Topic.findAll({
+            where: {
+                facultyCode: infoTopic.facultyCode
+            },
+            raw: true
+        })
+
+
+        const topicCode = univerCode.univerCode + infoTopic.facultyCode +
+            ((listTopic.length + 1) <= 9 ? ('0' + (listTopic.length + 1)) : listTopic.length + 1);
+        // return res.json(topicCode);
+
         try {
             document = await Document.create({
                 documentCode,
@@ -53,6 +70,7 @@ const createTopic = async (req, res) => {
                     teamCode
                 })
             })
+
             await Topic.create({
                 topicCode,
                 topicName: infoTopic.topicName,
@@ -60,7 +78,7 @@ const createTopic = async (req, res) => {
                 topicGoalSubject: infoTopic.topicGoalSubject,
                 topicExpectedResearch: infoTopic.topicExpectedResearch,
                 topicTech: null,
-                topicStatus: 'Đang Chờ Mentor Xét Duyệt',
+                topicStatus: 'Waiting for Mentor Approval',
                 topicDateStart: infoTopic.topicDateStart,
                 topicDateEnd: infoTopic.topicDateEnd,
                 documentCode,

@@ -17,8 +17,17 @@ function Project() {
   const usenavigate = useNavigate();
 
   const handleCreateProject = () => {
-    usenavigate("/student/createProject");
+    usenavigate("/student/project/createProject");
   };
+
+  const columns = [
+    { field: 'id', headerName: 'No.', width: 120 },
+    { field: 'topicCode', headerName: 'Topic Code', width: 200 },
+    { field: 'topicName', headerName: 'Topic Name', width: 350 },
+    { field: 'leader', headerName: 'Leader', width: 300, },
+  ];
+
+
 
   return (
     <Box sx={{ margin: "50px 0 0 50px" }}>
@@ -40,7 +49,7 @@ function Project() {
 
       <Box
         sx={{
-          width: "1036px",
+          width: "90%",
           height: "auto",
           backgroundColor: "#F6E8E8",
           borderRadius: "20px",
@@ -52,21 +61,39 @@ function Project() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ fontSize: "20px", fontWeight: "bold", color:"#707070" }}>
+                <TableCell sx={{ fontSize: "20px", fontWeight: "bold", color: "#707070" }}>
                   No.
                 </TableCell>
-                <TableCell sx={{ fontSize: "20px", fontWeight: "bold",color:"#707070" }}>
+                <TableCell sx={{ fontSize: "20px", fontWeight: "bold", color: "#707070" }}>
                   Project Code
                 </TableCell>
-                <TableCell sx={{ fontSize: "20px", fontWeight: "bold",color:"#707070" }}>
+                <TableCell sx={{ fontSize: "20px", fontWeight: "bold", color: "#707070" }}>
                   Project Name
                 </TableCell>
-                <TableCell sx={{ fontSize: "20px", fontWeight: "bold",color:"#707070" }}>
+                <TableCell sx={{ fontSize: "20px", fontWeight: "bold", color: "#707070" }}>
                   Leader
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
+              <TableRow>
+                <TableCell>1</TableCell>
+                <TableCell>KCKH01</TableCell>
+                <TableCell>Quản lí đồ án nghiên cứu khoa học</TableCell>
+                <TableCell>Nguyễn Trần Anh Thắng</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>1</TableCell>
+                <TableCell>KCKH01</TableCell>
+                <TableCell>Quản lí đồ án nghiên cứu khoa học</TableCell>
+                <TableCell>Nguyễn Trần Anh Thắng</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>1</TableCell>
+                <TableCell>KCKH01</TableCell>
+                <TableCell>Quản lí đồ án nghiên cứu khoa học</TableCell>
+                <TableCell>Nguyễn Trần Anh Thắng</TableCell>
+              </TableRow>
               <TableRow>
                 <TableCell>1</TableCell>
                 <TableCell>KCKH01</TableCell>
