@@ -64,12 +64,21 @@ const createTopic = async (req, res) => {
                 teamCode,
                 teamName: infoTopic.topicName
             });
-            infoTopic.listMember.forEach(async (item) => {
-                student_team = await StudentTeam.create({
-                    studentCode: item,
-                    teamCode
+            const findLeader = infoTopic.listMember.find(item => item === infoTopic.leader)
+
+            if (findLeader) {
+                infoTopic.listMember.forEach(async (item) => {
+                    student_team = await StudentTeam.create({
+                        studentCode: item,
+                        teamCode,
+                    })
                 })
-            })
+            } else {
+                student_team = await StudentTeam.create({
+                    studentCode: infoTopic.leader,
+                    teamCode,
+                })
+            }
 
             await Topic.create({
                 topicCode,
@@ -79,7 +88,7 @@ const createTopic = async (req, res) => {
                 topicExpectedResearch: infoTopic.topicExpectedResearch,
                 topicTech: null,
                 topicStatus: 'Waiting for Mentor Approval',
-                topicDateStart: infoTopic.topicDateStart,
+                topicDateStart: new Date(infoTopic.topicDateStart),
                 topicDateEnd: infoTopic.topicDateEnd,
                 documentCode,
                 facultyCode: infoTopic.facultyCode,
@@ -87,13 +96,14 @@ const createTopic = async (req, res) => {
                 mentorCode: infoTopic.mentorCode,
                 leader: infoTopic.leader
             });
+
             return res.status(200).json('Create Project Successfully')
         } catch (e) {
+            console.log(e);
             if (document || team) {
                 await document.destroy();
                 await team.destroy();
             }
-
             return res.status(500).json(e);
         }
 

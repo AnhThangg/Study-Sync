@@ -2,6 +2,18 @@ const { ProposeIdea, Topic, Document, Team, StudentTeam, Mentor, Student, sequel
 const { Sequelize, where } = require('sequelize');
 const { v4: uuid } = require('uuid');
 
+const fortmartDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const formattedMonth = month < 10 ? `0${month}` : month;
+    const formattedDay = day < 10 ? `0${day}` : day;
+    return `${year}-${formattedMonth}-${formattedDay}`;
+}
+
+
+
 const getStudent = async (req, res) => {
     try {
         const { id: studentCode } = req.params;
@@ -32,6 +44,9 @@ const getStudent = async (req, res) => {
     } catch (e) {
         return res.status(500).json(e);
     }
+
+
+
 }
 
 const getTopicApprovedForStudent = async (req, res) => {
@@ -41,14 +56,16 @@ const getTopicApprovedForStudent = async (req, res) => {
                 accountId: req.account.accountId
             }
         })
-        sequelize.query(`select topics.topicCode, topics.topicName, students.studentFullname, mentors.mentorFullname 
-        from students 
-        inner join student_teams on students.studentCode = student_teams.studentCode
-        inner join teams on student_teams.teamCode = teams.teamCode
-        inner join topics on teams.teamCode = topics.teamCode 
-        inner join mentors on topics.mentorCode = mentors.mentorCode 
-        where Students.studentCode = '${students?.studentCode}' 
-        and topics.topicStatus = 'Approved' `, { type: Sequelize.QueryTypes.SELECT })
+        await sequelize.query(`with result as (
+            select topics.topicCode, topics.topicName, topics.leader, mentors.mentorFullname 
+            from students 
+            inner join student_teams on students.studentCode = student_teams.studentCode
+            inner join teams on student_teams.teamCode = teams.teamCode
+            inner join topics on teams.teamCode = topics.teamCode 
+            inner join mentors on topics.mentorCode = mentors.mentorCode 
+            where students.studentCode = '${students?.studentCode}' and topics.topicStatus = 'Approved')
+            select result.topicCode, result.topicName, result.mentorFullname, students.studentFullname from result
+            inner join students on students.studentCode = result.leader; `, { type: Sequelize.QueryTypes.SELECT })
             .then(result => {
                 const simplifiedTopics = result.map((item, index) => ({
                     no: index + 1,
@@ -62,89 +79,79 @@ const getTopicApprovedForStudent = async (req, res) => {
     }
 }
 
-const acceptMentorIdea = async (req, res) => {
+const getTopicApprovedDetailForStudent = async (req, res) => {
     try {
-        const { body: infoTopic } = req;
-        const { id: ideaCode } = req.params;
-        const documentCode = uuid();
-        const teamCode = uuid();
-        let document;
-        let team;
-        let student_team;
-        const proposeIdea = await ProposeIdea.findOne({
+        const id = req.params.id;
+        const topic = await Topic.findOne({
             where: {
-                ideaCode
-            }
+                topicCode: id
+            },
+            raw: true
         })
-        if (!proposeIdea) {
-            return res.status(404).json('Propose Idea not found');
+        if (!topic) {
+            return res.status(404).json('Topic Not Found');
         }
-
         const mentor = await Mentor.findOne({
             where: {
-                mentorCode: proposeIdea.mentorCode
+                mentorCode: topic.mentorCode
+            },
+            attributes: ['mentorScientificName', 'mentorEmail', 'mentorPhone'],
+            raw: true
+        })
+        const leader = await Student.findOne({
+            where: {
+                studentCode: topic.leader
+            },
+            attributes: ['studentCode', 'studentFullname', 'studentEmail', 'studentPhone'],
+            raw: true
+        })
+        const listMember = await StudentTeam.findAll({
+            where: {
+                teamCode: topic.teamCode,
+                studentCode: {
+                    [Sequelize.Op.ne]: topic.leader
+                }
             }
-        });
-
-        const univerCode = await Faculty.findOne({
+        })
+        const studentCodes = listMember.map(member => member.studentCode);
+        const members = await Student.findAll({
             where: {
-                facultyCode: infoTopic.facultyCode
+                studentCode: studentCodes
             },
-            attributes: ['univerCode'],
+            attributes: ['studentCode', 'studentFullname'],
             raw: true
         });
-        const listTopic = await Topic.findAll({
-            where: {
-                facultyCode: infoTopic.facultyCode
+        const topicDate = '(' + fortmartDate(topic.topicDateStart) + ') - (' + fortmartDate(topic.topicDateEnd) + ')';
+        const dateStart = new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear();
+
+        const thang = new Date('2024-04-27T17:00:00.000Z').getTime();
+        const thang2 = new Date();
+        const result = {
+            mentor: {
+                ...mentor
             },
-            raw: true
-        });
+            leader,
+            groupMembers: [
+                ...members
+            ],
+            topicDate,
+            status,
+            thang,
+            thang2,
+            topic: {
+                ...topic
+            },
+        }
 
-        const topicCode = univerCode.univerCode + infoTopic.facultyCode +
-            ((listTopic.length + 1) <= 9 ? ('0' + (listTopic.length + 1)) : listTopic.length + 1);
-
-        // await Topic.create({
-        //     topicCode,
-        //     topicName: infoTopic.topicName,
-        //     topicDescription: null,
-        //     topicGoalSubject: infoTopic.topicGoalSubject,
-        //     topicExpectedResearch: infoTopic.topicExpectedResearch,
-        //     topicTech: null,
-        //     topicStatus: 'Waiting for Mentor Approval',
-        //     topicDateStart: infoTopic.topicDateStart,
-        //     topicDateEnd: infoTopic.topicDateEnd,
-        //     documentCode,
-        //     facultyCode: infoTopic.facultyCode,
-        //     teamCode,
-        //     mentorCode: infoTopic.mentorCode,
-        //     leader: infoTopic.leader
-        // });
-        // const list = {
-        //     topicCode,
-        //     topicName: proposeIdea.topicName,
-        //     topicDescription: null,
-        //     topicGoalSubject: infoTopic.topicGoalSubject,
-        //     topicExpectedResearch: infoTopic.topicExpectedResearch,
-        //     topicTech: null,
-        //     topicStatus: 'Waiting for Mentor Approval',
-        //     topicDateStart: infoTopic.topicDateStart,
-        //     topicDateEnd: infoTopic.topicDateEnd,
-        //     documentCode,
-        //     facultyCode: infoTopic.facultyCode,
-        //     teamCode,
-        //     mentorCode: infoTopic.mentorCode,
-        //     leader: infoTopic.leader
-        // }
-
-        return res.status(200).json(proposeIdea);
+        return res.status(200).json(result);
     } catch (e) {
-        console.log(e);
-        return res.status(500).json(e);
+        console.log(e)
+        return res.status(500).json(e.error);
     }
 }
 
 module.exports = {
     getStudent,
     getTopicApprovedForStudent,
-    acceptMentorIdea
+    getTopicApprovedDetailForStudent
 }
