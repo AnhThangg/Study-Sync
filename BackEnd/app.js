@@ -14,6 +14,7 @@ const { unitVietNamRoute } = require('./src/routes/unitVietNam.route')
 const { univerRoute } = require('./src/routes/univer.route');
 const { facultyRoute } = require('./src/routes/faculty.route');
 const { proposeIdea } = require('./src/routes/proposeIdea.route')
+const {status} = require('./src/util/checkStatus.util')
 
 app.use("/account", accountRoute);
 app.use("/auth", authRoute);

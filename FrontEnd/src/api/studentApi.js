@@ -8,3 +8,12 @@ export const getStudent = (id) => {
         console.log(e);
     }
 }
+
+export const getTopicApprovedForStudent = () => {
+    try {
+        const res = request.get(`/student/TopicApprovedForStudent`)
+        return res
+    } catch (e) {
+        console.log(e);
+    }
+}

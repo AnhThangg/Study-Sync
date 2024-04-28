@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -11,9 +11,21 @@ import {
   Typography,
   colors,
 } from "@mui/material";
+import { DataGrid } from '@mui/x-data-grid';
 import { useNavigate } from "react-router-dom";
+import { getTopicApprovedForStudent } from '../../../api/studentApi';
+
 
 function Project() {
+  const [listTopic, setListTopic] = useState([]);
+
+  useEffect(() => {
+    getTopicApprovedForStudent()
+      .then(list => {
+        setListTopic(list);
+      })
+  }, []);
+
   const usenavigate = useNavigate();
 
   const handleCreateProject = () => {
@@ -21,13 +33,23 @@ function Project() {
   };
 
   const columns = [
-    { field: 'id', headerName: 'No.', width: 120 },
-    { field: 'topicCode', headerName: 'Topic Code', width: 200 },
-    { field: 'topicName', headerName: 'Topic Name', width: 350 },
-    { field: 'leader', headerName: 'Leader', width: 300, },
+    { field: 'id', headerName: 'No.', width: 80 },
+    { field: 'topicCode', headerName: 'Topic Code', width: 220 },
+    { field: 'topicName', headerName: 'Topic Name', width: 370 },
+    { field: 'leader', headerName: 'Leader', width: 330, },
+    { field: 'mentor', headerName: 'Mentor', width: 300, },
   ];
 
 
+  const rows = listTopic.map((item) => {
+    return {
+      id: item.no,
+      topicCode: item.topicCode,
+      topicName: item.topicName,
+      leader: item.studentFullname,
+      mentor: item.mentorFullname,
+    }
+  })
 
   return (
     <Box sx={{ margin: "50px 0 0 50px" }}>
@@ -43,73 +65,57 @@ function Project() {
             fontWeight: "bold",
           }}
         >
-          Project
+          Topics
         </Typography>
       </Box>
 
       <Box
         sx={{
-          width: "90%",
-          height: "auto",
-          backgroundColor: "#F6E8E8",
-          borderRadius: "20px",
-          margin: "50px 50px 20px 50px",
-          padding: "10px",
+          width: '95%',
+          background: '#F6E8E8',
+          borderRadius: '20px',
+          marginTop: '50px',
+          marginBottom: '30px',
         }}
       >
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell sx={{ fontSize: "20px", fontWeight: "bold", color: "#707070" }}>
-                  No.
-                </TableCell>
-                <TableCell sx={{ fontSize: "20px", fontWeight: "bold", color: "#707070" }}>
-                  Project Code
-                </TableCell>
-                <TableCell sx={{ fontSize: "20px", fontWeight: "bold", color: "#707070" }}>
-                  Project Name
-                </TableCell>
-                <TableCell sx={{ fontSize: "20px", fontWeight: "bold", color: "#707070" }}>
-                  Leader
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow>
-                <TableCell>1</TableCell>
-                <TableCell>KCKH01</TableCell>
-                <TableCell>Quản lí đồ án nghiên cứu khoa học</TableCell>
-                <TableCell>Nguyễn Trần Anh Thắng</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>1</TableCell>
-                <TableCell>KCKH01</TableCell>
-                <TableCell>Quản lí đồ án nghiên cứu khoa học</TableCell>
-                <TableCell>Nguyễn Trần Anh Thắng</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>1</TableCell>
-                <TableCell>KCKH01</TableCell>
-                <TableCell>Quản lí đồ án nghiên cứu khoa học</TableCell>
-                <TableCell>Nguyễn Trần Anh Thắng</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>1</TableCell>
-                <TableCell>KCKH01</TableCell>
-                <TableCell>Quản lí đồ án nghiên cứu khoa học</TableCell>
-                <TableCell>Nguyễn Trần Anh Thắng</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <DataGrid
+          autoHeight
+          rows={rows}
+          onCellClick={(e) => (usenavigate(`/student/project/informationProject/${e.row.topicCode}`))}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 5 },
+            },
+          }}
+          pageSizeOptions={[5, 10, 15, 20]}
+          sx={{
+            border: 'none',
+            '& .MuiDataGrid-container--top [role=row]': {
+              background: "#D82C2C",
+              fontWeight: 'bold'
+            },
+            '& .MuiDataGrid-columnHeaderTitle': {
+              fontWeight: 'bold',
+              color: '#fff',
+              fontSize: '30px',
+            },
+            '& .MuiDataGrid-row': {
+              fontSize: '25px',
+              color: '#707070',
+              '&:hover': {
+                cursor: 'pointer',
+              },
+            },
+            '& .css-1essi2g-MuiDataGrid-columnHeaderRow': {
+              borderTopLeftRadius: '20px',
+              borderTopRightRadius: '20px',
+            }
+          }}
+        />
       </Box>
 
-      <Box
-        sx={{
-          margin: "0 50px 0 50px",
-        }}
-      >
+      <Box>
         <Button
           sx={{
             border: "3px solid #D82C2C",
