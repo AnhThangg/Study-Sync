@@ -122,10 +122,15 @@ const getTopicApprovedDetailForStudent = async (req, res) => {
             raw: true
         });
         const topicDate = '(' + fortmartDate(topic.topicDateStart) + ') - (' + fortmartDate(topic.topicDateEnd) + ')';
-        const dateStart = new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear();
 
-        const thang = new Date('2024-04-27T17:00:00.000Z').getTime();
-        const thang2 = new Date();
+        const faculty = await Faculty.findOne({
+            where: {
+                facultyCode: topic.facultyCode
+            },
+            attributes: ['facultyName']
+        })
+        facultyName =faculty.facultyName;
+
         const result = {
             mentor: {
                 ...mentor
@@ -135,9 +140,7 @@ const getTopicApprovedDetailForStudent = async (req, res) => {
                 ...members
             ],
             topicDate,
-            status,
-            thang,
-            thang2,
+            facultyName,
             topic: {
                 ...topic
             },

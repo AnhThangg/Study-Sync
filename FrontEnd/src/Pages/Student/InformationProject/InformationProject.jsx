@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom"
 import {
   Box,
@@ -19,6 +19,7 @@ import {
   Description,
   Upload,
 } from "@mui/icons-material";
+import { getTopicApprovedDetailForStudent } from '../../../api/studentApi';
 
 function InformationProject() {
   const topicCode = useParams().id;
@@ -53,30 +54,35 @@ function InformationProject() {
     setUploadedFile(file);
   };
 
-  const project = {
-    faculty: "Khoa Công Nghệ Phần Mềm",
-    projectName: "StudySync Manage scientific research projects for students in Duy Tan University",
-    procjectCode: "PJ01SA",
-  };
-  const mentor = {
-    mentorName: "Dr. Tran Thi Thuy Trinh",
-    mentorEmail: "ttthuytrinh@dtu.edu.vn",
-    mentorPhone: "09133350642",
-  };
+  const [infoTopic, setInfoTopic] = useState({});
+  const [topicDescription, setTopicDescription] = useState();
+  const [topicGoalSubject, setTopicGoalSubject] = useState();
+  const [topicExpectedResearch, setTopicExpectedResearch] = useState();
+  const [topicTech, setTopicTech] = useState();
 
-  const leader = {
-    leaderName: "Nguyen Tran Anh Thang",
-    leaderEmail: "anhthang2529@gmail.com",
-    leaderPhone: "0869132529",
-  };
 
-  const members = {
-    membersOne: "Nguyen Hoang Quoc Anh",
-    membersTwo: "Duong Nguyen Cong Luan",
-    membersThree: "Nguyen Quoc Nhat",
-  };
-  const startTime = "24/02/2024";
-  const trangThai = "In progess";
+  useEffect(() => {
+    getTopicApprovedDetailForStudent(topicCode)
+      .then(data => {
+        setInfoTopic(data)
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+  }, [topicCode])
+  // setTopicDescription(infoTopic.topic?.topicDescription);
+  // setTopicGoalSubject(infoTopic.topic?.topicGoalSubject);
+  console.log(topicGoalSubject);
+
+
+
+
+
+
+
+
+
+
 
   return (
     <Box sx={{ margin: "50px 50px 0 50px", color: "#818181" }}>
@@ -93,10 +99,10 @@ function InformationProject() {
               //   width:'100%'
             }}
           >
-            {project.faculty}
+            {infoTopic.facultyName}
           </Typography>
           <Box>
-            <InfoItem label="Project code" value={project.procjectCode} />
+            <InfoItem label="Project code" value={infoTopic.topic?.topicCode} />
           </Box>
         </Box>
         <Box
@@ -104,7 +110,7 @@ function InformationProject() {
           sx={{ display: "flex", flexDirection: "row" }}
         >
           <Typography sx={{ fontSize: "24px" }}>
-            {project.projectName}
+            {infoTopic.topic?.topicName}
           </Typography>
         </Box>
       </Box>
@@ -123,6 +129,7 @@ function InformationProject() {
             <InfoItem label="Describe project" />
 
             <TextareaAutosize
+              value={infoTopic.topic?.topicDescription}
               style={{
                 width: "700px",
                 height: "200px",
@@ -137,6 +144,40 @@ function InformationProject() {
             <InfoItem label="Technology" />
 
             <TextareaAutosize
+              value={infoTopic.topic?.topicTech}
+              style={{
+                width: "700px",
+                height: "200px",
+                border: "2px solid #999",
+                borderRadius: "10px",
+                padding: "10px",
+                fontSize: "20px",
+              }}
+            />
+          </Box>
+
+          <Box className="topicGoalSubject" sx={{ marginBottom: "20px" }}>
+            <InfoItem label="The Goal Of The Subject" />
+
+            <TextareaAutosize
+              value={infoTopic.topic?.topicGoalSubject}
+              style={{
+                width: "700px",
+                height: "200px",
+                border: "2px solid #999",
+                borderRadius: "10px",
+                padding: "10px",
+                fontSize: "20px",
+              }}
+            />
+          </Box>
+
+          <Box className="topicExpectedResearch" sx={{ marginBottom: "20px" }}>
+            <InfoItem label="Expected research products of the topic and applicability" />
+
+            <TextareaAutosize
+              value={infoTopic.topic?.topicExpectedResearch}
+              // onChange={(e)=>{e.target.value}}
               style={{
                 width: "700px",
                 height: "200px",
@@ -341,14 +382,14 @@ function InformationProject() {
           className="contRight"
           sx={{
             backgroundColor: "#F6E8E8",
-            width: "360px",
-            height: "570px",
+            width: "fit-content",
+            height: "fit-content",
             borderRadius: "20px",
           }}
         >
           <Box
             sx={{
-              margin: "20px 10px ",
+              margin: "10px 35px 35px 10px",
             }}
           >
             <Box
@@ -360,9 +401,9 @@ function InformationProject() {
               </Icon>
               <Box sx={{ marginTop: "20px" }}>
                 <InfoItem label="Mentor" />
-                <Typography>{mentor.mentorName}</Typography>
-                <Typography>{mentor.mentorEmail}</Typography>
-                <Typography>{mentor.mentorPhone}</Typography>
+                <Typography>{infoTopic.mentor?.mentorScientificName}</Typography>
+                <Typography>{infoTopic.mentor?.mentorEmail}</Typography>
+                <Typography>{infoTopic.mentor?.mentorPhone}</Typography>
               </Box>
             </Box>
             <Box
@@ -374,9 +415,9 @@ function InformationProject() {
               </Icon>
               <Box sx={{ marginTop: "20px" }}>
                 <InfoItem label="Leader" />
-                <Typography>{leader.leaderName}</Typography>
-                <Typography>{leader.leaderEmail}</Typography>
-                <Typography>{leader.leaderPhone}</Typography>
+                <Typography>{infoTopic.leader?.studentFullname}</Typography>
+                <Typography>{infoTopic.leader?.studentEmail}</Typography>
+                <Typography>{infoTopic.leader?.studentPhone}</Typography>
               </Box>
             </Box>
             <Box
@@ -388,9 +429,11 @@ function InformationProject() {
               </Icon>
               <Box sx={{ marginTop: "20px" }}>
                 <InfoItem label="Group members" />
-                <Typography>{members.membersOne}</Typography>
-                <Typography>{members.membersTwo}</Typography>
-                <Typography>{members.membersThree}</Typography>
+                {
+                  infoTopic.groupMembers?.map(member => (
+                    <Typography>{member.studentFullname}</Typography>
+                  ))
+                }
               </Box>
             </Box>
             <Box
@@ -402,7 +445,7 @@ function InformationProject() {
               </Icon>
               <Box sx={{ marginTop: "20px" }}>
                 <InfoItem label="Start" />
-                <Typography>{startTime}</Typography>
+                <Typography>{infoTopic.topicDate}</Typography>
               </Box>
             </Box>
             <Box
@@ -413,8 +456,8 @@ function InformationProject() {
                 <DataSaverOff fontSize="large" />
               </Icon>
               <Box sx={{ marginTop: "20px" }}>
-                <InfoItem label="Status" />
-                <Typography>{trangThai}</Typography>
+                <InfoItem label="Status (yyyy-mm-dd)" />
+                <Typography>{infoTopic.topic?.topicStatus}</Typography>
               </Box>
             </Box>
           </Box>
