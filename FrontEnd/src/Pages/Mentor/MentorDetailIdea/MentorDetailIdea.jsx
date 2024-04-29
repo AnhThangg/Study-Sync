@@ -27,7 +27,7 @@ const MentorDetailIdea = () => {
                     fontWeight: 'bold',
                     color: '#D82C2C'
                 }}>
-                    ProposeIdea
+                    Edit Idea
                 </Typography>
             </Box>
             <Box className="proposeIdeaContain" sx={{
