@@ -14,9 +14,9 @@ const {proposeIdeaModel} = require('../models/proposeIdea.model');
 const host = 'localhost';
 const port = 3306;
 const user = 'root';
-const password = '123456';
+const password = 'QuocAnh2002';
 
-const databaseName = 'StudySync';
+const databaseName = 'studysync';
 
 const pool = mysql.createPool({ host, port, user, password });
 pool.query(`CREATE DATABASE IF NOT EXISTS ${databaseName}`);
