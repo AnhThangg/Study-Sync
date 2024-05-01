@@ -6,6 +6,8 @@ import Student from './Component/Template/Student/Student.jsx'
 import Check from './Component/Check/Check.jsx'
 import Profile from './Pages/Student/Profile/Profile.jsx'
 import Project from './Pages/Student/Project/Project.jsx'
+import ProposeIdeaStudent from './Pages/Student/ProposeIdea/ProposeIdeaStudent.jsx'
+import ProposeIdeaDetailStudent from './Pages/Student/ProposeIdeaDetail/ProposeIdeaDetailStudent.jsx'
 import Univer from './Component/Template/Univer/Univer.jsx'
 import InformationProject from "./Pages/Student/InformationProject/InformationProject.js";
 import CreateProject from "./Pages/Student/CreateProject/CreateProject.jsx";
@@ -70,6 +72,14 @@ const router = createBrowserRouter([
       {
         path: '/student/project',
         element: <Project />
+      },
+      {
+        path: '/student/proposeidea',
+        element: <ProposeIdeaStudent />
+      },
+      {
+        path: '/student/proposeidea/:id',
+        element: <ProposeIdeaDetailStudent />
       },
       {
         path: '/student/profile',

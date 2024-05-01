@@ -8,3 +8,12 @@ export const getAllFacultiesCodeForUniver = (id) => {
         console.log(e);
     }
 }
+
+export const getMentor = (id) => {
+    try {
+        const res = request.get(`/mentor/getmentor/${id}`)
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}
