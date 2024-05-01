@@ -42,6 +42,8 @@ import AcceptProject from './Pages/Faculty/AcceptProject/AcceptProject.jsx'
 import MentorProjectInformation from './Pages/Mentor/MentorProjectInformation/MentorProjectInformation.jsx'
 import UnconfirmedTopicForMentor from './Pages/Mentor/UnconfirmedTopicForMentor/UnconfirmedTopicForMentor.jsx'
 import MentorDetailIdea from './Pages/Mentor/MentorDetailIdea/MentorDetailIdea.jsx'
+import ListProposeIdea from './Pages/Mentor/ListProposeIdea/ListProposeIdea.jsx'
+import MyProposeIdea from './Pages/Mentor/MyProposeIdea/MyProposeIdea.jsx'
 const router = createBrowserRouter([
 
   { path: '*', element: <Page404 /> },
@@ -170,7 +172,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/Mentor/MentorProposeIdea',
-        element: <MentorDetailIdea/>
+        element: <MentorDetailIdea />
       },
       {
         path: '/Mentor/MentorInformation',
@@ -183,6 +185,14 @@ const router = createBrowserRouter([
       {
         path: '/Mentor/unconfirmedtopicformentor',
         element: <UnconfirmedTopicForMentor />
+      },
+      {
+        path: '/Mentor/listProposeIdea',
+        element: <ListProposeIdea />
+      },
+      {
+        path: '/Mentor/myProposeIdea',
+        element: <MyProposeIdea />
       }
     ]
   },

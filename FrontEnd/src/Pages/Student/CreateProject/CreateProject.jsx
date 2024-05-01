@@ -13,18 +13,18 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
 } from "@mui/material";
-import { LocalizationProvider } from '@mui/x-date-pickers-pro';
-import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import dayjs from 'dayjs';
+import { LocalizationProvider } from "@mui/x-date-pickers-pro";
+import { AdapterDayjs } from "@mui/x-date-pickers-pro/AdapterDayjs";
+import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
+import dayjs from "dayjs";
 import "./CreateProject.scss";
 import { Delete } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { getInfo, getNameMentor } from '../../../api/infoApi';
+import { getInfo, getNameMentor } from "../../../api/infoApi";
 import { getStudent } from "../../../api/studentApi";
-import { v4 as uuid } from 'uuid';
+import { v4 as uuid } from "uuid";
 import { createTopic } from "../../../api/topicsApi";
 function CreateProject() {
   const InfoItem = ({ label, value }) => (
@@ -52,54 +52,54 @@ function CreateProject() {
   const [members, setMembers] = useState([undefined]);
   const [leader, setLeader] = useState();
   const [listMentor, setListMentor] = useState([]);
-  const [mentor, setMentor] = useState('');
-  const [startDate, setStartDate] = useState(dayjs().add(7, 'day'));
-  const [endDate, setEndDate] = useState(dayjs().add(3, 'month').add(7, 'day'));
-  const [message, setMessage] = useState('');
+  const [mentor, setMentor] = useState("");
+  const [startDate, setStartDate] = useState(dayjs().add(7, "day"));
+  const [endDate, setEndDate] = useState(dayjs().add(3, "month").add(7, "day"));
+  const [message, setMessage] = useState("");
   const [isCheckAlert, setIsCheckAlert] = useState(false);
-  const [alertType, setAlertType] = useState('error');
+  const [alertType, setAlertType] = useState("error");
   const [openDialog, setOpenDialog] = useState(false);
   const [key, setKey] = useState(uuid());
   useEffect(() => {
     getInfo()
-      .then(data => {
-        setLeader(data)
+      .then((data) => {
+        setLeader(data);
       })
       .catch((e) => {
         console.log(e);
-      })
-  }, [])
+      });
+  }, []);
 
   useEffect(() => {
     getNameMentor(leader?.facultyCode)
-      .then(data => {
-        setListMentor(data)
+      .then((data) => {
+        setListMentor(data);
       })
       .catch((e) => {
         console.log(e);
-      })
-  }, [leader])
+      });
+  }, [leader]);
 
   const onSearchMember = async (id, index) => {
     const res = await getStudent(id);
-    if (res.status === 'success') {
-      if ((members.find(item => item?.studentCode === res.student.studentCode))) {
-        setMessage('This student is already on the member list');
-        setAlertType('error');
+    if (res.status === "success") {
+      if (
+        members.find((item) => item?.studentCode === res.student.studentCode)
+      ) {
+        setMessage("This student is already on the member list");
+        setAlertType("error");
         setIsCheckAlert(true);
         setTimeout(() => {
           setIsCheckAlert(false);
-        }, 4000)
-      }
-      else if (res.student.studentCode === leader.studentCode) {
-        setMessage('You are the Leader, do not enter your Student Code');
-        setAlertType('error');
+        }, 4000);
+      } else if (res.student.studentCode === leader.studentCode) {
+        setMessage("You are the Leader, do not enter your Student Code");
+        setAlertType("error");
         setIsCheckAlert(true);
         setTimeout(() => {
           setIsCheckAlert(false);
-        }, 4000)
-      }
-      else {
+        }, 4000);
+      } else {
         const newMembers = [...members];
         newMembers[index] = res.student;
         setMembers(newMembers);
@@ -109,7 +109,7 @@ function CreateProject() {
       newMembers[index] = undefined;
       setMembers(newMembers);
     }
-  }
+  };
 
   const onDeleteMember = async (index) => {
     if (members.length > 1) {
@@ -118,68 +118,85 @@ function CreateProject() {
       setMembers(newMembers);
       setKey(uuid());
     }
-  }
+  };
 
   const onAddMember = () => {
     if (members[members.length - 1]) {
-      setMembers([...members, undefined])
+      setMembers([...members, undefined]);
     }
-  }
+  };
   const onCreateTopic = () => {
-    if (endDate.diff(startDate, 'month') < 3) { setMessage('The duration of the project must be more than 3 months'); }
-    (!researchProducts) && setMessage('Applicability cannot be left blank');
-    (!goalOfSubject) && setMessage('Goal Of The Subject cannot be left blank');
-    (!mentor) && setMessage('Please choose a mentor to guide you');
-    (!members[0]) && setMessage('must have at least one member');
-    (!topicName) && setMessage('TopicName cannot be left blank');
-    if (!researchProducts || !goalOfSubject || !topicName || (endDate.diff(startDate, 'month') < 3) || !mentor || (!members[0])) {
-      setAlertType('error');
+    if (endDate.diff(startDate, "month") < 3) {
+      setMessage("The duration of the project must be more than 3 months");
+    }
+    !researchProducts && setMessage("Applicability cannot be left blank");
+    !goalOfSubject && setMessage("Goal Of The Subject cannot be left blank");
+    !mentor && setMessage("Please choose a mentor to guide you");
+    !members[0] && setMessage("must have at least one member");
+    !topicName && setMessage("TopicName cannot be left blank");
+    if (
+      !researchProducts ||
+      !goalOfSubject ||
+      !topicName ||
+      endDate.diff(startDate, "month") < 3 ||
+      !mentor ||
+      !members[0]
+    ) {
+      setAlertType("error");
       setIsCheckAlert(true);
       setTimeout(() => {
         setIsCheckAlert(false);
-      }, 4000)
+      }, 4000);
     } else {
       setOpenDialog(true);
     }
   };
 
-
   const fortmartDate = (year, month, date) => {
     const formattedMonth = month < 9 ? `0${month + 1}` : month + 1;
     const formattedDate = date < 10 ? `0${date}` : date;
     return `${year}-${formattedMonth}-${formattedDate}`;
-  }
+  };
 
-  console.log(fortmartDate(startDate?.$y, startDate?.$d.getMonth(), startDate?.$D))
-
+  console.log(
+    fortmartDate(startDate?.$y, startDate?.$d.getMonth(), startDate?.$D)
+  );
 
   const onSubmitTopic = async () => {
-    const listMember = members.map(member => member.studentCode);
+    const listMember = members.map((member) => member.studentCode);
     const res = await createTopic({
       topicName,
       topicGoalSubject: goalOfSubject,
       topicExpectedResearch: researchProducts,
-      topicDateStart: fortmartDate(startDate?.$y, startDate?.$d.getMonth(), startDate?.$D),
-      topicDateEnd: fortmartDate(endDate?.$y, endDate?.$d.getMonth(), endDate?.$D),
+      topicDateStart: fortmartDate(
+        startDate?.$y,
+        startDate?.$d.getMonth(),
+        startDate?.$D
+      ),
+      topicDateEnd: fortmartDate(
+        endDate?.$y,
+        endDate?.$d.getMonth(),
+        endDate?.$D
+      ),
       facultyCode: leader.facultyCode,
       mentorCode: mentor.code,
       leader: leader.studentCode,
       listMember,
-    })
+    });
     if (res.status === 200) {
       setOpenDialog(false);
-      setAlertType('success');
+      setAlertType("success");
       setMessage(res.data);
     } else {
-      setOpenDialog(false)
-      setAlertType('error');
-      setMessage('Thêm không thành công');
+      setOpenDialog(false);
+      setAlertType("error");
+      setMessage("Thêm không thành công");
     }
     setIsCheckAlert(true);
     setTimeout(() => {
       setIsCheckAlert(false);
-    }, 4000)
-  }
+    }, 4000);
+  };
 
   return (
     <Box sx={{ margin: "50px 0 0 50px" }}>
@@ -204,7 +221,9 @@ function CreateProject() {
           size="medium"
           label="Topic Name"
           value={topicName}
-          onChange={(e) => { setTopicName(e.target.value) }}
+          onChange={(e) => {
+            setTopicName(e.target.value);
+          }}
           sx={{
             marginTop: "50px",
             width: "95%",
@@ -283,28 +302,28 @@ function CreateProject() {
                   display: "flex",
                   flexDirection: "row",
                   marginLeft: "20px",
-                  gap: '10px'
+                  gap: "10px",
                 }}
               >
                 <TextField
                   className="textFieldMember"
                   type="number"
                   size="small"
-                  disabled={(index < members.length - 1) ? true : false}
-                  defaultValue={(item) ? item.studentCode : ''}
+                  disabled={index < members.length - 1 ? true : false}
+                  defaultValue={item ? item.studentCode : ""}
                   onChange={(e) => {
                     if (e.target.value.length > 11) {
                       e.target.value = e.target.value.slice(0, -1);
                     }
-                    onSearchMember(e.target.value, index)
+                    onSearchMember(e.target.value, index);
                   }}
                   sx={{
                     width: "170px",
                     '& .MuiInputBase-input[type="number"]::-webkit-inner-spin-button, & .MuiInputBase-input[type="number"]::-webkit-outer-spin-button':
-                    {
-                      "-webkit-appearance": "none",
-                      margin: 0,
-                    },
+                      {
+                        "-webkit-appearance": "none",
+                        margin: 0,
+                      },
                     '& .MuiInputBase-input[type="number"]': {
                       "-moz-appearance": "textfield",
                     },
@@ -314,29 +333,27 @@ function CreateProject() {
                   <Delete />
                 </IconButton>
               </Box>
-              {(item) && <Box
-                className="infoMember"
-                sx={{
-                  margin: "10px 50px 20px 20px",
-                  color: "#818181",
-                }}
-              >
-                <InfoItem label="Full Name" value={item.studentFullname} />
-                <InfoItem label="Student Code" value={item.studentCode} />
-                <InfoItem label="Class" value={item.studentClass} />
+              {item && (
                 <Box
+                  className="infoMember"
                   sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    marginBottom: "5px",
+                    margin: "10px 50px 20px 20px",
+                    color: "#818181",
                   }}
                 >
+                  <InfoItem label="Full Name" value={item.studentFullname} />
+                  <InfoItem label="Student Code" value={item.studentCode} />
+                  <InfoItem label="Class" value={item.studentClass} />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      marginBottom: "5px",
+                    }}
+                  ></Box>
+                  <InfoItem label="Department" value={item.facultyName} />
                 </Box>
-                <InfoItem
-                  label="Department"
-                  value={item.facultyName}
-                />
-              </Box>}
+              )}
             </Box>
           ))}
           <Box
@@ -377,7 +394,7 @@ function CreateProject() {
               sx={{
                 fontWeight: "bold",
                 color: "#818181",
-                paddingBottom: '10px',
+                paddingBottom: "10px",
               }}
             >
               Mentor
@@ -387,15 +404,15 @@ function CreateProject() {
             className="nameMentor"
             sx={{
               marginLeft: "20px",
-              width: '20%'
+              width: "20%",
             }}
           >
             <TextField
-              size='small'
+              size="small"
               select
-              label='Select Mentor'
+              label="Select Mentor"
               sx={{
-                width: '100%',
+                width: "100%",
               }}
             >
               {listMentor.map((option) => (
@@ -405,8 +422,8 @@ function CreateProject() {
                   onClick={() => {
                     setMentor({
                       code: option.mentorCode,
-                      name: option.mentorScientificName
-                    })
+                      name: option.mentorScientificName,
+                    });
                   }}
                 >
                   {option.mentorScientificName}
@@ -423,7 +440,7 @@ function CreateProject() {
           >
             {member && (
               <>
-                <InfoItem label="Full Name" value={'mentor.mentorName'} />
+                <InfoItem label="Full Name" value={"mentor.mentorName"} />
                 <Box
                   sx={{
                     display: "flex",
@@ -433,9 +450,9 @@ function CreateProject() {
                 >
                   <InfoItem
                     label="Scientific Name"
-                    value={'mentor.scientificName'}
+                    value={"mentor.scientificName"}
                   />
-                  <InfoItem label="Degree" value={'mentor.degree'} />
+                  <InfoItem label="Degree" value={"mentor.degree"} />
                 </Box>
                 <Box
                   sx={{
@@ -444,11 +461,14 @@ function CreateProject() {
                     marginBottom: "5px",
                   }}
                 >
-                  <InfoItem label="Phone" value={'mentor.mentorPhone'} />
-                  <InfoItem label="Email" value={'mentor.mentorEmail'} />
+                  <InfoItem label="Phone" value={"mentor.mentorPhone"} />
+                  <InfoItem label="Email" value={"mentor.mentorEmail"} />
                 </Box>
-                <InfoItem label="Department" value={'mentor.mentorDepartment'} />
-                <InfoItem label="Address" value={'mentor.mentorAddress'} />
+                <InfoItem
+                  label="Department"
+                  value={"mentor.mentorDepartment"}
+                />
+                <InfoItem label="Address" value={"mentor.mentorAddress"} />
               </>
             )}
           </Box>
@@ -478,7 +498,9 @@ function CreateProject() {
           >
             <TextareaAutosize
               value={goalOfSubject}
-              onChange={(e) => { setGoalOfSubject(e.target.value) }}
+              onChange={(e) => {
+                setGoalOfSubject(e.target.value);
+              }}
               style={{
                 width: "850px",
                 height: "250px",
@@ -515,7 +537,9 @@ function CreateProject() {
           >
             <TextareaAutosize
               value={researchProducts}
-              onChange={(e) => { setResearchProducts(e.target.value) }}
+              onChange={(e) => {
+                setResearchProducts(e.target.value);
+              }}
               style={{
                 width: "850px",
                 height: "250px",
@@ -548,7 +572,7 @@ function CreateProject() {
             sx={{
               margin: "10px 50px 20px 20px",
               color: "#818181",
-              width: '50%'
+              width: "50%",
             }}
           >
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -559,8 +583,8 @@ function CreateProject() {
                   setStartDate(newDates[0]);
                   setEndDate(newDates[1]);
                 }}
-                minDate={dayjs().add(7, 'day')}
-                maxDate={dayjs().add(1, 'year')}
+                minDate={dayjs().add(7, "day")}
+                maxDate={dayjs().add(1, "year")}
               />
             </LocalizationProvider>
           </Box>
@@ -605,135 +629,228 @@ function CreateProject() {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            <Box className="dialogContain" sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '20px'
-            }}>
+            <Box
+              className="dialogContain"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "20px",
+              }}
+            >
               {/* Topic Name */}
               <Box>
-                <Typography sx={{ fontWeight: 'bold', color: '#D82C2C' }}>Topic Name: </Typography>
-                <Typography sx={{ marginLeft: '10px', fontWeight: 'bold' }}>{topicName}</Typography>
+                <Typography sx={{ fontWeight: "bold", color: "#D82C2C" }}>
+                  Topic Name:{" "}
+                </Typography>
+                <Typography sx={{ marginLeft: "10px", fontWeight: "bold" }}>
+                  {topicName}
+                </Typography>
               </Box>
               <Box>
-                <Typography sx={{ fontWeight: 'bold', color: '#D82C2C' }}>Faculty: </Typography>
-                <Typography sx={{ marginLeft: '10px', fontWeight: 'bold' }}>{leader?.facultyName}</Typography>
+                <Typography sx={{ fontWeight: "bold", color: "#D82C2C" }}>
+                  Faculty:{" "}
+                </Typography>
+                <Typography sx={{ marginLeft: "10px", fontWeight: "bold" }}>
+                  {leader?.facultyName}
+                </Typography>
               </Box>
               <Box>
-                <Typography sx={{ fontWeight: 'bold', color: '#D82C2C' }}>Leader: </Typography>
-                <Box sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  marginLeft: '10px'
-                }}>
-                  <Typography sx={{ fontWeight: 'bold' }}>Full Name: </Typography>
-                  <Typography sx={{ marginLeft: '10px' }}>{leader?.studentFullname}</Typography>
+                <Typography sx={{ fontWeight: "bold", color: "#D82C2C" }}>
+                  Leader:{" "}
+                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginLeft: "10px",
+                  }}
+                >
+                  <Typography sx={{ fontWeight: "bold" }}>
+                    Full Name:{" "}
+                  </Typography>
+                  <Typography sx={{ marginLeft: "10px" }}>
+                    {leader?.studentFullname}
+                  </Typography>
                 </Box>
 
-                <Box sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  marginLeft: '10px'
-                }}>
-                  <Typography sx={{ fontWeight: 'bold' }}>Student Code: </Typography>
-                  <Typography sx={{ marginLeft: '10px' }}>{leader?.studentCode}</Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginLeft: "10px",
+                  }}
+                >
+                  <Typography sx={{ fontWeight: "bold" }}>
+                    Student Code:{" "}
+                  </Typography>
+                  <Typography sx={{ marginLeft: "10px" }}>
+                    {leader?.studentCode}
+                  </Typography>
                 </Box>
 
-                <Box sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  marginLeft: '10px'
-                }}>
-                  <Typography sx={{ fontWeight: 'bold' }}>Class: </Typography>
-                  <Typography sx={{ marginLeft: '10px' }}>{leader?.studentClass}</Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginLeft: "10px",
+                  }}
+                >
+                  <Typography sx={{ fontWeight: "bold" }}>Class: </Typography>
+                  <Typography sx={{ marginLeft: "10px" }}>
+                    {leader?.studentClass}
+                  </Typography>
                 </Box>
 
-                <Box sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  marginLeft: '10px'
-                }}>
-                  <Typography sx={{ fontWeight: 'bold' }}>Faculty: </Typography>
-                  <Typography sx={{ marginLeft: '10px' }}>{leader?.facultyName}</Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginLeft: "10px",
+                  }}
+                >
+                  <Typography sx={{ fontWeight: "bold" }}>Faculty: </Typography>
+                  <Typography sx={{ marginLeft: "10px" }}>
+                    {leader?.facultyName}
+                  </Typography>
                 </Box>
-
               </Box>
 
               {/* team member */}
               <Box>
-                <Typography sx={{ fontWeight: 'bold', color: '#D82C2C' }}>Team Members: </Typography>
+                <Typography sx={{ fontWeight: "bold", color: "#D82C2C" }}>
+                  Team Members:{" "}
+                </Typography>
                 {members.map((item, index) => (
-                  <Box sx={{ marginLeft: '10px' }}>
-                    <Typography sx={{ fontWeight: 'bold', marginTop: '5px', color: '#ff6666' }}>+ Member {index + 1}</Typography>
-                    <Box sx={{ marginLeft: '10px', }}>
-                      <Box sx={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        marginLeft: '10px'
-                      }}>
-                        <Typography sx={{ fontWeight: 'bold' }}>Full Name: </Typography>
-                        <Typography sx={{ marginLeft: '10px' }}>{item?.studentFullname}</Typography>
+                  <Box sx={{ marginLeft: "10px" }}>
+                    <Typography
+                      sx={{
+                        fontWeight: "bold",
+                        marginTop: "5px",
+                        color: "#ff6666",
+                      }}
+                    >
+                      + Member {index + 1}
+                    </Typography>
+                    <Box sx={{ marginLeft: "10px" }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "row",
+                          marginLeft: "10px",
+                        }}
+                      >
+                        <Typography sx={{ fontWeight: "bold" }}>
+                          Full Name:{" "}
+                        </Typography>
+                        <Typography sx={{ marginLeft: "10px" }}>
+                          {item?.studentFullname}
+                        </Typography>
                       </Box>
 
-                      <Box sx={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        marginLeft: '10px'
-                      }}>
-                        <Typography sx={{ fontWeight: 'bold' }}>Student Code: </Typography>
-                        <Typography sx={{ marginLeft: '10px' }}>{item?.studentCode}</Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "row",
+                          marginLeft: "10px",
+                        }}
+                      >
+                        <Typography sx={{ fontWeight: "bold" }}>
+                          Student Code:{" "}
+                        </Typography>
+                        <Typography sx={{ marginLeft: "10px" }}>
+                          {item?.studentCode}
+                        </Typography>
                       </Box>
 
-                      <Box sx={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        marginLeft: '10px'
-                      }}>
-                        <Typography sx={{ fontWeight: 'bold' }}>Class: </Typography>
-                        <Typography sx={{ marginLeft: '10px' }}>{item?.studentClass}</Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "row",
+                          marginLeft: "10px",
+                        }}
+                      >
+                        <Typography sx={{ fontWeight: "bold" }}>
+                          Class:{" "}
+                        </Typography>
+                        <Typography sx={{ marginLeft: "10px" }}>
+                          {item?.studentClass}
+                        </Typography>
                       </Box>
 
-                      <Box sx={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        marginLeft: '10px'
-                      }}>
-                        <Typography sx={{ fontWeight: 'bold' }}>Faculty: </Typography>
-                        <Typography sx={{ marginLeft: '10px' }}>{item?.facultyName}</Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "row",
+                          marginLeft: "10px",
+                        }}
+                      >
+                        <Typography sx={{ fontWeight: "bold" }}>
+                          Faculty:{" "}
+                        </Typography>
+                        <Typography sx={{ marginLeft: "10px" }}>
+                          {item?.facultyName}
+                        </Typography>
                       </Box>
                     </Box>
                   </Box>
                 ))}
               </Box>
 
-
               {/* Instructor Name */}
-              <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                <Typography sx={{ fontWeight: 'bold', color: '#D82C2C' }}>Instructor: </Typography>
-                <Typography sx={{ marginLeft: '10px', fontWeight: 'bold' }}>{mentor.name}</Typography>
+              <Box sx={{ display: "flex", flexDirection: "row" }}>
+                <Typography sx={{ fontWeight: "bold", color: "#D82C2C" }}>
+                  Instructor:{" "}
+                </Typography>
+                <Typography sx={{ marginLeft: "10px", fontWeight: "bold" }}>
+                  {mentor.name}
+                </Typography>
               </Box>
 
               {/* Goal Of The Subject */}
               <Box>
-                <Typography sx={{ fontWeight: 'bold', color: '#D82C2C' }}>The Goal Of The Subject:</Typography>
-                <Typography sx={{ marginLeft: '10px', whiteSpace: 'pre-line' }}>{goalOfSubject}</Typography>
+                <Typography sx={{ fontWeight: "bold", color: "#D82C2C" }}>
+                  The Goal Of The Subject:
+                </Typography>
+                <Typography sx={{ marginLeft: "10px", whiteSpace: "pre-line" }}>
+                  {goalOfSubject}
+                </Typography>
               </Box>
 
               {/* Expected research products */}
               <Box>
-                <Typography sx={{ fontWeight: 'bold', color: '#D82C2C' }}>Expected research products of the topic and applicability:</Typography>
-                <Typography sx={{ marginLeft: '10px', whiteSpace: 'pre-line' }}>{researchProducts}</Typography>
+                <Typography sx={{ fontWeight: "bold", color: "#D82C2C" }}>
+                  Expected research products of the topic and applicability:
+                </Typography>
+                <Typography sx={{ marginLeft: "10px", whiteSpace: "pre-line" }}>
+                  {researchProducts}
+                </Typography>
               </Box>
               {/* Topic Date Start */}
-              <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                <Typography sx={{ fontWeight: 'bold', color: '#D82C2C' }}>Topic Date Start: </Typography>
-                <Typography sx={{ marginLeft: '10px' }}>{startDate?.$D + "/" + (startDate?.$d.getMonth() + 1) + "/" + startDate?.$y}</Typography>
+              <Box sx={{ display: "flex", flexDirection: "row" }}>
+                <Typography sx={{ fontWeight: "bold", color: "#D82C2C" }}>
+                  Topic Date Start:{" "}
+                </Typography>
+                <Typography sx={{ marginLeft: "10px" }}>
+                  {startDate?.$D +
+                    "/" +
+                    (startDate?.$d.getMonth() + 1) +
+                    "/" +
+                    startDate?.$y}
+                </Typography>
               </Box>
 
               {/* Topic Date End */}
-              <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                <Typography sx={{ fontWeight: 'bold', color: '#D82C2C' }}>Topic Date End: </Typography>
-                <Typography sx={{ marginLeft: '10px' }}>{endDate?.$D + "/" + (endDate.$d.getMonth() + 1) + "/" + endDate?.$y}</Typography>
+              <Box sx={{ display: "flex", flexDirection: "row" }}>
+                <Typography sx={{ fontWeight: "bold", color: "#D82C2C" }}>
+                  Topic Date End:{" "}
+                </Typography>
+                <Typography sx={{ marginLeft: "10px" }}>
+                  {endDate?.$D +
+                    "/" +
+                    (endDate.$d.getMonth() + 1) +
+                    "/" +
+                    endDate?.$y}
+                </Typography>
               </Box>
             </Box>
           </DialogContentText>
@@ -745,8 +862,13 @@ function CreateProject() {
           </Button>
         </DialogActions>
       </Dialog>
-      <Snackbar open={isCheckAlert} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-        <Alert variant="filled" severity={alertType}>{message}</Alert>
+      <Snackbar
+        open={isCheckAlert}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert variant="filled" severity={alertType}>
+          {message}
+        </Alert>
       </Snackbar>
     </Box>
   );

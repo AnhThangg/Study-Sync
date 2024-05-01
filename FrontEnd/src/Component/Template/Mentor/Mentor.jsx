@@ -3,7 +3,7 @@ import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button, Box, Typography } from "@mui/material";
 import logoDTU from "../../../assets/Logo-DuyTan.png";
 import "./Mentor.scss";
-import { TipsAndUpdates, Home, Logout } from "@mui/icons-material";
+import { TipsAndUpdates, Home, Logout, List, BatchPrediction } from "@mui/icons-material";
 import { getInfo } from '../../../api/infoApi'
 
 const Mentor = () => {
@@ -139,6 +139,52 @@ const Mentor = () => {
                                     }}
                                 >
                                     ProposeIdea
+                                </Typography>
+                            </Box>
+                        </NavLink>
+                        <NavLink to={"/Mentor/listProposeIdea"} className="listBar">
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    gap: "10px",
+                                    height: "50px",
+                                    paddingLeft: "10px",
+                                }}
+                            >
+                                <List fontSize="large" sx={{ color: "#D82C2C" }} />
+                                <Typography
+                                    sx={{
+                                        color: "#D82C2C",
+                                        fontWeight: "bold",
+                                        fontSize: "20px",
+                                    }}
+                                >
+                                    List ProposeIdea
+                                </Typography>
+                            </Box>
+                        </NavLink>
+                        <NavLink to={"/Mentor/myProposeIdea"} className="listBar">
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    gap: "10px",
+                                    height: "50px",
+                                    paddingLeft: "10px",
+                                }}
+                            >
+                                <BatchPrediction fontSize="large" sx={{ color: "#D82C2C" }} />
+                                <Typography
+                                    sx={{
+                                        color: "#D82C2C",
+                                        fontWeight: "bold",
+                                        fontSize: "20px",
+                                    }}
+                                >
+                                    My ProposeIdea
                                 </Typography>
                             </Box>
                         </NavLink>
