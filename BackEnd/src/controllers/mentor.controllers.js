@@ -23,7 +23,7 @@ const getMentor = async (req, res) => {
             }
         });
         mentor.facultyName = faculty.facultyName;
-        const { mentorCode, mentorBirthday, mentorScientificName, mentorAvatar, accountId, facultyCode, ...data } = mentor;
+        const { mentorCode, mentorAvatar, accountId, facultyCode, ...data } = mentor;
         return res.status(200).send(data);
 
     } catch (e) {
