@@ -1,25 +1,33 @@
-const univerModel = (sequelize, DataTypes) =>{
+const univerModel = (sequelize, DataTypes) => {
     return sequelize.define(
         'univer',
         {
-            univerCode:{
+            univerCode: {
                 type: DataTypes.STRING,
                 primaryKey: true,
                 allowNull: false
             },
-            univerName:{
+            univerName: {
                 type: DataTypes.STRING,
                 allowNull: false
             },
-            univerPhone:{
+            univerPhone: {
                 type: DataTypes.STRING,
                 allowNull: false
             },
-            univerEmail:{
+            univerEmail: {
                 type: DataTypes.STRING,
                 allowNull: false
             },
-            accountId:{
+            univerAvatar: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+            univerAddress: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+            accountId: {
                 type: DataTypes.STRING,
                 allowNull: false
             },

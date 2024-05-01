@@ -2,19 +2,30 @@ import React, { useEffect, useState } from "react";
 import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button, Box, Typography } from "@mui/material";
 import logoDTU from "../../../assets/Logo-DuyTan.png";
-import avatar from "../../../assets/avt.jpg";
 import "./Mentor.scss";
 import { TipsAndUpdates, Home, Logout } from "@mui/icons-material";
+import { getInfo } from '../../../api/infoApi'
 
 const Mentor = () => {
 
     const { pathname: url } = useLocation();
     const navigate = useNavigate();
+    const [user, setUser] = useState();
 
     useEffect(() => {
         if (!localStorage.getItem('accessToken')) {
             navigate('/');
         }
+    }, [])
+
+    useEffect(() => {
+        getInfo()
+            .then(data => {
+                setUser(data)
+            })
+            .catch(e => {
+                console.log(e);
+            })
     }, [])
 
     useEffect(() => {
@@ -32,10 +43,6 @@ const Mentor = () => {
         window.location.href = "/mentor/mentorhomepage/mentorproject";
     };
 
-    const userInfo = {
-        userName: "Vũ Như Cẩn",
-        userEmail: "vunhucan247@gmail.com"
-    };
     const logOut = () => {
         localStorage.removeItem('accessToken');
         navigate('/');
@@ -47,12 +54,13 @@ const Mentor = () => {
         }}>
             <Box className="sideBar" sx={{
                 height: '100vh',
-                flex: '1',
                 background: '#F6E6E6',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '25px'
+                gap: '25px',
+                position: 'fixed',
+                width: '16.5%',
             }}>
                 <img
                     src={logoDTU}
@@ -177,7 +185,7 @@ const Mentor = () => {
                         }}
                         >
                             <Box className="avatar">
-                                <img className="avatar" src={avatar} alt="avatar" width="50px" />
+                                <img className="avatar" src={`http://localhost:2109/info/avatar/${user?.accountId}_mentor`} alt="avatar" width="50px" />
                             </Box>
                             <Box
                                 className="infor"
@@ -194,7 +202,7 @@ const Mentor = () => {
                                             fontWeight: "bold",
                                         }}
                                     >
-                                        {userInfo.userName}
+                                        {user?.mentorFullname}
                                     </Typography>
                                 </Box>
                                 <Box className="userEmail">
@@ -204,7 +212,7 @@ const Mentor = () => {
                                             fontWeight: "bold",
                                         }}
                                     >
-                                        {userInfo.userEmail}
+                                        {user?.mentorEmail}
                                     </Typography>
                                 </Box>
                             </Box>
@@ -213,7 +221,8 @@ const Mentor = () => {
                 </Box>
             </Box>
             <Box sx={{
-                flex: '5'
+                 width: '83.5%',
+                 marginLeft: '16.5%'
             }}>
                 <Outlet />
             </Box>

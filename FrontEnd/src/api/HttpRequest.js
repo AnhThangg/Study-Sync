@@ -44,7 +44,7 @@ export const put = async (path, data, options = {}) => {
 export const del = async (path, options = {}) => {
     try {
         const response = await httpRequest.delete(path, options);
-        return response.data;
+        return response;
     } catch (error) {
         return error.response.data;
     }

@@ -46,6 +46,7 @@ const rows = [
 export default function StickyHeadTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [sortConfig, setSortConfig] = React.useState({ key: null, direction: null });
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -58,10 +59,35 @@ export default function StickyHeadTable() {
 
   const homeClick = () => {
     window.location.href = "/Mentor/MentorProjectInformation"
-  }
+  };
+
+  const requestSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedRows = React.useMemo(() => {
+    let sortableRows = [...rows];
+    if (sortConfig !== null) {
+      sortableRows.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'asc' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'asc' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableRows;
+  }, [rows, sortConfig]);
+
   return (
     <Paper sx={{ width: '90%', overflow: 'hidden'}}>
-      <TableContainer sx={{ maxHeight: 640 }}>
+      <TableContainer sx={{ maxHeight: 640, paddingLeft: '50px', backgroundColor: '#fff'}}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
@@ -69,7 +95,8 @@ export default function StickyHeadTable() {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth, fontWeight: 'bold' }}
+                  style={{ minWidth: column.minWidth, fontWeight: 'bold', backgroundColor: '#D82C2C', color: '#fff', fontSize: '25px' }}
+                  onClick={() => requestSort(column.id)} // Added onClick to initiate sorting
                 >
                   {column.label}
                 </TableCell>
@@ -77,15 +104,17 @@ export default function StickyHeadTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
+            {sortedRows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => (
-                
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.no}>
                   {columns.map((column) => {
                     const value = row[column.id];
                     return (
-                      <TableCell key={column.id} align={column.align}>
+                      <TableCell 
+                      key={column.id} 
+                      align={column.align}
+                      style={{backgroundColor: '#F6E8E8'}}>
                         <Typography
                           component="div"
                           style={{ cursor: 'pointer' }}
@@ -97,8 +126,6 @@ export default function StickyHeadTable() {
                     );
                   })}
                 </TableRow>
-                
-                
               ))}
           </TableBody>
         </Table>

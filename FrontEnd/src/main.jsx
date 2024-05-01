@@ -35,6 +35,7 @@ import MentorProject from './Pages/Mentor/MentorProject/MentorProject.jsx'
 import MentorWaitting from './Pages/Mentor/MentorWaitting/MentorWaitting.jsx'
 import MentorInformation from './Pages/Mentor/MentorInformation/MentorInformation.jsx'
 import MentorProjectInformation from './Pages/Mentor/MentorProjectInformation/MentorProjectInformation.jsx'
+import MentorWaittingInformation from './Pages/Mentor/MentorWaittingInformation/MentorWaittingInformation.jsx'
 
 const router = createBrowserRouter([
 
@@ -152,6 +153,10 @@ const router = createBrowserRouter([
       {
         path: '/Mentor/MentorProjectInformation',
         element: <MentorProjectInformation />,
+      },
+      {
+        path: '/Mentor/MentorWaittingInformation',
+        element: <MentorWaittingInformation/>,
       }
     ]
   },

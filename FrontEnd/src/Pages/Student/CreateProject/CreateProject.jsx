@@ -12,6 +12,9 @@ import {
 } from "@mui/material";
 import "./CreateProject.scss";
 import { Delete } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import { getInfo, getNameMentor } from '../../../api/infoApi';
+import { getStudent } from "../../../api/studentApi";
 
 function CreateProject() {
   const InfoItem = ({ label, value }) => (
@@ -38,139 +41,57 @@ function CreateProject() {
     { label: "Dr. Nguyen Duc Man", value: 3 },
   ];
 
+  const [topicName, setTopicName] = useState("");
+  const [goalOfSubject, setGoalOfSubject] = useState("");
+  const [researchProducts, setResearchProducts] = useState("");
   const [studentCode, setStudentCode] = useState("");
   const [showInfo, setShowInfo] = useState(false);
   const [members, setMembers] = useState([]);
   const [selectedMentor, setSelectedMentor] = useState(null);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [message, setMessage] = useState('');
+  const [isCheckAlert, setIsCheckAlert] = useState(false);
+  const [alertType, setAlertType] = useState('error');
+  const [leader, setLeader] = useState();
+  const [listMentor, setListMentor] = useState([]);
 
-  const [isOpenA, setIsOpenA] = useState(false);
-  const [statusA, setStatusA] = useState("success");
-  const [messageA, setMessageA] = useState("");
 
-  const [nextId, setNextId] = useState(1);
+  useEffect(() => {
+    getInfo()
+      .then(data => {
+        setLeader(data)
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+  }, [])
 
-  const handleStudentCodeChange = (event) => {
-    const code = event.target.value;
-    setStudentCode(code);
-    if (event.target.value === "26211329003" || event.target.value === "26211236334") {
-      setShowInfo(true);
-    } else {
-      setShowInfo(false);
-    }
-  };
+  useEffect(() => {
+    getNameMentor(leader?.facultyCode)
+      .then(data => {
+        setListMentor(data)
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+  }, [leader])
 
-  const handleAddMember = () => {
-    if (members.length === 1) {
-      setStatusA("warning");
-      setMessageA("Please add at least one member!");
-      setIsOpenA(true);
-      return;
-    }
-  
-    const newMember = {
-      id: nextId,
-      studentCode: studentCode,
-    };
-    setNextId(nextId + 1);
-    setMembers([...members, newMember]);
-    setStudentCode("");
-    console.log("Add Member: ", newMember);
-  };
-  
+  const onSearchMember = async (id) => {
+    const cc = await getStudent(id)
+    console.log(cc)
+  }
 
-  const handleDeleteMember = (id) => {
-    const updatedMembers = members.filter((member) => member.id !== id);
-    if (updatedMembers.length === members.length) {
-      setStatusA("warning");
-      setMessageA("Failed to delete member!");
-      setIsOpenA(true);
-      return;
-    }
-    setMembers(updatedMembers);
-  };
-  
 
-  const handleSelectMentor = (event, newValue) => {
-    const isValidMentor = options.some(
-      (option) => option.label === newValue.label
-    );
-
-    if (isValidMentor) {
-      setSelectedMentor(newValue);
-    } else {
-      setSelectedMentor(null);
-    }
-  };
-
-  const handleStartTimeChange = (event) => {
-    const inputStartTime = event.target.value;
-    const today = new Date();
-    const sevenDaysFromNow = new Date(today.setDate(today.getDate() + 6));
-
-    if (new Date(inputStartTime) >= sevenDaysFromNow) {
-      setStartTime(inputStartTime);
-
-      const threeMonthsFromStart = new Date(
-        new Date(inputStartTime).setMonth(new Date(inputStartTime).getMonth() + 3)
-      );
-      if (!endTime || new Date(endTime) > threeMonthsFromStart) {
-        setEndTime(threeMonthsFromStart.toISOString().split("T")[0]);
-      }
-    } else {
-      setStatusA("warning");
-      setMessageA("Start Time must be at least 7 days from today.");
-      setIsOpenA(true);
-    }
-  };
-
-  const handleEndTimeChange = (event) => {
-    const inputEndTime = event.target.value;
-    const threeMonthsFromStart = new Date(
-      new Date(startTime).setMonth(new Date(startTime).getMonth() + 3)
-    );
-
-    if (
-      new Date(inputEndTime) > new Date(startTime) &&
-      new Date(inputEndTime) >= threeMonthsFromStart
-    ) {
-      setEndTime(inputEndTime);
-    } else {
-      setStatusA("warning");
-      setMessageA("End Time must be after Start Time and within 3 months.");
-      setIsOpenA(true);
-    }
-  };
-
-  const leader = {
-    leaderName: "Thang, Nguyen Tran Anh",
-    leaderCode: "26211329003",
-    leaderPhone: "0869132529",
-    leaderClass: "K26 CMU-TPM4",
-    leaderEmail: "anhthang2529@gmail.com",
-    leaderDepartment: "Khoa Công Nghệ Phần Mềm CMU",
-    leaderAddress: "60/1 Lê Thị Tính, An Khê, Thanh Khê, Đà Nẵng",
-  };
-
-  const addMembers = {
-    memberName: "Luan, Duong Nguyen Cong",
-    memberCode: "26211236334",
-    memberPhone: "0796503172",
-    memberClass: "K26 CMU-TPM4",
-    memberEmail: "duongnguyencongluan@gmail.com",
-    memberDepartment: "Khoa Công Nghệ Phần Mềm CMU",
-    memberAddress: "Tân Hạnh, Hòa Phước, Hòa Vang, Đà Nẵng",
-  };
-
-  const mentor = {
-    mentorName: "Tran Thi Thuy Trinh",
-    scientificName: "Dr. Tran Thi Thuy Trinh",
-    mentorPhone: "0913350642",
-    degree: "Doctor",
-    mentorEmail: "tthuytrinh@dtu.edu.vn",
-    mentorDepartment: "Khoa Công Nghệ Phần Mềm CMU",
-    mentorAddress: "Biệt thự 5 đứa con Đà Nẵng",
+  const onCreateTopic = () => {
+    (!researchProducts) && setMessage('Applicability cannot be left blank');
+    (!goalOfSubject) && setMessage('Goal Of The Subject cannot be left blank');
+    (!topicName) && setMessage('TopicName cannot be left blank');
+    setAlertType('error');
+    setIsCheckAlert(true);
+    setTimeout(() => {
+      setIsCheckAlert(false);
+    }, 4000)
   };
 
   return (
@@ -194,7 +115,9 @@ function CreateProject() {
       <Box>
         <TextField
           size="medium"
-          label="Project Name"
+          label="Topic Name"
+          value={topicName}
+          onChange={(e) => { setTopicName(e.target.value) }}
           sx={{
             marginTop: "50px",
             width: "95%",
@@ -224,7 +147,7 @@ function CreateProject() {
               color: "#818181",
             }}
           >
-            <InfoItem label="Full Name" value={leader.leaderName} />
+            <InfoItem label="Full Name" value={leader?.studentFullname} />
             <Box
               sx={{
                 display: "flex",
@@ -232,8 +155,8 @@ function CreateProject() {
                 marginBottom: "5px",
               }}
             >
-              <InfoItem label="Student Code" value={leader.leaderCode} />
-              <InfoItem label="Class" value={leader.leaderClass} />
+              <InfoItem label="Student Code" value={leader?.studentCode} />
+              <InfoItem label="Class" value={leader?.studentClass} />
             </Box>
             <Box
               sx={{
@@ -242,11 +165,11 @@ function CreateProject() {
                 marginBottom: "5px",
               }}
             >
-              <InfoItem label="Phone" value={leader.leaderPhone} />
-              <InfoItem label="Email" value={leader.leaderEmail} />
+              <InfoItem label="Phone" value={leader?.studentPhone} />
+              <InfoItem label="Email" value={leader?.studentEmail} />
             </Box>
-            <InfoItem label="Department" value={leader.leaderDepartment} />
-            <InfoItem label="Address" value={leader.leaderAddress} />
+            <InfoItem label="Department" value={leader?.facultyName} />
+            <InfoItem label="Address" value={leader?.studentAddress} />
           </Box>
         </Box>
 
@@ -266,81 +189,85 @@ function CreateProject() {
               Team Members
             </Typography>
           </Box>
-          {members.map((member) => (
-            <Box key={member.id} className="member">
+          <Box className="member">
+            <Box
+              className="id_student"
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                marginLeft: "20px",
+                gap: '10px'
+              }}
+            >
+              <TextField
+                type="number"
+                size="small"
+
+                onChange={(e) => onSearchMember(e.target.value)}
+                // value={'26211329003'}
+                // onChange={(e) => {
+                //   handleStudentCodeChange(e);
+                //   setMembers(
+                //     members.map((m) =>
+                //       m.id === member.id
+                //         ? { ...m, studentCode: e.target.value }
+                //         : m
+                //     )
+                //   );
+                // }}
+                sx={{
+                  width: "170px",
+                  '& .MuiInputBase-input[type="number"]::-webkit-inner-spin-button, & .MuiInputBase-input[type="number"]::-webkit-outer-spin-button':
+                  {
+                    "-webkit-appearance": "none",
+                    margin: 0,
+                  },
+                  '& .MuiInputBase-input[type="number"]': {
+                    "-moz-appearance": "textfield",
+                  },
+                }}
+              />
+              <IconButton>
+                <Delete />
+              </IconButton>
+            </Box>
+            {(!members) && <Box
+              className="infoMember"
+              sx={{
+                margin: "10px 50px 20px 20px",
+                color: "#818181",
+              }}
+            >
+              <InfoItem label="Full Name" value={'Dương Nguyễn Công Luận'} />
               <Box
-                className="id_student"
                 sx={{
                   display: "flex",
                   flexDirection: "row",
-                  marginLeft: "20px",
+                  marginBottom: "5px",
                 }}
               >
-                <TextField
-                  type="number"
-                  size="small"
-                  value={member.studentCode}
-                  onChange={(e) => {
-                    handleStudentCodeChange(e);
-                    setMembers(
-                      members.map((m) =>
-                        m.id === member.id ? { ...m, studentCode: e.target.value } : m
-                      )
-                    );
-                  }}
-                  sx={{
-                    width: "170px",
-                    '& .MuiInputBase-input[type="number"]::-webkit-inner-spin-button, & .MuiInputBase-input[type="number"]::-webkit-outer-spin-button': {
-                      "-webkit-appearance": "none",
-                      margin: 0,
-                    },
-                    '& .MuiInputBase-input[type="number"]': {
-                      "-moz-appearance": "textfield",
-                    },
-                  }}
+                <InfoItem
+                  label="Student Code"
                 />
-                <IconButton
-                  onClick={() => handleDeleteMember(member.id)}
-                  sx={{ position: "absolute", left: "500px" }}
-                >
-                  <Delete />
-                </IconButton>
+                <InfoItem label="Class" value={'TPM 04'} />
               </Box>
-              {showInfo && (
-                <Box
-                  className="infoMember"
-                  sx={{
-                    margin: "10px 50px 20px 20px",
-                    color: "#818181",
-                  }}
-                >
-                  <InfoItem label="Full Name" value={addMembers.memberName} />
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      marginBottom: "5px",
-                    }}
-                  >
-                    <InfoItem label="Student Code" value={addMembers.memberCode} />
-                    <InfoItem label="Class" value={addMembers.memberClass} />
-                  </Box>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      marginBottom: "5px",
-                    }}
-                  >
-                    <InfoItem label="Phone" value={addMembers.memberPhone} />
-                    <InfoItem label="Email" value={addMembers.memberEmail} />
-                  </Box>
-                  <InfoItem label="Department" value={addMembers.memberDepartment} />
-                  <InfoItem label="Address" value={addMembers.memberAddress} />
-                </Box>
-              )}
-            </Box>
-          ))}
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginBottom: "5px",
+                }}
+              >
+                <InfoItem label="Phone" value={'0869132529'} />
+                <InfoItem label="Email" value={'duongnguyencongluan@gmail.com'} />
+              </Box>
+              <InfoItem
+                label="Department"
+                value={'Công Nghệ Phần Mềm Chuẩn CMU'}
+              />
+              <InfoItem label="Address" value={'Gầm Cầu'} />
+            </Box>}
+          </Box>
           <Box
             className="addMember"
             sx={{
@@ -350,7 +277,6 @@ function CreateProject() {
             }}
           >
             <Button
-              onClick={handleAddMember}
               sx={{
                 marginTop: "10px",
                 borderRadius: "10px",
@@ -395,7 +321,7 @@ function CreateProject() {
               options={options}
               getOptionLabel={(option) => option.label}
               value={selectedMentor}
-              onChange={handleSelectMentor}
+              // onChange={handleSelectMentor}
               sx={{ width: 300 }}
               renderInput={(params) => <TextField {...params} />}
             />
@@ -416,7 +342,10 @@ function CreateProject() {
                     marginBottom: "5px",
                   }}
                 >
-                  <InfoItem label="Scientific Name" value={mentor.scientificName} />
+                  <InfoItem
+                    label="Scientific Name"
+                    value={mentor.scientificName}
+                  />
                   <InfoItem label="Degree" value={mentor.degree} />
                 </Box>
                 <Box
@@ -426,7 +355,7 @@ function CreateProject() {
                     marginBottom: "5px",
                   }}
                 >
-                  <InfoItem label="Phone" value={mentor.mentorPhone}/>
+                  <InfoItem label="Phone" value={mentor.mentorPhone} />
                   <InfoItem label="Email" value={mentor.mentorEmail} />
                 </Box>
                 <InfoItem label="Department" value={mentor.mentorDepartment} />
@@ -459,6 +388,8 @@ function CreateProject() {
             }}
           >
             <TextareaAutosize
+              value={goalOfSubject}
+              onChange={(e) => { setGoalOfSubject(e.target.value) }}
               style={{
                 width: "850px",
                 height: "250px",
@@ -494,6 +425,8 @@ function CreateProject() {
             }}
           >
             <TextareaAutosize
+              value={researchProducts}
+              onChange={(e) => { setResearchProducts(e.target.value) }}
               style={{
                 width: "850px",
                 height: "250px",
@@ -548,7 +481,7 @@ function CreateProject() {
                   type="date"
                   size="small"
                   value={startTime}
-                  onChange={handleStartTimeChange}
+                  // onChange={handleStartTimeChange}
                   inputProps={{
                     inputMode: "numeric",
                     pattern: "\\d{4}-\\d{2}-\\d{2}",
@@ -569,7 +502,7 @@ function CreateProject() {
                   type="date"
                   size="small"
                   value={endTime}
-                  onChange={handleEndTimeChange}
+                // onChange={handleEndTimeChange}
                 />
               </Box>
             </Box>
@@ -586,6 +519,7 @@ function CreateProject() {
           }}
         >
           <Button
+            onClick={onCreateTopic}
             sx={{
               backgroundColor: "#D82C2C",
               borderRadius: "10px",
@@ -606,18 +540,8 @@ function CreateProject() {
         </Box>
       </Box>
 
-      <Snackbar
-        open={isOpenA}
-        autoHideDuration={5000}
-        onClose={(event, reason) => {
-          if (reason === "clickaway") {
-            setIsOpenA(false);
-          }
-        }}
-      >
-        <Alert severity={statusA} variant="filled" sx={{ width: "100%" }}>
-          {messageA}
-        </Alert>
+      <Snackbar open={isCheckAlert} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+        <Alert variant="filled" severity={alertType}>{message}</Alert>
       </Snackbar>
     </Box>
   );

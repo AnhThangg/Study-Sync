@@ -205,11 +205,6 @@ const MentorInformation = () => {
                         color: "#000",
                         fontWeight: "bold",
                         fontSize: "20px",
-                        "&:hover": {
-                            background: "#D82C2C",
-                            color: "#fff",
-                            border: "5px solid #999",
-                        },
                     }}
                 >
                     Update

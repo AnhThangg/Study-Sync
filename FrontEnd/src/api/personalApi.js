@@ -9,4 +9,11 @@ export const getRole = () => {
     }
 }
 
-
+export const getInfo = () => {
+    try {
+        const res = request.get('/info');
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}

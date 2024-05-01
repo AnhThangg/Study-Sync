@@ -1,14 +1,55 @@
 import {
   Box,
-  Icon,
   Typography,
   Input,
   IconButton,
   Button,
 } from "@mui/material";
-import React from "react";
+import { React, useEffect, useState } from "react";
 import { FileUpload, RecentActors } from "@mui/icons-material";
+import { getInfo } from '../../../api/infoApi';
+
+
 function Profile() {
+
+  const [information, setInformation] = useState({});
+  const [selectedFile, setSelectedFile] = useState(null);
+
+
+  useEffect(() => {
+    getInfo()
+      .then(data => {
+        setInformation(data)
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }, [])
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    file.preview = URL.createObjectURL(file)
+    setSelectedFile(file);
+  };
+
+  const address = (addressString) => {
+    if (addressString) {
+      const parts = addressString.split(',').map(part => part.trim());
+      const address = parts[0];
+      const ward = parts[1];
+      const district = parts[2];
+      const province = parts[3];
+      return { address, ward, district, province };
+    }
+  }
+
   return (
     <Box sx={{ margin: "50px 0 0 50px" }}>
       <Box
@@ -80,12 +121,12 @@ function Profile() {
             }}
           >
             <Typography sx={{ fontWeight: "bold" }}>
-              Duong Nguyen Cong Luan
+              {information.studentFullname}
             </Typography>
-            <Typography>26211236334</Typography>
-            <Typography>Male</Typography>
-            <Typography>10/08/2002</Typography>
-            <Typography>duongncongluan@gmail.com</Typography>
+            <Typography>{information.studentCode}</Typography>
+            <Typography>{(information.studentSex) ? 'Male' : 'Female'}</Typography>
+            <Typography>{formatDate(information.studentBirthday)}</Typography>
+            <Typography>{information.studentEmail}</Typography>
           </Box>
         </Box>
         <Box
@@ -113,14 +154,19 @@ function Profile() {
                 component="span"
                 aria-label="upload-picture"
                 sx={{
-                  width: "100px",
-                  height: "100px",
+                  width: "100%",
+                  // height: "100px",
                 }}
               >
-                <FileUpload fontSize="large" />
+                <img src={selectedFile ? selectedFile?.preview : `http://localhost:2109/info/avatar/${information.accountId}_student`} width={'100%'} alt="" />
               </IconButton>
             </label>
-            <Input id="upload-file" type="file" sx={{ display: "none" }} />
+            <Input
+              id="upload-file"
+              type="file"
+              sx={{ display: "none" }}
+              onChange={handleFileChange}
+            />
           </Box>
         </Box>
       </Box>
@@ -165,10 +211,8 @@ function Profile() {
             </Typography>
             <Typography sx={{ fontWeight: "bold" }}>Wards:</Typography>
             <Typography sx={{ fontWeight: "bold" }}>District:</Typography>
-            <Typography sx={{ fontWeight: "bold" }}>City:</Typography>
-            <Typography sx={{ fontWeight: "bold" }}>Nation:</Typography>
+            <Typography sx={{ fontWeight: "bold" }}>Province:</Typography>
             <Typography sx={{ fontWeight: "bold" }}>Phone:</Typography>
-            <Typography sx={{ fontWeight: "bold" }}>Email(Orther):</Typography>
           </Box>
           <Box
             className="Infor_Right"
@@ -177,14 +221,12 @@ function Profile() {
             }}
           >
             <Typography>
-              Tổ 4, thôn Tân Hạnh, xã Hòa Phước, huyện Hòa vang, Tp Đà Nẵng
+              {information.studentAddress}
             </Typography>
-            <Typography>Hòa Phước</Typography>
-            <Typography>Hòa Vang</Typography>
-            <Typography>Đà Nẵng</Typography>
-            <Typography>Việt Nam</Typography>
-            <Typography>0796053172</Typography>
-            <Typography>duongnguyencongluan@gmail.com</Typography>
+            <Typography>{address(information.studentAddress)?.ward}</Typography>
+            <Typography>{address(information.studentAddress)?.district}</Typography>
+            <Typography>{address(information.studentAddress)?.province}</Typography>
+            <Typography>{information.studentPhone}</Typography>
           </Box>
         </Box>
       </Box>

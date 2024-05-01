@@ -1,21 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { Outlet, NavLink, useLocation, useNavigate} from "react-router-dom";
+import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button, Box, Typography } from "@mui/material";
 import { ContactEmergency, AccountBox, Person, AccountTree, Logout } from "@mui/icons-material";
 import logoDTU from "../../../assets/Logo-DuyTan.png";
 import avatar from "../../../assets/Avatar.png";
 import "./Faculty.scss";
 
+import { getInfo } from '../../../api/infoApi'
+
 const Faculty = () => {
 
   const { pathname: url } = useLocation();
   const navigate = useNavigate();
+  const [user, setUser] = useState();
 
-  useEffect(()=>{
-    if(!localStorage.getItem('accessToken')){
+  useEffect(() => {
+    if (!localStorage.getItem('accessToken')) {
       navigate('/')
     }
-  },[])
+  }, [])
+
+  useEffect(() => {
+    getInfo()
+      .then((data) => {
+        setUser(data)
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+  })
 
   useEffect(() => {
     const navLinks = document.getElementsByClassName("listBar");
@@ -32,10 +45,6 @@ const Faculty = () => {
     window.location.href = "/faculty/profile";
   };
 
-  const userInfo = {
-    userName: "Nguyễn Trần Anh Thắng",
-    userEmail: "anhthang2529@gmail.com",
-  };
   const logOut = () => {
     localStorage.removeItem('accessToken');
     navigate('/')
@@ -232,7 +241,7 @@ const Faculty = () => {
             }}
           >
             <Box className="avatar">
-              <img className="avatar" src={avatar} alt="avatar" width="50px" />
+              <img className="avatar" src={`http://localhost:2109/info/avatar/${user?.accountId}_faculty`} alt="avatar" width="50px" />
             </Box>
             <Box
               className="infor"
@@ -249,7 +258,7 @@ const Faculty = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  {userInfo.userName}
+                  {user?.facultyName}
                 </Typography>
               </Box>
               <Box className="userEmail">
@@ -259,7 +268,7 @@ const Faculty = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  {userInfo.userEmail}
+                  {user?.facultyEmail}
                 </Typography>
               </Box>
             </Box>
