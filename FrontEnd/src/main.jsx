@@ -41,7 +41,7 @@ import UniverCetificate from './Pages/Univer/UniverCetificate/UniverCetificate.j
 import AcceptProject from './Pages/Faculty/AcceptProject/AcceptProject.jsx'
 import MentorProjectInformation from './Pages/Mentor/MentorProjectInformation/MentorProjectInformation.jsx'
 import UnconfirmedTopicForMentor from './Pages/Mentor/UnconfirmedTopicForMentor/UnconfirmedTopicForMentor.jsx'
-
+import MentorDetailIdea from './Pages/Mentor/MentorDetailIdea/MentorDetailIdea.jsx'
 const router = createBrowserRouter([
 
   { path: '*', element: <Page404 /> },
@@ -170,7 +170,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/Mentor/MentorProposeIdea',
-        element: <MentorProposeIdea />
+        element: <MentorDetailIdea/>
       },
       {
         path: '/Mentor/MentorInformation',

@@ -16,7 +16,7 @@ const port = 3306;
 const user = 'root';
 const password = '123456';
 
-const databaseName = 'StudySync';
+const databaseName = 'studysync';
 
 const pool = mysql.createPool({ host, port, user, password });
 pool.query(`CREATE DATABASE IF NOT EXISTS ${databaseName}`);
