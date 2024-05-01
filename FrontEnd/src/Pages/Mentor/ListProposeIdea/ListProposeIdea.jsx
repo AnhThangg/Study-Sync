@@ -8,9 +8,9 @@ const columns = [
     {
         field: 'id',
         headerName: 'No.',
-        width: 150,
+        width: 350,
     },
-    { field: 'ideaName', headerName: 'IdeaName', width: 400 },
+    { field: 'ideaName', headerName: 'IdeaName', width: 500 },
     { field: 'mentorFullname', headerName: 'Mentor Fullname', width: 500 },
    
     
