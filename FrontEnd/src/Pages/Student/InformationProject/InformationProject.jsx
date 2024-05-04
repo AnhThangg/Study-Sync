@@ -10,7 +10,9 @@ import {
   TextareaAutosize,
 } from "@mui/material";
 import {
-
+  Folder,
+  FileUpload,
+  CreateNewFolder,
   Person,
   AccessTime,
   DataSaverOff,
@@ -60,7 +62,22 @@ function InformationProject() {
   const [topicGoalSubject, setTopicGoalSubject] = useState();
   const [topicExpectedResearch, setTopicExpectedResearch] = useState();
   const [topicTech, setTopicTech] = useState();
-  // const ơ
+  const [folders, setFolders] = useState([]);
+  const [newFolderName, setNewFolderName] = useState('');
+
+  useEffect(() => {
+    // Thêm một thư mục mặc định khi component được khởi tạo
+    const defaultFolder = { id: 1, name: 'Folder 1' };
+    setFolders([defaultFolder]);
+  }, []);
+  const addFolder = () => {
+    // Tạo một thư mục mới với một id duy nhất và tên mặc định
+    const newFolder = { id: folders.length + 1, name: `Folder ${folders.length + 1}` };
+    setFolders([...folders, newFolder]); // Thêm thư mục mới vào danh sách
+  };
+  const deleteFolder = (id) => {
+    setFolders(folders.filter(folder => folder.id !== id)); // Loại bỏ folder có id tương ứng khỏi danh sách
+  };
 
 
   useEffect(() => {
@@ -108,7 +125,6 @@ function InformationProject() {
       <Box
         className="container"
         sx={{
-          //   width: "100%",
           height: "100%",
           display: "flex",
           flexDirection: "row",
@@ -181,374 +197,125 @@ function InformationProject() {
 
           <Box className="document" sx={{ marginBottom: "20px" }}>
             <InfoItem label="Document Uploaded" />
-            {/* <input
-              type="file"
-              ref={fileInputRef}
-              style={{ width: '0px', height: '0px' }}
-              onChange={handleFileChange}
-            />
-            <Box className="file">
-              <Box sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                width: 'auto',
-                height: '100%',
-                alignItems: 'center'
-              }}>
-                <Article fontSize="large" sx={{
-                  color: '#707070'
-                }}></Article>
-                <Box sx={{
-                  width: 'auto',
-                  height: '100%',
+
+
+
+            <Box className="createFolder" sx={{
+              margin: '10px 0 30px 10px'
+            }}>
+              {folders.map(folder => (
+                <Box className="folder" key={folder.id} sx={{
                   display: 'flex',
-                  alignItems: 'center'
+                  flexDirection: 'column'
                 }}>
-                  <Typography ClassName="documentsPJ" sx={{
-                    marginTop: '10px',
-                    fontSize: '18px',
-                    marginLeft: '10px',
-                    color: '#707070',
-                    marginBottom: '8px'
+                  <Box className="rowFolder" sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center'
                   }}>
-                    {fileInputRef.current?.value?.split('\\').pop()}
-                  </Typography>
-                </Box>
-              </Box>
-            </Box>
-            <Button onClick={() => { fileInputRef.current.click() }}>Upload File</Button> */}
-
-            <Box className="createFolder" sx={{
-              // background: 'red'
-            }}>
-              <Box className="folder" sx={{
-                display: 'flex',
-                flexDirection: 'column'
-              }}>
-                <Box className="rowFolder" sx={{
-                  display: 'flex',
-                  flexDirection: 'row'
-                }}>
-                  <TextField
-                    size="small"
-                    sx={{ width: "600px", paddingLeft: "10px" }}
-                  />
-                  <Button><Delete /></Button>
-                </Box>
-                <Box className="chooseFile">
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    style={{ width: '0px', height: '0px' }}
-                    onChange={handleFileChange}
-                  />
-                  <Box className="file">
-                    <Box sx={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      width: 'auto',
-                      height: '100%',
-                      alignItems: 'center'
-                    }}>
-                      <Article fontSize="large" sx={{
-                        color: '#707070'
-                      }}></Article>
+                    <Folder fontSize="large" sx={{
+                      color: '#D82C2C'
+                    }} />
+                    <TextField
+                      sx={{
+                        width: "500px",
+                        paddingLeft: "10px"
+                      }}
+                      size="small"
+                      value={folder.name}
+                      onChange={event => {
+                        const newName = event.target.value;
+                        setFolders(prevFolders => prevFolders.map(item => (item.id === folder.id ? { ...item, name: newName } : item)));
+                      }}
+                    />
+                    <Button onClick={() => deleteFolder(folder.id)}>
+                      <Delete
+                        sx={{
+                          color: '#D82C2C'
+                        }}
+                        fontSize="large" />
+                    </Button>
+                  </Box>
+                  <Box className="chooseFile" sx={{
+                    marginLeft: '50px'
+                  }}>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      style={{ display: 'none' }}
+                      onChange={handleFileChange}
+                    />
+                    <Box className="file">
                       <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
                         width: 'auto',
                         height: '100%',
-                        display: 'flex',
                         alignItems: 'center'
                       }}>
-                        <Typography ClassName="documentsPJ" sx={{
-                          marginTop: '10px',
-                          fontSize: '18px',
-                          marginLeft: '10px',
-                          color: '#707070',
-                          marginBottom: '8px'
+                        <Article fontSize="large" sx={{
+                          color: '#1e385d'
+                        }}></Article>
+                        <Box sx={{
+                          width: 'auto',
+                          height: '100%',
+                          display: 'flex',
+                          alignItems: 'center'
                         }}>
-                          {fileInputRef.current?.value?.split('\\').pop()}
-                        </Typography>
+                          <Typography ClassName="documentsPJ" sx={{
+                            marginTop: '10px',
+                            fontSize: '18px',
+                            marginLeft: '10px',
+                            color: '#1e385d',
+                            marginBottom: '8px'
+                          }}>
+                            {fileInputRef.current?.value?.split('\\').pop()}
+                          </Typography>
+                        </Box>
                       </Box>
                     </Box>
-                  </Box>
-                  <Button onClick={() => { fileInputRef.current.click() }}>Upload File</Button>
-                </Box>
-              </Box>
-
-
-              <Box className="folder" sx={{
-                display: 'flex',
-                flexDirection: 'row'
-              }}>
-
-              </Box>
-              {/* <Button>
-                Add Folder
-              </Button> */}
-
-            </Box>
-
-
-
-
-
-
-
-
-
-
-
-            <Box className="createFolder" sx={{
-              // background: 'red'
-            }}>
-              <Box className="folder" sx={{
-                display: 'flex',
-                flexDirection: 'column'
-              }}>
-                <Box className="rowFolder" sx={{
-                  display: 'flex',
-                  flexDirection: 'row'
-                }}>
-                  <TextField
-                    size="small"
-                    sx={{ width: "600px", paddingLeft: "10px" }}
-                  />
-                  <Button><Delete /></Button>
-                </Box>
-                <Box className="chooseFile">
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    style={{ width: '0px', height: '0px' }}
-                    onChange={handleFileChange}
-                  />
-                  <Box className="file">
-                    <Box sx={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      width: 'auto',
-                      height: '100%',
-                      alignItems: 'center'
+                    <Button onClick={() => { fileInputRef.current.click() }} sx={{
+                      background: "#1e385d",
+                      color: "#fff",
+                      border: "1px solid #1e385d",
+                      "&:hover": {
+                        border: '1px solid #1e385d',
+                        color: '#1e385d',
+                      },
                     }}>
-                      <Article fontSize="large" sx={{
-                        color: '#707070'
-                      }}></Article>
-                      <Box sx={{
-                        width: 'auto',
-                        height: '100%',
-                        display: 'flex',
-                        alignItems: 'center'
-                      }}>
-                        <Typography ClassName="documentsPJ" sx={{
-                          marginTop: '10px',
-                          fontSize: '18px',
-                          marginLeft: '10px',
-                          color: '#707070',
-                          marginBottom: '8px'
-                        }}>
-                          {fileInputRef.current?.value?.split('\\').pop()}
-                        </Typography>
-                      </Box>
-                    </Box>
+                      <FileUpload />
+                      Upload File
+                    </Button>
                   </Box>
-                  <Button onClick={() => { fileInputRef.current.click() }}>Upload File</Button>
                 </Box>
-              </Box>
-
-
-              <Box className="folder" sx={{
-                display: 'flex',
-                flexDirection: 'row'
-              }}>
-
-              </Box>
-              <Button>
+              ))}
+              <Button
+                onClick={addFolder}
+                sx={{
+                  margin: '10px 0',
+                  gap: '5px',
+                  background: "#D82C2C",
+                  color: "#fff",
+                  border: "1px solid #D82C2C",
+                  "&:hover": {
+                    border: '1px solid #D82C2C',
+                    color: '#D82C2C',
+                  },
+                }}>
+                <CreateNewFolder />
                 Add Folder
               </Button>
-
             </Box>
 
 
 
 
-            {/* 
-            <Box
-              className="proposal"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ width: "40%" }}>Proposal</Typography>
 
-              <Box className="upload">
-                <IconButton onClick={handleUploadClick}>
-                  <Upload />
-                </IconButton>
-              </Box>
-            </Box>
-            {uploadedFile && (
-              <Typography
-                sx={{
-                  // width: "100%",
-                  paddingLeft: "25px",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {uploadedFile.name}
-              </Typography>
-            )}
-            <Box
-              className="projectPlan"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ width: "40%" }}>Project Plan</Typography>
-              <IconButton>
-                <Upload />
-              </IconButton>
-            </Box>
-            <Box
-              className="productBacklog"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ width: "40%" }}>Product Backlog</Typography>
-              <IconButton>
-                <Upload />
-              </IconButton>
-            </Box>
-            <Box
-              className="userStories"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ width: "40%" }}>User Stories</Typography>
-              <IconButton>
-                <Upload />
-              </IconButton>
-            </Box>
-            <Box
-              className="architecture"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ width: "40%" }}>Architecture Design</Typography>
-              <IconButton>
-                <Upload />
-              </IconButton>
-            </Box>
-            <Box
-              className="database"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ width: "40%" }}>Database Design</Typography>
-              <IconButton>
-                <Upload />
-              </IconButton>
-            </Box>
-            <Box
-              className="userInter"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ width: "40%" }}>
-                User Interface Design
-              </Typography>
-              <IconButton>
-                <Upload />
-              </IconButton>
-            </Box>
-            <Box
-              className="testCase"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ width: "40%" }}>Test Case</Typography>
-              <IconButton>
-                <Upload />
-              </IconButton>
-            </Box>
-            <Box
-              className="testPlan"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ width: "40%" }}>Test Plan</Typography>
-              <IconButton>
-                <Upload />
-              </IconButton>
-            </Box>
-            <Box
-              className="sprintBacklog"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ width: "40%" }}>Sprint Backlog</Typography>
-              <IconButton>
-                <Upload />
-              </IconButton>
-            </Box> */}
+
+
+
+
+
           </Box>
         </Box>
 
@@ -638,18 +405,7 @@ function InformationProject() {
         </Box>
       </Box>
 
-      <Box className="link">
-        <InfoItem label="Link Project" />
-        <Box>
-          <Icon>
-            <Attachment />
-          </Icon>
-          <TextField
-            size="small"
-            sx={{ width: "600px", paddingLeft: "10px" }}
-          />
-        </Box>
-      </Box>
+
       <Box
         className="btnCreate"
         sx={{
