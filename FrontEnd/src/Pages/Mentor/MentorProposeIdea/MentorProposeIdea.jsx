@@ -5,11 +5,13 @@ import {
   Input,
   IconButton,
   Button,
+  TextareaAutosize,
   TextField
 } from "@mui/material";
 import { React, useEffect } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { ListAlt } from "@mui/icons-material"
+
 
 const MentorProposeIdea = () => {
   return (
@@ -57,13 +59,16 @@ const MentorProposeIdea = () => {
             >
               Project Name
             </Typography>
-            <TextField
-              size="medium"
-              label="Project Name"
-              sx={{
-                width: "95%"
+            <TextareaAutosize
+              style={{
+                width: "95%",
+                height: "50px",
+                border: "2px solid #999",
+                borderRadius: "10px",
+                padding: "10px",
+                fontSize: "20px",
               }}
-            ></TextField>
+            />
           </Box>
           <Box sx={{
             display: 'flex',
@@ -79,16 +84,16 @@ const MentorProposeIdea = () => {
             >
               Project Description
             </Typography>
-            <TextField
-              size="medium"
-              label="Project Description"
-              sx={{
+            <TextareaAutosize
+              style={{
                 width: "95%",
-                "& .MuiInputBase-input": {
-                  height: '250px',
-                },
+                height: "250px",
+                border: "2px solid #999",
+                borderRadius: "10px",
+                padding: "10px",
+                fontSize: "20px",
               }}
-            ></TextField>
+            />
           </Box>
           <Box sx={{
             display: 'flex',
@@ -104,16 +109,16 @@ const MentorProposeIdea = () => {
             >
               Requirements for students
             </Typography>
-            <TextField
-              size="medium"
-              label="Requirements for students"
-              sx={{
+            <TextareaAutosize
+              style={{
                 width: "95%",
-                "& .MuiInputBase-input": {
-                  height: '50px',
-                },
+                height: "50px",
+                border: "2px solid #999",
+                borderRadius: "10px",
+                padding: "10px",
+                fontSize: "20px",
               }}
-            ></TextField>
+            />
           </Box>
           <Box sx={{
             display: 'flex',
@@ -129,16 +134,16 @@ const MentorProposeIdea = () => {
             >
               Other notes
             </Typography>
-            <TextField
-              size="medium"
-              label="Other notes"
-              sx={{
+            <TextareaAutosize
+              style={{
                 width: "95%",
-                "& .MuiInputBase-input": {
-                  height: '50px',
-                },
+                height: "50px",
+                border: "2px solid #999",
+                borderRadius: "10px",
+                padding: "10px",
+                fontSize: "20px",
               }}
-            ></TextField>
+            />
           </Box>
         </Box>
         <Box className="proposedProjects" sx={{
