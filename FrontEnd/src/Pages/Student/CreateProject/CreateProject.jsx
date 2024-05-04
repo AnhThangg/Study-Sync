@@ -158,10 +158,7 @@ function CreateProject() {
     return `${year}-${formattedMonth}-${formattedDate}`;
   };
 
-  console.log(
-    fortmartDate(startDate?.$y, startDate?.$d.getMonth(), startDate?.$D)
-  );
-
+console.log(members);
   const onSubmitTopic = async () => {
     const listMember = members.map((member) => member.studentCode);
     const res = await createTopic({

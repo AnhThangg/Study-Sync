@@ -138,6 +138,7 @@ const AddAccountStudent = () => {
         (!password) && setMessage('Please fill in information in Password');
         (!userName) && setMessage('Please fill in information in Username');
         if (!univerCode || !facultyCode || !address || !ward || !district || !province || !studentPhone || !studentEmail || !studentClass || !studentBirthday || !studentCode || !studentFullname || !password || !userName || !validateEmail(studentEmail) || !validPhoneNumber(studentPhone) || !studentSex) {
+            console.log(!studentSex)
             setAlertType('error');
             setIsCheckAlert(true);
             setTimeout(() => {
@@ -171,7 +172,7 @@ const AddAccountStudent = () => {
             setPassword('');
             setStudentFullname('');
             setStudentCode('');
-            setStudentSex('');
+            setStudentSex('1');
             setStudentBirthday('');
             setStudentClass('');
             setStudentEmail('');

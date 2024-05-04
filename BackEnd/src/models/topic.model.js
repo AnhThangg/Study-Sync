@@ -39,11 +39,6 @@ const topicModel = (sequelize, DataTypes) =>{
                 type: DataTypes.DATE,
                 allowNull: false
             },
-            documentCode: {
-                type: DataTypes.STRING,
-                allowNull: false,
-                unique: true
-            },
             facultyCode: {
                 type: DataTypes.STRING,
                 allowNull: false

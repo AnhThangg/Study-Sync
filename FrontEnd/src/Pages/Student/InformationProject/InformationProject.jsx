@@ -10,14 +10,15 @@ import {
   TextareaAutosize,
 } from "@mui/material";
 import {
-  Person2,
+
   Person,
-  Groups,
   AccessTime,
   DataSaverOff,
   Attachment,
   Description,
   Upload,
+  Delete,
+  Article, Person2, Link, Groups, AccessAlarm, WorkspacePremium
 } from "@mui/icons-material";
 import { getTopicApprovedDetailForStudent } from '../../../api/studentApi';
 
@@ -59,6 +60,7 @@ function InformationProject() {
   const [topicGoalSubject, setTopicGoalSubject] = useState();
   const [topicExpectedResearch, setTopicExpectedResearch] = useState();
   const [topicTech, setTopicTech] = useState();
+  // const ơ
 
 
   useEffect(() => {
@@ -70,19 +72,7 @@ function InformationProject() {
         console.log(e);
       })
   }, [topicCode])
-  // setTopicDescription(infoTopic.topic?.topicDescription);
-  // setTopicGoalSubject(infoTopic.topic?.topicGoalSubject);
   console.log(topicGoalSubject);
-
-
-
-
-
-
-
-
-
-
 
   return (
     <Box sx={{ margin: "50px 50px 0 50px", color: "#818181" }}>
@@ -191,13 +181,197 @@ function InformationProject() {
 
           <Box className="document" sx={{ marginBottom: "20px" }}>
             <InfoItem label="Document Uploaded" />
-            <input
+            {/* <input
               type="file"
               ref={fileInputRef}
-              style={{ display: "none" }}
+              style={{ width: '0px', height: '0px' }}
               onChange={handleFileChange}
             />
+            <Box className="file">
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                width: 'auto',
+                height: '100%',
+                alignItems: 'center'
+              }}>
+                <Article fontSize="large" sx={{
+                  color: '#707070'
+                }}></Article>
+                <Box sx={{
+                  width: 'auto',
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center'
+                }}>
+                  <Typography ClassName="documentsPJ" sx={{
+                    marginTop: '10px',
+                    fontSize: '18px',
+                    marginLeft: '10px',
+                    color: '#707070',
+                    marginBottom: '8px'
+                  }}>
+                    {fileInputRef.current?.value?.split('\\').pop()}
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+            <Button onClick={() => { fileInputRef.current.click() }}>Upload File</Button> */}
 
+            <Box className="createFolder" sx={{
+              // background: 'red'
+            }}>
+              <Box className="folder" sx={{
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
+                <Box className="rowFolder" sx={{
+                  display: 'flex',
+                  flexDirection: 'row'
+                }}>
+                  <TextField
+                    size="small"
+                    sx={{ width: "600px", paddingLeft: "10px" }}
+                  />
+                  <Button><Delete /></Button>
+                </Box>
+                <Box className="chooseFile">
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    style={{ width: '0px', height: '0px' }}
+                    onChange={handleFileChange}
+                  />
+                  <Box className="file">
+                    <Box sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      width: 'auto',
+                      height: '100%',
+                      alignItems: 'center'
+                    }}>
+                      <Article fontSize="large" sx={{
+                        color: '#707070'
+                      }}></Article>
+                      <Box sx={{
+                        width: 'auto',
+                        height: '100%',
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}>
+                        <Typography ClassName="documentsPJ" sx={{
+                          marginTop: '10px',
+                          fontSize: '18px',
+                          marginLeft: '10px',
+                          color: '#707070',
+                          marginBottom: '8px'
+                        }}>
+                          {fileInputRef.current?.value?.split('\\').pop()}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                  <Button onClick={() => { fileInputRef.current.click() }}>Upload File</Button>
+                </Box>
+              </Box>
+
+
+              <Box className="folder" sx={{
+                display: 'flex',
+                flexDirection: 'row'
+              }}>
+
+              </Box>
+              {/* <Button>
+                Add Folder
+              </Button> */}
+
+            </Box>
+
+
+
+
+
+
+
+
+
+
+
+            <Box className="createFolder" sx={{
+              // background: 'red'
+            }}>
+              <Box className="folder" sx={{
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
+                <Box className="rowFolder" sx={{
+                  display: 'flex',
+                  flexDirection: 'row'
+                }}>
+                  <TextField
+                    size="small"
+                    sx={{ width: "600px", paddingLeft: "10px" }}
+                  />
+                  <Button><Delete /></Button>
+                </Box>
+                <Box className="chooseFile">
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    style={{ width: '0px', height: '0px' }}
+                    onChange={handleFileChange}
+                  />
+                  <Box className="file">
+                    <Box sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      width: 'auto',
+                      height: '100%',
+                      alignItems: 'center'
+                    }}>
+                      <Article fontSize="large" sx={{
+                        color: '#707070'
+                      }}></Article>
+                      <Box sx={{
+                        width: 'auto',
+                        height: '100%',
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}>
+                        <Typography ClassName="documentsPJ" sx={{
+                          marginTop: '10px',
+                          fontSize: '18px',
+                          marginLeft: '10px',
+                          color: '#707070',
+                          marginBottom: '8px'
+                        }}>
+                          {fileInputRef.current?.value?.split('\\').pop()}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                  <Button onClick={() => { fileInputRef.current.click() }}>Upload File</Button>
+                </Box>
+              </Box>
+
+
+              <Box className="folder" sx={{
+                display: 'flex',
+                flexDirection: 'row'
+              }}>
+
+              </Box>
+              <Button>
+                Add Folder
+              </Button>
+
+            </Box>
+
+
+
+
+            {/* 
             <Box
               className="proposal"
               sx={{
@@ -374,7 +548,7 @@ function InformationProject() {
               <IconButton>
                 <Upload />
               </IconButton>
-            </Box>
+            </Box> */}
           </Box>
         </Box>
 

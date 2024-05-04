@@ -30,9 +30,7 @@ const getTopics = async (req, res) => {
 const createTopic = async (req, res) => {
     try {
         const { body: infoTopic } = req;
-        const documentCode = uuid();
         const teamCode = uuid();
-        let document;
         let team;
         let student_team;
         const univerCode = await Faculty.findOne({
@@ -55,11 +53,6 @@ const createTopic = async (req, res) => {
         // return res.json(topicCode);
 
         try {
-            document = await Document.create({
-                documentCode,
-                documentName: infoTopic.topicName,
-                documentNameSourceCode: infoTopic.topicName + documentCode,
-            });
             team = await Team.create({
                 teamCode,
                 teamName: infoTopic.topicName
@@ -90,7 +83,6 @@ const createTopic = async (req, res) => {
                 topicStatus: 'Waiting for Mentor Approval',
                 topicDateStart: new Date(infoTopic.topicDateStart),
                 topicDateEnd: infoTopic.topicDateEnd,
-                documentCode,
                 facultyCode: infoTopic.facultyCode,
                 teamCode,
                 mentorCode: infoTopic.mentorCode,
@@ -100,8 +92,7 @@ const createTopic = async (req, res) => {
             return res.status(200).json('Create Project Successfully')
         } catch (e) {
             console.log(e);
-            if (document || team) {
-                await document.destroy();
+            if (team) {
                 await team.destroy();
             }
             return res.status(500).json(e);

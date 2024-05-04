@@ -15,6 +15,10 @@ const documentModel = (sequelize, DataTypes) =>{
                 type: DataTypes.STRING,
                 allowNull: false
             },
+            topicCode: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
         }
     )
 }
