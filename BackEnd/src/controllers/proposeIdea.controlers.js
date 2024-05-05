@@ -2,6 +2,15 @@ const { where } = require('sequelize');
 const { Mentor, Student, Faculty, Topic, ProposeIdea, AccountUser } = require('../database/database');
 const { v4: uuid } = require('uuid');
 
+const fortmartDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const formattedMonth = month < 10 ? `0${month}` : month;
+    const formattedDay = day < 10 ? `0${day}` : day;
+    return `${year}-${formattedMonth}-${formattedDay}`;
+}
 
 const createProposeIdea = async (req, res) => {
     try {
@@ -77,10 +86,10 @@ const getListProposeIdea = async (req, res) => {
             }
         }
         const listProposeIdea = await ProposeIdea.findAll({
-            attributes: ['ideaCode', 'ideaName'],
+            attributes: ['ideaCode', 'ideaName', 'createdAt', 'updatedAt'],
             include: [{
                 model: Mentor,
-                attributes: ['mentorFullname', 'facultyCode'],
+                attributes: ['mentorFullname', 'facultyCode', 'createdAt', 'updatedAt'],
                 where: {
                     facultyCode
                 }
@@ -96,7 +105,9 @@ const getListProposeIdea = async (req, res) => {
             ideaName: idea.ideaName,
             mentorFullname: idea.mentor.mentorFullname,
             facultyCode: idea.mentor.facultyCode,
-            facultyName: faculty.facultyName
+            facultyName: faculty.facultyName,
+            createdAt: fortmartDate(idea.createdAt),
+            updatedAt: fortmartDate(idea.updatedAt)
         }));
         return res.status(200).json(result);
     } catch (e) {

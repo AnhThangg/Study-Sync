@@ -1,3 +1,5 @@
+import { React, useEffect, useRef, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom"
 import {
     Box,
     Icon,
@@ -7,15 +9,60 @@ import {
     Button,
     TextField
 } from "@mui/material";
-import { React, useEffect } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { ListAlt } from "@mui/icons-material"
+import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
+import { getProposeIdea } from '../../../api/proposeIdeaApi'
+import { getMentor } from '../../../api/mentor.Api'
+
 
 const MentorDetailIdea = () => {
+    const navigate = useNavigate();
+    const ideaCode = useParams().id;
+    const [infoIdea, setInfoIdea] = useState();
+    const [infoMentor, setInfoMentor] = useState();
+
+    useEffect(() => {
+        getProposeIdea(ideaCode)
+            .then((data) => {
+                setInfoIdea(data)
+            })
+            .catch(e => {
+                console.log(e)
+            })
+    }, [])
+
+    useEffect(() => {
+        getMentor(infoIdea?.mentorCode)
+            .then((data) => {
+                setInfoMentor(data)
+            })
+            .catch(e => {
+                console.log(e)
+            })
+    }, [infoIdea])
+
+    console.log(infoMentor)
+    const formatContent = (text) => {
+        if (typeof text !== 'string') {
+            return [];
+        }
+
+        const lines = text.split('\n').map((line, index) => {
+            return (
+                <div key={index} style={{ textIndent: `20px`, marginBottom: `10px` }}>
+                    {line}
+                </div>
+            );
+        });
+
+        return lines;
+    }
     return (
         <Box sx={{
             display: 'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            margin: '0 0 20px 0'
         }}>
             <Box sx={{
                 flex: '1'
@@ -27,7 +74,7 @@ const MentorDetailIdea = () => {
                     fontWeight: 'bold',
                     color: '#D82C2C'
                 }}>
-                    Edit Idea
+                    Propose Idea
                 </Typography>
             </Box>
             <Box className="proposeIdeaContain" sx={{
@@ -40,7 +87,7 @@ const MentorDetailIdea = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     margin: "0 50px 0 50px",
-                    gap: '30px'
+                    gap: '20px'
                 }}>
                     <Box sx={{
                         display: 'flex',
@@ -51,48 +98,25 @@ const MentorDetailIdea = () => {
                             variant="h6"
                             sx={{
                                 fontWeight: "bold",
-                                color: "#707070",
+                                color: "#D82C2C",
                                 marginTop: "50px"
                             }}
                         >
-                            Project Name
+                            Idea Name
                         </Typography>
-                        <TextField
-                            size="medium"
-                            label="Project Name"
-                            sx={{
-                                width: "95%"
-                            }}
-                            disabled
-                        ></TextField>
-                    </Box>
-                    <Box sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '10px'
-                    }}>
                         <Typography
                             variant="h6"
                             sx={{
-                                fontWeight: "bold",
-                                color: "#707070"
+                                // fontWeight: "bold",
+                                color: "#707070",
+                                marginLeft: '10px',
+                                textIndent: '20px',
                             }}
                         >
-                            Project Description
+                            {infoIdea?.ideaName}
                         </Typography>
-
-
-                        <TextField
-                            multiline
-                            rows={7}
-                            variant="outlined"
-                            label="Project Description"
-                            style={{
-                                width: "95%",
-                            }}
-                        />;
-
                     </Box>
+
                     <Box sx={{
                         display: 'flex',
                         flexDirection: 'column',
@@ -102,21 +126,24 @@ const MentorDetailIdea = () => {
                             variant="h6"
                             sx={{
                                 fontWeight: "bold",
-                                color: "#707070"
+                                color: "#D82C2C",
                             }}
                         >
-                            Requirements for students
+                            Idea Description
                         </Typography>
-                        <TextField
-                            multiline
-                            rows={4}
-                            variant="outlined"
-                            label="Requirements for students"
-                            style={{
-                                width: "95%",
+
+                        <Typography
+                            variant="h6"
+                            sx={{
+                                color: "#707070",
+                                marginLeft: '10px',
+
                             }}
-                        />;
+                        >
+                            {formatContent(infoIdea?.ideaDescription)}
+                        </Typography>
                     </Box>
+
                     <Box sx={{
                         display: 'flex',
                         flexDirection: 'column',
@@ -126,21 +153,77 @@ const MentorDetailIdea = () => {
                             variant="h6"
                             sx={{
                                 fontWeight: "bold",
-                                color: "#707070"
+                                color: "#D82C2C",
+                            }}
+                        >
+                            Idea Goal Of The Subject
+                        </Typography>
+
+
+                        <Typography
+                            variant="h6"
+                            sx={{
+                                color: "#707070",
+                                marginLeft: '10px',
+
+                            }}
+                        >
+                            {formatContent(infoIdea?.ideaGoalSubject)}
+                        </Typography>
+                    </Box>
+
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '10px'
+                    }}>
+                        <Typography
+                            variant="h6"
+                            sx={{
+                                fontWeight: "bold",
+                                color: "#D82C2C",
+                            }}
+                        >
+                            Idea expected research products of the topic and applicability
+                        </Typography>
+
+                        <Typography
+                            variant="h6"
+                            sx={{
+                                color: "#707070",
+                                marginLeft: '10px',
+
+                            }}
+                        >
+                            {formatContent(infoIdea?.ideaExpectedResearch)}
+                        </Typography>
+                    </Box>
+
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '10px'
+                    }}>
+                        <Typography
+                            variant="h6"
+                            sx={{
+                                fontWeight: "bold",
+                                color: "#D82C2C",
                             }}
                         >
                             Other notes
                         </Typography>
-                        <TextField
-                            size="medium"
-                            label="Other notes"
+
+                        <Typography
+                            variant="h6"
                             sx={{
-                                width: "95%",
-                                "& .MuiInputBase-input": {
-                                    height: '50px',
-                                },
+                                color: "#707070",
+                                marginLeft: '10px',
+
                             }}
-                        ></TextField>
+                        >
+                            {formatContent(infoIdea?.otherNotes)}
+                        </Typography>
                     </Box>
                 </Box>
                 <Box className="proposedProjects" sx={{
@@ -152,214 +235,163 @@ const MentorDetailIdea = () => {
                         display: 'flex',
                         flexDirection: 'column',
                         width: '80%',
-                        height: '633px',
+                        height: 'autoHeight',
                         background: '#F6E6E6',
                         borderRadius: '20px',
+                        paddingBottom: '20px'
                     }}>
                         <Box sx={{
                             display: 'flex',
                             flexDirection: 'row',
                             alignItems: 'center',
                             margin: '20px 0 0 30px',
-                            gap: '20px'
+                            gap: '15px'
                         }}>
-                            <ListAlt fontSize="large" sx={{ color: '#707070' }} />
+                            <ContactEmergencyIcon fontSize="large" sx={{ color: '#D82C2C' }} />
                             <Typography sx={{
-                                fontSize: '20px',
+                                fontSize: '26px',
                                 fontWeight: 'bold',
-                                color: '#707070'
+                                color: '#D82C2C'
                             }}>
-                                Proposed Projects
+                                Author of the topic
                             </Typography>
                         </Box>
                         <Box sx={{
                             display: 'flex',
                             flexDirection: 'column',
                             margin: '30px 0 0 50px',
-                            gap: '40px'
+                            gap: '5px'
                         }}>
-
-                            <Box sx={{
+                            <Box className="line" sx={{
                                 display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                gap: '20px'
+                                flexDirection: 'column',
                             }}>
                                 <Typography sx={{
-                                    fontSize: '20px',
-                                    fontWeight: 'bold',
-                                    color: '#707070'
-                                }}>
-                                    1
-                                </Typography>
+                                    color: '#D82C2C',
+                                    fontSize: '23px',
+                                    marginLeft: '10px',
+                                    fontWeight: 'bold'
+                                }}>Mentor Name: </Typography>
                                 <Typography sx={{
+                                    color: '#707070',
                                     fontSize: '20px',
-                                    color: '#707070'
-                                }}>
-                                    Baby vaccine tracker
-                                </Typography>
+                                    marginLeft: '30px',
+                                }}>{infoMentor?.mentorFullname} </Typography>
                             </Box>
 
-                            <Box sx={{
+                            <Box className="line" sx={{
                                 display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                gap: '20px'
+                                flexDirection: 'column',
                             }}>
                                 <Typography sx={{
-                                    fontSize: '20px',
-                                    fontWeight: 'bold',
-                                    color: '#707070'
-                                }}>
-                                    2
-                                </Typography>
+                                    color: '#D82C2C',
+                                    fontSize: '23px',
+                                    marginLeft: '10px',
+                                    fontWeight: 'bold'
+                                }}>Mentor Scientific Name: </Typography>
                                 <Typography sx={{
+                                    color: '#707070',
                                     fontSize: '20px',
-                                    color: '#707070'
-                                }}>
-                                    ETickets - QR code for coaches tickets
-                                </Typography>
+                                    marginLeft: '30px',
+                                }}>{infoMentor?.mentorScientificName} </Typography>
                             </Box>
 
-                            <Box sx={{
+                            <Box className="line" sx={{
                                 display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                gap: '20px'
+                                flexDirection: 'column',
                             }}>
                                 <Typography sx={{
-                                    fontSize: '20px',
-                                    fontWeight: 'bold',
-                                    color: '#707070'
-                                }}>
-                                    3
-                                </Typography>
+                                    color: '#D82C2C',
+                                    fontSize: '23px',
+                                    marginLeft: '10px',
+                                    fontWeight: 'bold'
+                                }}>Degree: </Typography>
                                 <Typography sx={{
+                                    color: '#707070',
                                     fontSize: '20px',
-                                    color: '#707070'
-                                }}>
-                                    SyncStudy
-                                </Typography>
+                                    marginLeft: '30px',
+                                }}>{infoMentor?.mentorDegree} </Typography>
                             </Box>
 
-                            <Box sx={{
+                            <Box className="line" sx={{
                                 display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                gap: '20px'
+                                flexDirection: 'column',
                             }}>
                                 <Typography sx={{
-                                    fontSize: '20px',
-                                    fontWeight: 'bold',
-                                    color: '#707070'
-                                }}>
-                                    4
-                                </Typography>
+                                    color: '#D82C2C',
+                                    fontSize: '23px',
+                                    marginLeft: '10px',
+                                    fontWeight: 'bold'
+                                }}>Gender: </Typography>
                                 <Typography sx={{
+                                    color: '#707070',
                                     fontSize: '20px',
-                                    color: '#707070'
-                                }}>
-                                    Open Al
-                                </Typography>
+                                    marginLeft: '30px',
+                                }}>{infoMentor?.mentorSex === 0 ? 'Female' : 'Male'}</Typography>
                             </Box>
 
-                            <Box sx={{
+                            <Box className="line" sx={{
                                 display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                gap: '20px'
+                                flexDirection: 'column',
                             }}>
                                 <Typography sx={{
-                                    fontSize: '20px',
-                                    fontWeight: 'bold',
-                                    color: '#707070'
-                                }}>
-                                    5
-                                </Typography>
+                                    color: '#D82C2C',
+                                    fontSize: '23px',
+                                    marginLeft: '10px',
+                                    fontWeight: 'bold'
+                                }}>Email: </Typography>
                                 <Typography sx={{
+                                    color: '#707070',
                                     fontSize: '20px',
-                                    color: '#707070'
-                                }}>
-                                    Quick Exam
-                                </Typography>
+                                    marginLeft: '30px',
+                                }}>{infoMentor?.mentorEmail}</Typography>
                             </Box>
 
-                            <Box sx={{
+                            <Box className="line" sx={{
                                 display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                gap: '20px'
+                                flexDirection: 'column',
                             }}>
                                 <Typography sx={{
-                                    fontSize: '20px',
-                                    fontWeight: 'bold',
-                                    color: '#707070'
-                                }}>
-                                    6
-                                </Typography>
+                                    color: '#D82C2C',
+                                    fontSize: '23px',
+                                    marginLeft: '10px',
+                                    fontWeight: 'bold'
+                                }}>Phone Number: </Typography>
                                 <Typography sx={{
+                                    color: '#707070',
                                     fontSize: '20px',
-                                    color: '#707070'
-                                }}>
-                                    Easy CV - Create a smart CV
-                                </Typography>
+                                    marginLeft: '30px',
+                                }}>{infoMentor?.mentorPhone}</Typography>
                             </Box>
-
-                            <Box sx={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                gap: '20px'
-                            }}>
-                                <Typography sx={{
-                                    fontSize: '20px',
-                                    fontWeight: 'bold',
-                                    color: '#707070'
-                                }}>
-                                    7
-                                </Typography>
-                                <Typography sx={{
-                                    fontSize: '20px',
-                                    color: '#707070'
-                                }}>
-                                    Traveloka - Smart travel
-                                </Typography>
-                            </Box>
-
                         </Box>
                     </Box>
                     <Box className="proposeButton" sx={{
                         display: 'flex',
                         flexDirection: 'row',
-                        margin: '50px 0 0 0',
+                        marginTop: '20px',
                         alignItems: "center",
                         justifyContent: "center",
-                        gap: '30px'
+                        width: '80%',
                     }}>
-                        <Button sx={{
-                            backgroundColor: "#D9D9D9",
-                            border: "5px solid #D82C2C",
-                            borderRadius: "20px",
-                            width: "150px",
-                            height: "50px",
-                            color: "#000",
-                            fontWeight: "bold",
-                            fontSize: "20px"
-                        }}>
-                            Edit
-                        </Button>
-
-                        <Button sx={{
-                            backgroundColor: "#D9D9D9",
-                            border: "5px solid #D82C2C",
-                            borderRadius: "20px",
-                            width: "150px",
-                            height: "50px",
-                            color: "#000",
-                            fontWeight: "bold",
-                            fontSize: "20px"
-                        }}>
-                            Cancel
+                        <Button
+                            onClick={() => navigate(`/mentor/listproposeidea`)}
+                            sx={{
+                                backgroundColor: "#D82C2C",
+                                border: "2px solid #D82C2C",
+                                borderRadius: "15px",
+                                width: "100%",
+                                height: "50px",
+                                color: "#fff",
+                                fontWeight: "bold",
+                                fontSize: "20px",
+                                gap: '10px',
+                                "&:hover": {
+                                    backgroundColor: "#fff",
+                                    borderColor: "#D82C2C",
+                                    color: '#D82C2C'
+                                }
+                            }}>
+                            <KeyboardReturnIcon fontSize="large" />Back to List Propose Idea
                         </Button>
                     </Box>
                 </Box>

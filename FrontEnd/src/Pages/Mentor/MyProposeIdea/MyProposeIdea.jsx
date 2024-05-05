@@ -10,7 +10,7 @@ const columns = [
         headerName: 'No.',
         width: 100,
     },
-    { field: 'ideaName', headerName: 'IdeaName', width: 350 },
+    { field: 'ideaName', headerName: 'IdeaName', width: 250 },
     { field: 'mentorCode', headerName: 'Mentor Code', width: 280 },
     { field: 'createdAt', headerName: 'Created At', width: 250 },
     { field: 'updatedAt', headerName: 'Updated At', width: 220 },

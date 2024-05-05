@@ -200,6 +200,10 @@ const router = createBrowserRouter([
       {
         path: '/Mentor/MentorWaittingInformation',
         element: <MentorWaittingInformation />,
+      },
+      {
+        path: '/Mentor/proposeidea/:id',
+        element: <MentorDetailIdea />
       }
     ]
   },
