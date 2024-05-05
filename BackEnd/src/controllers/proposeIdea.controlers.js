@@ -7,6 +7,19 @@ const createProposeIdea = async (req, res) => {
     try {
         const { body: info } = req;
         const account = req.account;
+
+        // Kiểm tra xem có bản ghi nào tồn tại với ideaName đã được cung cấp hay không
+        const existingIdea = await ProposeIdea.findOne({
+            where: {
+                ideaName: info.ideaName
+            }
+        });
+
+        // Nếu đã tồn tại bản ghi với ideaName đã được cung cấp, trả về lỗi
+        if (existingIdea) {
+            return res.status(400).json('Idea Name already exists');
+        }
+
         const mentor = await Mentor.findOne({
             where: {
                 accountId: account.accountId
@@ -168,7 +181,7 @@ const updateProposalIdea = async (req, res) => {
         if (!proposeIdea) {
             return res.status(404).json('Propose Idea Not Found');
         }
-        if(mentor.mentorCode!==proposeIdea.mentorCode){
+        if (mentor.mentorCode !== proposeIdea.mentorCode) {
             return res.status(403).json(`Do not edit other people's proposalsIdea`);
         }
         await proposeIdea.update({

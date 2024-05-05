@@ -1,5 +1,14 @@
 import * as request from './HttpRequest';
 
+export const createProposeIdea = async (info) => {
+    try {
+        const res = await request.post('/proposeIdea/createProposeIdea', info);
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 export const getListProposeIdea = () => {
     try {
         const res = request.get('/proposeIdea/ListProposeIdea')

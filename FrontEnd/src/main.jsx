@@ -175,7 +175,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/Mentor/MentorProposeIdea',
-        element: <MentorDetailIdea />
+        element: <MentorProposeIdea />
       },
       {
         path: '/Mentor/MentorInformation',
