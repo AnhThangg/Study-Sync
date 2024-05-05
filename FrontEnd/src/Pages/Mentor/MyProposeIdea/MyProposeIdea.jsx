@@ -4,64 +4,58 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Edit, Delete } from "@mui/icons-material";
 import { useState } from 'react';
 
-const columns = [
-    {
-        field: 'id',
-        headerName: 'No.',
-        width: 100,
-    },
-    { field: 'ideaName', headerName: 'IdeaName', width: 250 },
-    { field: 'mentorCode', headerName: 'Mentor Code', width: 280 },
-    { field: 'createdAt', headerName: 'Created At', width: 250 },
-    { field: 'updatedAt', headerName: 'Updated At', width: 220 },
-    {
-        field: 'action',
-        headerName: 'Action',
-        description: 'This column has edit and delete functions and cannot be sorted',
-        sortable: false,
-        width: 200,
-        headerAlign: 'center',
-        align: 'center',
-        renderCell: (params) => {
-            return (
-                <div>
-                    <Button
-                        onClick={() => handleEdit(params.row.accountId)}
-                        sx={{
-                            color: '#707070',
-                            '&:hover': {
-                                background: 'none',
-                                color: '#D82C2C'
-                            }
-                        }}>
-                        <Edit fontSize='large' />
-                    </Button>
-                    <Button
-                        onClick={() => onDeleteAccount(params.row.accountId)}
-                        sx={{
-                            color: '#707070',
-                            '&:hover': {
-                                background: 'none',
-                                color: '#D82C2C'
-                            }
-                        }}>
-                        <Delete fontSize='large' />
-                    </Button>
-                </div>
-            );
-        },
-    },
-    
-    
-];
-
 const MyProposeIdea = () => {
+
+    const columns = [
+        { field: 'id', headerName: 'No.', width: 100, },
+        { field: 'ideaName', headerName: 'IdeaName', width: 250 },
+        { field: 'mentorCode', headerName: 'Mentor Code', width: 280 },
+        { field: 'createdAt', headerName: 'Created At', width: 250 },
+        { field: 'updatedAt', headerName: 'Updated At', width: 220 },
+        {
+            field: 'action',
+            headerName: 'Action',
+            description: 'This column has edit and delete functions and cannot be sorted',
+            sortable: false,
+            width: 200,
+            headerAlign: 'center',
+            align: 'center',
+            renderCell: (params) => {
+                return (
+                    <div>
+                        <Button
+                            onClick={() => handleEdit(params.row.accountId)}
+                            sx={{
+                                color: '#707070',
+                                '&:hover': {
+                                    background: 'none',
+                                    color: '#D82C2C'
+                                }
+                            }}>
+                            <Edit fontSize='large' />
+                        </Button>
+                        <Button
+                            onClick={() => onDeleteAccount(params.row.accountId)}
+                            sx={{
+                                color: '#707070',
+                                '&:hover': {
+                                    background: 'none',
+                                    color: '#D82C2C'
+                                }
+                            }}>
+                            <Delete fontSize='large' />
+                        </Button>
+                    </div>
+                );
+            },
+        },
+    ];
     const [MyProposeIdea, setMyProposeIdea] = useState([
-        { id: 1, ideaName: 'Exam Master22', mentorCode: '123456', createdAt:'22/03/2024', updatedAt:'30/04/2024'},
-        { id: 2, ideaName: 'Exam Master23', mentorCode: '123456', createdAt:'22/03/2024', updatedAt:'30/04/2024'},
-        { id: 3, ideaName: 'Exam Master24', mentorCode: '123456', createdAt:'22/03/2024', updatedAt:'30/04/2024'},
-        { id: 4, ideaName: 'Exam Master25', mentorCode: '123456', createdAt:'22/03/2024', updatedAt:'30/04/2024'},
-        { id: 5, ideaName: 'Exam Master26', mentorCode: '123456', createdAt:'22/03/2024', updatedAt:'30/04/2024'},
+        { id: 1, ideaName: 'Exam Master22', mentorCode: '123456', createdAt: '22/03/2024', updatedAt: '30/04/2024' },
+        { id: 2, ideaName: 'Exam Master23', mentorCode: '123456', createdAt: '22/03/2024', updatedAt: '30/04/2024' },
+        { id: 3, ideaName: 'Exam Master24', mentorCode: '123456', createdAt: '22/03/2024', updatedAt: '30/04/2024' },
+        { id: 4, ideaName: 'Exam Master25', mentorCode: '123456', createdAt: '22/03/2024', updatedAt: '30/04/2024' },
+        { id: 5, ideaName: 'Exam Master26', mentorCode: '123456', createdAt: '22/03/2024', updatedAt: '30/04/2024' },
     ]);
 
     return (
