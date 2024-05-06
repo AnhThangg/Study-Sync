@@ -44,7 +44,6 @@ const ProposeIdeaDetailStudent = () => {
     if (typeof text !== 'string') {
       return [];
     }
-
     const lines = text.split('\n').map((line, index) => {
       return (
         <div key={index} style={{ textIndent: `20px`, marginBottom: `10px` }}>
@@ -52,7 +51,6 @@ const ProposeIdeaDetailStudent = () => {
         </div>
       );
     });
-
     return lines;
   }
 

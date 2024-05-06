@@ -59,6 +59,7 @@ const MentorProposeIdea = () => {
       otherNotes: otherNotes,
     })
     if (res.status === 200) {
+      console.log(res);
       setOpenDialog(false);
       setAlertType('success');
       setMessage(res.data);
@@ -146,8 +147,8 @@ const MentorProposeIdea = () => {
               onChange={(e) => { setIdeaName(e.target.value) }}
               sx={{
                 width: "95%",
-                '& input': { 
-                  fontSize: '20px', 
+                '& input': {
+                  fontSize: '20px',
                   fontWeight: 'bold',
                   color: '#1e385d',
                   border: '1px solid #999',

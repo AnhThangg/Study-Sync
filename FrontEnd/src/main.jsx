@@ -186,7 +186,7 @@ const router = createBrowserRouter([
         element: <MentorProjectInformation />,
       },
       {
-        path: '/Mentor/unconfirmedtopicformentor',
+        path: '/Mentor/unconfirmedtopicformentor/:id',
         element: <UnconfirmedTopicForMentor />
       },
       {

@@ -58,7 +58,7 @@ const createTopic = async (req, res) => {
                 teamName: infoTopic.topicName
             });
             const findLeader = infoTopic.listMember.find(item => item === infoTopic.leader)
-
+            console.log(findLeader);
             if (findLeader) {
                 infoTopic.listMember.forEach(async (item) => {
                     student_team = await StudentTeam.create({
@@ -71,12 +71,18 @@ const createTopic = async (req, res) => {
                     studentCode: infoTopic.leader,
                     teamCode,
                 })
+                infoTopic.listMember.forEach(async (item) => {
+                    student_team = await StudentTeam.create({
+                        studentCode: item,
+                        teamCode,
+                    })
+                })
             }
 
             await Topic.create({
                 topicCode,
                 topicName: infoTopic.topicName,
-                topicDescription: null,
+                topicDescription: infoTopic.topicDescription,
                 topicGoalSubject: infoTopic.topicGoalSubject,
                 topicExpectedResearch: infoTopic.topicExpectedResearch,
                 topicTech: null,

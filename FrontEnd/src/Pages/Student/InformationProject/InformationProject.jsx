@@ -49,7 +49,6 @@ function InformationProject() {
 
   const [fileInputRefs, setFileInputRefs] = useState([useRef(null)]);
   const [uploadedFile, setUploadedFile] = useState(null);
-
   const handleUploadClick = () => {
     fileInputRefs[0].current.click();
   };
@@ -92,7 +91,9 @@ function InformationProject() {
     const isNewFolderExist = folders.some(folder => folder.name === 'New Folder');
     if (!isNewFolderExist) {
       if (onCheckDuplicated(folders)) {
-        const newFolder = { id: uuid(), name: `New Folder` };
+        const newFolder = { id: uuid(), name: `New Folder`, files: [] };
+        const newFileInputRef = {current: null};
+        setFileInputRefs([...fileInputRefs, newFileInputRef])
         setFolders([...folders, newFolder]);
       }
       else {
@@ -119,17 +120,17 @@ function InformationProject() {
   };
 
   const upFile = (index) => {
-    console.log(index)
+    console.log(fileInputRefs[index])
     fileInputRefs[index].current.click();
   }
 
-  const onChangeFile = (e,index) => {
+  const onChangeFile = (e, index) => {
     const newFolders = [...folders];
-    newFolders[index].files.push({id: uuid(), file: e.target.files[0], name: e.target.value});
+    newFolders[index].files.push({ id: uuid(), file: e.target.files[0], name: e.target.value });
     setFolders(newFolders);
   }
 
-  const onDeleteFile = (folderIndex,fileId) => {
+  const onDeleteFile = (folderIndex, fileId) => {
     const newFolders = [...folders];
     const newFiles = newFolders[folderIndex].files.filter(item => item.id !== fileId);
     newFolders[folderIndex].files = newFiles;
@@ -146,8 +147,6 @@ function InformationProject() {
       })
   }, [topicCode])
 
-
-  console.log(folders);
   return (
     <Box sx={{ margin: "50px 50px 0 50px", color: "#818181" }}>
       <Box
@@ -298,10 +297,10 @@ function InformationProject() {
                       ref={fileInputRefs[index]}
                       type="file"
                       style={{ display: 'none' }}
-                      onChange={(e)=>{onChangeFile(e,index);e.target.value=''}}
+                      onChange={(e) => { onChangeFile(e, index); e.target.value = '' }}
                     />
                     {
-                      folder.files?.map((item,fileIndex) => (
+                      folder.files?.map((item, fileIndex) => (
                         <Box key={item.id} className="file">
                           <Box sx={{
                             display: 'flex',
@@ -328,7 +327,7 @@ function InformationProject() {
                               }}>
                                 {item.name?.split('\\').pop()}
                               </Typography>
-                              <Button onClick={()=>onDeleteFile(index,item.id)}>
+                              <Button onClick={() => onDeleteFile(index, item.id)}>
                                 <Delete />
                               </Button>
                             </Box>
@@ -336,7 +335,7 @@ function InformationProject() {
                         </Box>
                       ))
                     }
-                    <Button onClick={()=>upFile(index)} sx={{
+                    <Button onClick={() => upFile(index)} sx={{
                       background: "#1e385d",
                       color: "#fff",
                       border: "1px solid #1e385d",
