@@ -406,11 +406,13 @@ const UnconfirmedTopicForMentor = () => {
                             width: '100%',
                             display: 'flex',
                             flexDirection: 'row',
-                            gap: '50px',
+                            gap: '2%',
                             paddingTop: '50px',
                             justifyContent: 'center'
                         }}>
                             <Button className="reject" sx={{
+                                width: '48%',
+                                height: '45px',
                                 background: '#D82C2C',
                                 border: '1px solid #D82C2C',
                                 borderRadius: '10px',
@@ -431,6 +433,8 @@ const UnconfirmedTopicForMentor = () => {
                                 onClick={approveTopic}
                                 className="approve"
                                 sx={{
+                                    width: '48%',
+                                    height: '45px',
                                     textTransform: 'none',
                                     background: '#41B06E',
                                     border: '1px solid #41B06E',
@@ -451,12 +455,13 @@ const UnconfirmedTopicForMentor = () => {
                             onClick={() => { navigate('/Mentor/MentorHomepage/MentorWaitting') }}
                             className="Back" sx={{
                                 marginTop: '20px',
+                                height: '45px',
                                 background: '#1e385d',
                                 border: '1px solid #1e385d',
                                 borderRadius: '10px',
                                 fontSize: '20px',
                                 color: '#fff',
-                                padding: '0 65px',
+                                width: '100%',
                                 fontSize: '25px',
                                 gap: '10px',
                                 textTransform: 'none',

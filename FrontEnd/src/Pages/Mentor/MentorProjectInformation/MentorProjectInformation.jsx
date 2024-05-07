@@ -1,11 +1,55 @@
-import React from 'react'
-import { Outlet, NavLink, useLocation } from "react-router-dom";
-import { Button, Box, Typography } from "@mui/material";
+import { React, useEffect, useState } from 'react'
+import { Outlet, useParams, useLocation, useNavigate, NavLink } from "react-router-dom";
+import {
+    Button,
+    Box,
+    Typography,
+    Snackbar,
+    Alert,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle
+} from "@mui/material";
 import './MentorProjectInformation.scss'
 import { Article, Person2, Link, Person, Groups, AccessAlarm, WorkspacePremium } from "@mui/icons-material";
-
+import { getConfirmedTopicDetailForMentor } from '../../../api/mentor.Api'
 
 const MentorProjectInformation = () => {
+    const navigate = useNavigate();
+    const topicCode = useParams().id;
+    const [topicInfo, setTopicInfo] = useState({});
+    const [message, setMessage] = useState('');
+    const [isCheckAlert, setIsCheckAlert] = useState(false);
+    const [alertType, setAlertType] = useState('error');
+    const [openDialog, setOpenDialog] = useState(false);
+
+    useEffect(() => {
+        getConfirmedTopicDetailForMentor(topicCode)
+            .then(data => {
+                setTopicInfo(data);
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }, [topicCode]);
+
+
+    const formatContent = (text) => {
+        if (typeof text !== 'string') {
+            return [];
+        }
+        const lines = text.split('\n').map((line, index) => {
+            return (
+                <div key={index} style={{ textIndent: `20px`, marginBottom: `10px` }}>
+                    {line}
+                </div>
+            );
+        });
+        return lines;
+    }
+
     return (
         <div>
             <Box ClassName="Container" sx={{
@@ -35,7 +79,7 @@ const MentorProjectInformation = () => {
                             fontSize: '30px',
                             fontWeight: 'bold',
                             color: '#D82C2C'
-                        }}>Khoa Công Nghệ Phần Mềm</Typography>
+                        }}>{topicInfo.facultyName}</Typography>
                         <Box sx={{
                             width: '100%',
                             height: '50px',
@@ -54,7 +98,7 @@ const MentorProjectInformation = () => {
                                 marginLeft: '10px',
                                 fontSize: '18px',
                                 color: '#707070'
-                            }}>PJ01SA</Typography>
+                            }}>{topicInfo.topicCode}</Typography>
                         </Box>
                     </Box>
                     <Box sx={{
@@ -67,7 +111,11 @@ const MentorProjectInformation = () => {
                         <Typography sx={{
                             fontSize: '20px',
                             color: '#707070'
-                        }}>SyncStudy : Manage scientific research projects for students in Duy Tan University </Typography>
+                        }}><strong style={{
+                            fontSize: '24px',
+                            fontWeight: 'bold',
+                            color: '#707070'
+                        }}>Name:</strong> {topicInfo.topicName}</Typography>
                     </Box>
                 </Box>
                 <Box sx={{
@@ -97,20 +145,14 @@ const MentorProjectInformation = () => {
                             <Typography sx={{
                                 fontSize: '20px',
                                 fontWeight: '600',
-                                color: '#707070'
+                                color: '#D82C2C'
                             }}>Describle</Typography>
                             <Typography id="description" sx={{
                                 fontSize: '18px',
                                 fontWeight: '100',
                                 color: '#707070',
                                 marginTop: '5px'
-                            }}>This project aims to solve the problem of managing
-                                scientific research projects at Duy Tan University.
-                                Creating a website makes it convenient to register,
-                                interact, manage and report students' scientific research projects.
-                                Helps lecturers and schools closely follow projects,
-                                accurately and completely summarize
-                                statistics for each department and group.</Typography>
+                            }}>{formatContent(topicInfo.topicDescription)}</Typography>
                         </Box>
                         <Box ClassName="Technology" sx={{
                             width: '95%',
@@ -124,47 +166,61 @@ const MentorProjectInformation = () => {
                             <Typography sx={{
                                 fontSize: '20px',
                                 fontWeight: '600',
-                                color: '#707070'
-                            }}>Technology</Typography>
-                            <Typography ClassName="Technologyz" id="technology" sx={{
+                                color: '#D82C2C'
+                            }}>Technology:</Typography>
+                            <Typography ClassName="Technology" id="technology" sx={{
                                 fontSize: '18px',
                                 fontWeight: '100',
                                 color: '#707070',
                                 marginTop: '5px'
                             }}>
-                                Frontend : HTML,CSS,React,JavaScript
+                                {formatContent(topicInfo.topicTech)}
                             </Typography>
-                            <Typography ClassName="Technologyz" id="technology1" sx={{
+                        </Box>
+                        <Box ClassName="topicGoalSubject" sx={{
+                            width: '95%',
+                            height: 'auto',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'start',
+                            justifyContent: 'start',
+                            marginTop: '50px'
+                        }}>
+                            <Typography sx={{
+                                fontSize: '20px',
+                                fontWeight: '600',
+                                color: '#D82C2C'
+                            }}>The Goal Of The Subject:</Typography>
+                            <Typography ClassName="topicGoalSubject" id="goalSubject" sx={{
                                 fontSize: '18px',
                                 fontWeight: '100',
                                 color: '#707070',
                                 marginTop: '5px'
                             }}>
-                                Back-end : Java.
+                                {formatContent(topicInfo.topicGoalSubject)}
                             </Typography>
-                            <Typography ClassName="Technologyz" id="technology2" sx={{
+                        </Box>
+                        <Box ClassName="topicExpectedResearch" sx={{
+                            width: '95%',
+                            height: 'auto',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'start',
+                            justifyContent: 'start',
+                            marginTop: '50px'
+                        }}>
+                            <Typography sx={{
+                                fontSize: '20px',
+                                fontWeight: '600',
+                                color: '#D82C2C'
+                            }}>Expected research products of the topic and applicability:</Typography>
+                            <Typography ClassName="ExpectedResearch" id="expectedResearch" sx={{
                                 fontSize: '18px',
                                 fontWeight: '100',
                                 color: '#707070',
                                 marginTop: '5px'
                             }}>
-                                Database management system : SQL Server.
-                            </Typography>
-                            <Typography ClassName="Technologyz" id="technology3" sx={{
-                                fontSize: '18px',
-                                fontWeight: '100',
-                                color: '#707070',
-                                marginTop: '5px'
-                            }}>
-                                Design UI : Figma
-                            </Typography>
-                            <Typography ClassName="Technologyz" id="technology4" sx={{
-                                fontSize: '18px',
-                                fontWeight: '100',
-                                color: '#707070',
-                                marginTop: '5px'
-                            }}>
-                                Other tools : Postman, trello,github...
+                                {formatContent(topicInfo.topicExpectedResearch)}
                             </Typography>
                         </Box>
                         <Box ClassName="Documents" sx={{

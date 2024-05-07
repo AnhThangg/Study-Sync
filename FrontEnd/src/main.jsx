@@ -182,7 +182,7 @@ const router = createBrowserRouter([
         element: <MentorInformation />
       },
       {
-        path: '/Mentor/MentorProjectInformation',
+        path: '/Mentor/MentorProjectInformation/:id',
         element: <MentorProjectInformation />,
       },
       {

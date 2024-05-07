@@ -44,3 +44,21 @@ export const approveTopicForMentor = (id) => {
         console.log(e);
     }
 }
+
+export const getConfirmedTopicsForMentor = () => {
+    try {
+        const res = request.get(`/mentor/confirmedTopicsForMentor`);
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+export const getConfirmedTopicDetailForMentor = (id) => {
+    try {
+        const res = request.get(`/mentor/confirmedTopicDetailForMentor/${id}`);
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}

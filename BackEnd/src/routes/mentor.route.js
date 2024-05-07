@@ -1,5 +1,5 @@
 const express = require('express');
-const { getMentor, getUnconfirmedTopicsForMentor, approveTopicForMentor, getUnconfirmedTopicDetailForMentor } = require('../controllers/mentor.controllers')
+const { getMentor, getUnconfirmedTopicsForMentor, approveTopicForMentor, getUnconfirmedTopicDetailForMentor, getConfirmedTopicsForMentor, getConfirmedTopicDetailForMentor } = require('../controllers/mentor.controllers')
 const { authenMiddleware } = require('../middlewares/authen.middleware');
 const mentorRoute = express.Router();
 mentorRoute
@@ -23,10 +23,24 @@ mentorRoute
   );
 
 mentorRoute
-.route('/unconfirmedTopicDetailForMentor/:id')
-.get(
-  authenMiddleware,
-  getUnconfirmedTopicDetailForMentor
-);
+  .route('/unconfirmedTopicDetailForMentor/:id')
+  .get(
+    authenMiddleware,
+    getUnconfirmedTopicDetailForMentor
+  );
+
+mentorRoute
+  .route('/confirmedTopicsForMentor')
+  .get(
+    authenMiddleware,
+    getConfirmedTopicsForMentor
+  );
+
+mentorRoute
+  .route('/confirmedTopicDetailForMentor/:id')
+  .get(
+    authenMiddleware,
+    getConfirmedTopicDetailForMentor
+  );
 
 module.exports = { mentorRoute }

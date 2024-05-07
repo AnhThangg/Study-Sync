@@ -26,3 +26,22 @@ export const getProposeIdea = (id) => {
         console.log(e);
     }
 }
+
+export const getMyProposeIdea = () => {
+    try {
+        const res = request.get('/proposeIdea/myproposeidea')
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+export const deleteProposeIdea = (id) => {
+    try {
+        const res = request.del(`/proposeIdea/deleteProposeIdea/${id}`)
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}
+

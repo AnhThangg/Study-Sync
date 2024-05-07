@@ -47,13 +47,12 @@ const StickyHeadTable = () => {
   })
 
   return (
-    <Box sx={{ margin: "50px 0 0 50px" }}>
+    <Box sx={{ margin: "10px 0 0 50px" }}>
       <Box
         sx={{
           width: '95%',
           background: '#F6E8E8',
           borderRadius: '20px',
-          marginTop: '50px',
           marginBottom: '30px',
         }}
       >
