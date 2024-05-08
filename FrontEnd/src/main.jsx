@@ -45,6 +45,7 @@ import MentorDetailIdea from './Pages/Mentor/MentorDetailIdea/MentorDetailIdea.j
 import ListProposeIdea from './Pages/Mentor/ListProposeIdea/ListProposeIdea.jsx'
 import MyProposeIdea from './Pages/Mentor/MyProposeIdea/MyProposeIdea.jsx'
 import MentorWaittingInformation from './Pages/Mentor/MentorWaittingInformation/MentorWaittingInformation.jsx'
+import MentorEditIdea from './Pages/Mentor/MentorEditIdea/MentorEditIdea.jsx'
 
 
 
@@ -175,18 +176,18 @@ const router = createBrowserRouter([
       },
       {
         path: '/Mentor/MentorProposeIdea',
-        element: <MentorDetailIdea />
+        element: <MentorProposeIdea />
       },
       {
         path: '/Mentor/MentorInformation',
         element: <MentorInformation />
       },
       {
-        path: '/Mentor/MentorProjectInformation',
+        path: '/Mentor/MentorProjectInformation/:id',
         element: <MentorProjectInformation />,
       },
       {
-        path: '/Mentor/unconfirmedtopicformentor',
+        path: '/Mentor/unconfirmedtopicformentor/:id',
         element: <UnconfirmedTopicForMentor />
       },
       {
@@ -200,6 +201,14 @@ const router = createBrowserRouter([
       {
         path: '/Mentor/MentorWaittingInformation',
         element: <MentorWaittingInformation />,
+      },
+      {
+        path: '/Mentor/proposeidea/:id',
+        element: <MentorDetailIdea />
+      },
+      {
+        path: 'mentor/myproposeIdea/editidea/:id',
+        element: <MentorEditIdea/>
       }
     ]
   },

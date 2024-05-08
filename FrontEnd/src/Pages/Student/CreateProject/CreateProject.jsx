@@ -46,6 +46,7 @@ function CreateProject() {
   );
 
   const [topicName, setTopicName] = useState("");
+  const [topicDescription, setTopicDescription] = useState("");
   const [goalOfSubject, setGoalOfSubject] = useState("");
   const [researchProducts, setResearchProducts] = useState("");
   const [member, setMember] = useState();
@@ -131,6 +132,7 @@ function CreateProject() {
     }
     !researchProducts && setMessage("Applicability cannot be left blank");
     !goalOfSubject && setMessage("Goal Of The Subject cannot be left blank");
+    !topicDescription && setMessage("Description cannot be left blank");
     !mentor && setMessage("Please choose a mentor to guide you");
     !members[0] && setMessage("must have at least one member");
     !topicName && setMessage("TopicName cannot be left blank");
@@ -140,6 +142,7 @@ function CreateProject() {
       !topicName ||
       endDate.diff(startDate, "month") < 3 ||
       !mentor ||
+      !topicDescription ||
       !members[0]
     ) {
       setAlertType("error");
@@ -158,11 +161,11 @@ function CreateProject() {
     return `${year}-${formattedMonth}-${formattedDate}`;
   };
 
-console.log(members);
   const onSubmitTopic = async () => {
     const listMember = members.map((member) => member.studentCode);
     const res = await createTopic({
       topicName,
+      topicDescription,
       topicGoalSubject: goalOfSubject,
       topicExpectedResearch: researchProducts,
       topicDateStart: fortmartDate(
@@ -317,10 +320,10 @@ console.log(members);
                   sx={{
                     width: "170px",
                     '& .MuiInputBase-input[type="number"]::-webkit-inner-spin-button, & .MuiInputBase-input[type="number"]::-webkit-outer-spin-button':
-                      {
-                        "-webkit-appearance": "none",
-                        margin: 0,
-                      },
+                    {
+                      "-webkit-appearance": "none",
+                      margin: 0,
+                    },
                     '& .MuiInputBase-input[type="number"]': {
                       "-moz-appearance": "textfield",
                     },
@@ -468,6 +471,45 @@ console.log(members);
                 <InfoItem label="Address" value={"mentor.mentorAddress"} />
               </>
             )}
+          </Box>
+        </Box>
+
+        <Box>
+          <Box
+            sx={{
+              margin: "20px 0 0 10px",
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "bold",
+                color: "#818181",
+              }}
+            >
+              Description
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              height: "auto",
+              margin: "10px 50px 20px 10px",
+            }}
+          >
+            <TextareaAutosize
+              value={topicDescription}
+              onChange={(e) => {
+                setTopicDescription(e.target.value);
+              }}
+              style={{
+                width: "850px",
+                height: "250px",
+                border: "2px solid #999",
+                borderRadius: "10px",
+                padding: "10px",
+                fontSize: "20px",
+              }}
+            />
           </Box>
         </Box>
 

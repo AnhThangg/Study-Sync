@@ -175,7 +175,7 @@ const AddAccountMentor = () => {
       setPassword('');
       setMentorFullname('');
       setMentorCode('');
-      setMentorSex('');
+      setMentorSex('1');
       setMentorBirthday('');
       setMentorDegree('');
       setMentorScientificName('');
@@ -909,14 +909,14 @@ const AddAccountMentor = () => {
             width: '200',
             height: '50px',
             color: '#D82C2C',
-            borderRadius: '20px',
+            borderRadius: '10px',
             padding: '10px',
             '&:hover': {
               backgroundColor: '#D82C2C',
               color: '#FFF',
             },
           }}>
-          Add Univer
+          Add Mentor
         </Button>
       </Box>
       <Dialog

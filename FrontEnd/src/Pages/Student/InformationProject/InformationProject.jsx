@@ -8,6 +8,8 @@ import {
   Button,
   IconButton,
   TextareaAutosize,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import {
   Folder,
@@ -23,6 +25,7 @@ import {
   Article, Person2, Link, Groups, AccessAlarm, WorkspacePremium
 } from "@mui/icons-material";
 import { getTopicApprovedDetailForStudent } from '../../../api/studentApi';
+import { v4 as uuid } from "uuid";
 
 function InformationProject() {
   const topicCode = useParams().id;
@@ -44,11 +47,10 @@ function InformationProject() {
     </Box>
   );
 
-  const fileInputRef = useRef(null);
+  const [fileInputRefs, setFileInputRefs] = useState([useRef(null)]);
   const [uploadedFile, setUploadedFile] = useState(null);
-
   const handleUploadClick = () => {
-    fileInputRef.current.click();
+    fileInputRefs[0].current.click();
   };
 
   const handleFileChange = (event) => {
@@ -57,28 +59,83 @@ function InformationProject() {
     setUploadedFile(file);
   };
 
+  const [message, setMessage] = useState("");
+  const [isCheckAlert, setIsCheckAlert] = useState(false);
+  const [alertType, setAlertType] = useState("error");
   const [infoTopic, setInfoTopic] = useState({});
   const [topicDescription, setTopicDescription] = useState();
   const [topicGoalSubject, setTopicGoalSubject] = useState();
   const [topicExpectedResearch, setTopicExpectedResearch] = useState();
   const [topicTech, setTopicTech] = useState();
-  const [folders, setFolders] = useState([]);
+  const [folders, setFolders] = useState([{ id: 1, name: 'New Folder', files: [] }]);
   const [newFolderName, setNewFolderName] = useState('');
 
-  useEffect(() => {
-    // Thêm một thư mục mặc định khi component được khởi tạo
-    const defaultFolder = { id: 1, name: 'Folder 1' };
-    setFolders([defaultFolder]);
-  }, []);
+  const onChangeName = (value, index) => {
+    const newFolder = [...folders];
+    newFolder[index].name = value;
+    setFolders(newFolder);
+  }
+
+  const onCheckDuplicated = (folders) => {
+    for (let i = 0; i < folders.length; i++) {
+      for (let j = i + 1; j < folders.length; j++) {
+        if (folders[i].name === folders[j].name) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   const addFolder = () => {
-    // Tạo một thư mục mới với một id duy nhất và tên mặc định
-    const newFolder = { id: folders.length + 1, name: `Folder ${folders.length + 1}` };
-    setFolders([...folders, newFolder]); // Thêm thư mục mới vào danh sách
+    const isNewFolderExist = folders.some(folder => folder.name === 'New Folder');
+    if (!isNewFolderExist) {
+      if (onCheckDuplicated(folders)) {
+        const newFolder = { id: uuid(), name: `New Folder`, files: [] };
+        const newFileInputRef = {current: null};
+        setFileInputRefs([...fileInputRefs, newFileInputRef])
+        setFolders([...folders, newFolder]);
+      }
+      else {
+        setMessage(`Folder name already has exist.`);
+        setAlertType("error");
+        setIsCheckAlert(true);
+        setTimeout(() => {
+          setIsCheckAlert(false);
+        }, 4000);
+      }
+    } else {
+      setMessage(`A folder with name "New Folder" already exists.`);
+      setAlertType("error");
+      setIsCheckAlert(true);
+      setTimeout(() => {
+        setIsCheckAlert(false);
+      }, 4000);
+    }
   };
   const deleteFolder = (id) => {
-    setFolders(folders.filter(folder => folder.id !== id)); // Loại bỏ folder có id tương ứng khỏi danh sách
+    const newFolder = folders.filter(folder => folder.id !== id);
+
+    setFolders(newFolder); // Loại bỏ folder có id tương ứng khỏi danh sách
   };
 
+  const upFile = (index) => {
+    console.log(fileInputRefs[index])
+    fileInputRefs[index].current.click();
+  }
+
+  const onChangeFile = (e, index) => {
+    const newFolders = [...folders];
+    newFolders[index].files.push({ id: uuid(), file: e.target.files[0], name: e.target.value });
+    setFolders(newFolders);
+  }
+
+  const onDeleteFile = (folderIndex, fileId) => {
+    const newFolders = [...folders];
+    const newFiles = newFolders[folderIndex].files.filter(item => item.id !== fileId);
+    newFolders[folderIndex].files = newFiles;
+    setFolders(newFolders);
+  }
 
   useEffect(() => {
     getTopicApprovedDetailForStudent(topicCode)
@@ -89,7 +146,6 @@ function InformationProject() {
         console.log(e);
       })
   }, [topicCode])
-  console.log(topicGoalSubject);
 
   return (
     <Box sx={{ margin: "50px 50px 0 50px", color: "#818181" }}>
@@ -197,13 +253,10 @@ function InformationProject() {
 
           <Box className="document" sx={{ marginBottom: "20px" }}>
             <InfoItem label="Document Uploaded" />
-
-
-
             <Box className="createFolder" sx={{
               margin: '10px 0 30px 10px'
             }}>
-              {folders.map(folder => (
+              {folders.map((folder, index) => (
                 <Box className="folder" key={folder.id} sx={{
                   display: 'flex',
                   flexDirection: 'column'
@@ -222,11 +275,12 @@ function InformationProject() {
                         paddingLeft: "10px"
                       }}
                       size="small"
-                      value={folder.name}
-                      onChange={event => {
-                        const newName = event.target.value;
-                        setFolders(prevFolders => prevFolders.map(item => (item.id === folder.id ? { ...item, name: newName } : item)));
-                      }}
+                      onBlur={(e) => { onChangeName(e.target.value, index) }}
+                      defaultValue={folder.name}
+                    // onChange={event => {
+                    //   const newName = event.target.value;
+                    //   setFolders(prevFolders => prevFolders.map(item => (item.id === folder.id ? { ...item, name: newName } : item)));
+                    // }}
                     />
                     <Button onClick={() => deleteFolder(folder.id)}>
                       <Delete
@@ -240,41 +294,48 @@ function InformationProject() {
                     marginLeft: '50px'
                   }}>
                     <input
+                      ref={fileInputRefs[index]}
                       type="file"
-                      ref={fileInputRef}
                       style={{ display: 'none' }}
-                      onChange={handleFileChange}
+                      onChange={(e) => { onChangeFile(e, index); e.target.value = '' }}
                     />
-                    <Box className="file">
-                      <Box sx={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        width: 'auto',
-                        height: '100%',
-                        alignItems: 'center'
-                      }}>
-                        <Article fontSize="large" sx={{
-                          color: '#1e385d'
-                        }}></Article>
-                        <Box sx={{
-                          width: 'auto',
-                          height: '100%',
-                          display: 'flex',
-                          alignItems: 'center'
-                        }}>
-                          <Typography ClassName="documentsPJ" sx={{
-                            marginTop: '10px',
-                            fontSize: '18px',
-                            marginLeft: '10px',
-                            color: '#1e385d',
-                            marginBottom: '8px'
+                    {
+                      folder.files?.map((item, fileIndex) => (
+                        <Box key={item.id} className="file">
+                          <Box sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            width: 'auto',
+                            height: '100%',
+                            alignItems: 'center'
                           }}>
-                            {fileInputRef.current?.value?.split('\\').pop()}
-                          </Typography>
+                            <Article fontSize="large" sx={{
+                              color: '#1e385d'
+                            }}></Article>
+                            <Box sx={{
+                              width: 'auto',
+                              height: '100%',
+                              display: 'flex',
+                              alignItems: 'center'
+                            }}>
+                              <Typography ClassName="documentsPJ" sx={{
+                                marginTop: '10px',
+                                fontSize: '18px',
+                                marginLeft: '10px',
+                                color: '#1e385d',
+                                marginBottom: '8px'
+                              }}>
+                                {item.name?.split('\\').pop()}
+                              </Typography>
+                              <Button onClick={() => onDeleteFile(index, item.id)}>
+                                <Delete />
+                              </Button>
+                            </Box>
+                          </Box>
                         </Box>
-                      </Box>
-                    </Box>
-                    <Button onClick={() => { fileInputRef.current.click() }} sx={{
+                      ))
+                    }
+                    <Button onClick={() => upFile(index)} sx={{
                       background: "#1e385d",
                       color: "#fff",
                       border: "1px solid #1e385d",
@@ -435,6 +496,14 @@ function InformationProject() {
           Update
         </Button>
       </Box>
+      <Snackbar
+        open={isCheckAlert}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert variant="filled" severity={alertType}>
+          {message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

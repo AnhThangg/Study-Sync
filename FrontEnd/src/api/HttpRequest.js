@@ -61,4 +61,14 @@ export const del = async (path, options = {}) => {
     }
 };
 
+export const patch = async (path, data, options = {}) => {
+    try {
+        const response = await httpRequest.patch(path, data, options);
+        return response;
+    } catch (error) {
+        return error.response.data;
+    }
+};
+
+
 export default httpRequest;

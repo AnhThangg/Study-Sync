@@ -1,29 +1,43 @@
-import * as React from 'react';
+import { React, useState, useEffect } from 'react'
 import { Button, Box, Typography } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 import { Edit, Delete } from "@mui/icons-material";
-import { useState } from 'react';
+import { getListProposeIdea } from '../../../api/proposeIdeaApi';
+import { useNavigate } from "react-router-dom";
 
-const columns = [
-    {
-        field: 'id',
-        headerName: 'No.',
-        width: 350,
-    },
-    { field: 'ideaName', headerName: 'IdeaName', width: 500 },
-    { field: 'mentorFullname', headerName: 'Mentor Fullname', width: 500 },
-   
-    
-];
 
 const ListProposeIdea = () => {
-    const [ListProposeIdea, setListProposeIdea] = useState([
-        { id: 1, ideaName: 'Exam Master22', mentorFullname: 'Trần Thị Thuý Trinh'},
-        { id: 2, ideaName: 'Exam Master23', mentorFullname: 'Trần Thị Thuý Trinh'},
-        { id: 3, ideaName: 'Exam Master24', mentorFullname: 'Trần Thị Thuý Trinh'},
-        { id: 4, ideaName: 'Exam Master25', mentorFullname: 'Trần Thị Thuý Trinh' },
-        { id: 5, ideaName: 'Exam Master26', mentorFullname: 'Trần Thị Thuý Trinh' },
-    ]);
+    const navigate = useNavigate();
+    const [listProposeIdea, setListProposeIdea] = useState([]);
+
+    useEffect(() => {
+        getListProposeIdea()
+            .then((data) => {
+                setListProposeIdea(data)
+            })
+            .catch(e => {
+                console.log(e)
+            })
+    }, [])
+    const columns = [
+        { field: 'id', headerName: 'No.', width: 100 },
+        { field: 'ideaName', headerName: 'IdeaName', width: 350 },
+        { field: 'mentorFullname', headerName: 'Mentor Fullname', width: 350 },
+        { field: 'createdAt', headerName: 'Create At', width: 250 },
+        { field: 'updatedAt', headerName: 'Update At', width: 250 },
+    ];
+
+    const rows = listProposeIdea.map((item, index) => {
+        return {
+            id: index + 1,
+            ideaName: item.ideaName,
+            mentorFullname: item.mentorFullname,
+            ideaCode: item.ideaCode,
+            createdAt: item.createdAt,
+            updatedAt: item.updatedAt
+        }
+    })
+
 
     return (
         <Box className="container" sx={{ margin: "50px 0 0 50px" }}>
@@ -45,19 +59,23 @@ const ListProposeIdea = () => {
             }}>
                 <DataGrid
                     autoHeight
-                    rows={ListProposeIdea}
+                    rows={rows}
+                    onCellClick={(e) => (navigate(`/mentor/proposeidea/${e.row.ideaCode}`))}
                     columns={columns}
                     initialState={{
                         pagination: {
-                            paginationModel: { page: 0, pageSize: 10 },
+                            paginationModel: { page: 0, pageSize: 5 },
                         },
                     }}
-                    pageSizeOptions={[5, 10]}
+                    pageSizeOptions={[5, 10, 15, 20]}
                     sx={{
                         border: 'none',
+                        borderRadius: '20px',
                         '& .MuiDataGrid-container--top [role=row]': {
                             background: "#D82C2C",
-                            fontWeight: 'bold'
+                            fontWeight: 'bold',
+                            borderTopLeftRadius: '20px', 
+                            borderTopRightRadius: '20px',
                         },
                         '& .MuiDataGrid-columnHeaderTitle': {
                             fontWeight: 'bold',
@@ -66,7 +84,10 @@ const ListProposeIdea = () => {
                         },
                         '& .MuiDataGrid-row': {
                             fontSize: '25px',
-                            color: '#707070'
+                            color: '#707070',
+                            '&:hover': {
+                                cursor: 'pointer',
+                            },
                         },
                         '& .css-1essi2g-MuiDataGrid-columnHeaderRow': {
                             borderTopLeftRadius: '20px',

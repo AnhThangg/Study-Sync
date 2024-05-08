@@ -1,5 +1,5 @@
 import { React, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import {
   Box,
   Icon,
@@ -10,11 +10,14 @@ import {
   TextField
 } from "@mui/material";
 import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
+import AssignmentTurnedIn from '@mui/icons-material/AssignmentTurnedIn';
+import Reply from '@mui/icons-material/Reply';
 import { getProposeIdea } from '../../../api/proposeIdeaApi'
 import { getMentor } from '../../../api/mentor.Api'
 
 const ProposeIdeaDetailStudent = () => {
 
+  const navigate = useNavigate()
   const ideaCode = useParams().id;
   const [infoIdea, setInfoIdea] = useState();
   const [infoMentor, setInfoMentor] = useState();
@@ -44,7 +47,6 @@ const ProposeIdeaDetailStudent = () => {
     if (typeof text !== 'string') {
       return [];
     }
-
     const lines = text.split('\n').map((line, index) => {
       return (
         <div key={index} style={{ textIndent: `20px`, marginBottom: `10px` }}>
@@ -52,7 +54,6 @@ const ProposeIdeaDetailStudent = () => {
         </div>
       );
     });
-
     return lines;
   }
 
@@ -225,10 +226,12 @@ const ProposeIdeaDetailStudent = () => {
             </Typography>
           </Box>
         </Box>
+
         <Box className="proposedProjects" sx={{
           display: 'flex',
           flexDirection: 'column',
-          flex: '1'
+          flex: '1',
+          marginTop: '100px'
         }}>
           <Box className="nameProjects" sx={{
             display: 'flex',
@@ -370,33 +373,50 @@ const ProposeIdeaDetailStudent = () => {
             margin: '50px 0 0 0',
             alignItems: "center",
             justifyContent: "center",
-            gap: '30px',
-            width: '500px'
+            gap: '2%',
+            width: '80%',
+            padding: '10px',
           }}>
             <Button sx={{
-              backgroundColor: "#D9D9D9",
-              border: "5px solid #D82C2C",
-              borderRadius: "20px",
-              width: "150px",
-              height: "50px",
-              color: "#000",
-              fontWeight: "bold",
-              fontSize: "20px"
+              width: '38%',
+              height: '45px',
+              textTransform: 'none',
+              background: '#1e385d',
+              border: '1px solid #1e385d',
+              borderRadius: '10px',
+              fontSize: '20px',
+              color: '#fff',
+              padding: '0 20px',
+              gap: '10px',
+              '&:hover': {
+                background: '#fff',
+                color: '#1e385d',
+              }
             }}>
-              Add
+              <Reply fontSize='large' />
+              Back
             </Button>
 
-            <Button sx={{
-              backgroundColor: "#D9D9D9",
-              border: "5px solid #D82C2C",
-              borderRadius: "20px",
-              width: "150px",
-              height: "50px",
-              color: "#000",
-              fontWeight: "bold",
-              fontSize: "20px"
-            }}>
-              Cancel
+            <Button
+              onClick={()=>{navigate('/')}}
+              sx={{
+                width: '60%',
+                height: '45px',
+                textTransform: 'none',
+                background: '#41B06E',
+                border: '1px solid #41B06E',
+                borderRadius: '10px',
+                fontSize: '20px',
+                color: '#fff',
+                padding: '0 20px',
+                gap: '10px',
+                '&:hover': {
+                  background: '#fff',
+                  color: '#41B06E',
+                }
+              }}>
+              <AssignmentTurnedIn fontSize='large' />
+              Receive Ideas
             </Button>
           </Box>
         </Box>
