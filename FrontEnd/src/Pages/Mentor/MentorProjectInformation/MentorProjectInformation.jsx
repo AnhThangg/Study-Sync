@@ -13,8 +13,8 @@ import {
     DialogTitle
 } from "@mui/material";
 import './MentorProjectInformation.scss'
-import { Article, Person2, Link, Person, Groups, AccessAlarm, WorkspacePremium } from "@mui/icons-material";
-import { getConfirmedTopicDetailForMentor } from '../../../api/mentor.Api'
+import { Article, Person2, Link, Person, Groups, AccessAlarm, DonutLarge } from "@mui/icons-material";
+import { getConfirmedTopicDetailForMentor, getMentor } from '../../../api/mentor.Api'
 
 const MentorProjectInformation = () => {
     const navigate = useNavigate();
@@ -35,6 +35,53 @@ const MentorProjectInformation = () => {
             })
     }, [topicCode]);
 
+    //console.log(topicInfo);
+
+    const InfoItem = ({ label, value }) => (
+        <Box className="leaderContainerRow" sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            paddingLeft: '60px',
+            gap: '10px'
+        }}>
+            <Typography sx={{
+                fontSize: '20px',
+                color: '#707070',
+                fontWeight: 'bold'
+            }}>
+                {label}:
+            </Typography>
+            <Typography sx={{
+                fontSize: '20px',
+                color: '#707070',
+            }}>
+                {value}
+            </Typography>
+        </Box>
+    );
+
+    const InfoItemMember = ({ label, value }) => (
+        <Box className="leaderContainerRow" sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            paddingLeft: '60px',
+            gap: '10px'
+        }}>
+            <Typography sx={{
+                fontSize: '16px',
+                color: '#707070',
+                fontWeight: 'bold'
+            }}>
+                {label}:
+            </Typography>
+            <Typography sx={{
+                fontSize: '16px',
+                color: '#707070',
+            }}>
+                {value}
+            </Typography>
+        </Box>
+    );
 
     const formatContent = (text) => {
         if (typeof text !== 'string') {
@@ -521,24 +568,124 @@ const MentorProjectInformation = () => {
                     </Box>
                     <Box ClassName="InforMB" sx={{
                         width: '35%',
-                        height: 'auto',
+                        height: '700px',
+                        background: '#F6E8E8',
+                        borderRadius: '20px',
                         display: 'flex',
                         justifyContent: 'center',
-                        alignItems: 'start'
+                        padding: '10px 0 10px 0'
                     }}>
-                        <Box sx={{
-                            width: '90%',
-                            height: '600px',
-                            background: '#F6E8E8',
-                            border: 'solid 0.5px #707070',
-                            borderRadius: '30px',
+                        <Box className="infoScroll" sx={{
+                            width: '99%',
                             display: 'flex',
                             flexDirection: 'column',
-                            justifyContent: 'space-evenly',
-                            alignItems: 'center'
+                            alignItems: 'center',
+                            padding: '30px 0 30px 0',
+                            gap: '10px',
+                            overflow: 'auto',
                         }}>
-                            <Typography>Đoạn này chưa sửa</Typography>
-                            <Typography>Push tạm lên trước</Typography>
+                            <Box className="leader" sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                width: '90%',
+                            }}>
+                                <Box className="leaderTitle" sx={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
+                                    <Person fontSize='large' sx={{ color: '#D82C2C' }}></Person>
+                                    <Typography sx={{
+                                        color: '#D82C2C',
+                                        fontSize: '26px',
+                                        marginLeft: '10px',
+                                        fontWeight: 'bold'
+                                    }}>Leader</Typography>
+                                </Box>
+                                <Box className="leaderContainer" sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                    <InfoItem label="Id" value={topicInfo.leaderID} />
+                                    <InfoItem label="Name" value={topicInfo.leaderName} />
+                                    <InfoItem label="Mail" value={topicInfo.leaderEmail} />
+                                    <InfoItem label="Phone" value={topicInfo.leaderPhone} />
+                                </Box>
+                            </Box>
+                            <Box className="member" sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                width: '90%',
+                            }}>
+                                <Box className="memberTitle" sx={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
+                                    <Groups fontSize='large' sx={{ color: '#D82C2C' }} />
+                                    <Typography sx={{
+                                        color: '#D82C2C',
+                                        fontSize: '26px',
+                                        marginLeft: '10px',
+                                        fontWeight: 'bold'
+                                    }}>Member</Typography>
+                                </Box>
+                                {topicInfo?.members?.map((item, index) => (
+                                    <Box className="memberContainer" sx={{ display: 'flex', flexDirection: 'column' }}>
+                                        <Box className="memberIndexTitle">
+                                            <Typography sx={{
+                                                paddingLeft: '60px',
+                                                fontSize: '18px',
+                                                color: '#707070',
+                                                fontWeight: 'bold'
+                                            }}>
+                                                Member {index + 1}
+                                            </Typography>
+                                        </Box>
+                                        <Box className="memberIndexContainer" sx={{ paddingLeft: '10px' }}>
+                                            <InfoItemMember label="Id" value={item.studentCode} />
+                                            <InfoItemMember label="Name" value={item.studentFullname} />
+                                            <InfoItemMember label="Mail" value={item.studentEmail} />
+                                            <InfoItemMember label="Phone" value={item.studentPhone} />
+                                        </Box>
+                                    </Box>
+                                ))}
+                            </Box>
+
+                            <Box className="time" sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                width: '90%',
+                            }}>
+                                <Box className="timeTitle" sx={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
+                                    <AccessAlarm fontSize='large' sx={{ color: '#D82C2C' }}></AccessAlarm>
+                                    <Typography sx={{
+                                        color: '#D82C2C',
+                                        fontSize: '26px',
+                                        marginLeft: '10px',
+                                        fontWeight: 'bold'
+                                    }}>Execution Time</Typography>
+                                </Box>
+                                <Box className="leaderContainer" sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                    <InfoItem label="Start Time" value={topicInfo.topicDateStart} />
+                                    <InfoItem label="End Time" value={topicInfo.topicDateEnd} />
+
+                                </Box>
+                            </Box>
+
+                            <Box className="status" sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                width: '90%',
+                            }}>
+                                <Box className="statusTitle" sx={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
+                                    <DonutLarge fontSize='large' sx={{ color: '#D82C2C' }}></DonutLarge>
+                                    <Typography sx={{
+                                        color: '#D82C2C',
+                                        fontSize: '26px',
+                                        marginLeft: '10px',
+                                        fontWeight: 'bold'
+                                    }}>Status</Typography>
+                                </Box>
+                                <Box className="statusContainer" sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                    <Typography sx={{
+                                        fontSize: '20px',
+                                        color: '#707070',
+                                        paddingLeft: '60px',
+                                    }}>
+                                        Waiting for Mentor Approval
+                                    </Typography>
+                                </Box>
+                            </Box>
                         </Box>
                     </Box>
                 </Box>
