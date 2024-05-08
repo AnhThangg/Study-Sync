@@ -34,6 +34,7 @@ const sequelize = new Sequelize(databaseName, user, password, {
         raw: true,
     },
 })
+
 const AccountUser = accountUserModel(sequelize, DataTypes);
 const Univer = univerModel(sequelize, DataTypes);
 const Faculty = facultyModel(sequelize, DataTypes);
