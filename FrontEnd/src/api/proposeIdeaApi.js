@@ -45,3 +45,12 @@ export const deleteProposeIdea = (id) => {
     }
 }
 
+export const updateProposalIdea = (id) =>{
+    try {
+        const res = request.patch(`/proposeIdea/updateProposalIdea/${id}`)
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}
+

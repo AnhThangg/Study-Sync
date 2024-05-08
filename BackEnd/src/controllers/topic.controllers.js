@@ -86,6 +86,7 @@ const createTopic = async (req, res) => {
                 topicGoalSubject: infoTopic.topicGoalSubject,
                 topicExpectedResearch: infoTopic.topicExpectedResearch,
                 topicTech: null,
+                otherNotes: null,
                 topicStatus: 'Waiting for Mentor Approval',
                 topicDateStart: new Date(infoTopic.topicDateStart),
                 topicDateEnd: infoTopic.topicDateEnd,

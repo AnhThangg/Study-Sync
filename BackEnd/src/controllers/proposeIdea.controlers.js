@@ -42,6 +42,7 @@ const createProposeIdea = async (req, res) => {
             ideaGoalSubject: info.ideaGoalSubject,
             ideaExpectedResearch: info.ideaExpectedResearch,
             otherNotes: info.otherNotes,
+            status: 'idle',
             mentorCode: mentor.mentorCode
         });
         return res.status(200).json('Create Propose Idea Successfully')
@@ -167,7 +168,18 @@ const getMyProposeIdea = async (req, res) => {
                 mentorCode: mentor.mentorCode
             }
         })
-        return res.status(200).json(listProposeIdea);
+        const updatedListProposeIdea = listProposeIdea.map(idea => ({
+            ideaCode: idea.ideaCode,
+            ideaName: idea.ideaName,
+            ideaDescription: idea.ideaDescription,
+            ideaGoalSubject: idea.ideaGoalSubject,
+            ideaExpectedResearch: idea.ideaExpectedResearch,
+            otherNotes: idea.otherNotes,
+            mentorCode: idea.mentorCode,
+            createdAt: fortmartDate(idea.createdAt),
+            updatedAt: fortmartDate(idea.updatedAt)
+        }));
+        return res.status(200).json(updatedListProposeIdea);
     } catch (e) {
         console.log(e)
         return res.status(500).json(e);

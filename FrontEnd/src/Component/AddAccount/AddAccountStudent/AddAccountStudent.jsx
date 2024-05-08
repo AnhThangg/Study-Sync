@@ -876,7 +876,7 @@ const AddAccountStudent = () => {
                             color: '#FFF',
                         },
                     }}>
-                    Add Univer
+                    Add Student
                 </Button>
             </Box>
             <Dialog

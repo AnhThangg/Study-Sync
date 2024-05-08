@@ -79,7 +79,7 @@ const MyProposeIdea = () => {
                 return (
                     <div>
                         <Button
-                            onClick={() => handleEdit(params.row.accountId)}
+                            onClick={() => {navigate(`/mentor/myproposeidea/editidea/${params.row.ideaCode}`)}}
                             sx={{
                                 color: '#707070',
                                 '&:hover': {
