@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllFacultyCodeForUniver, getUnconfirmedTopicsForFaculty, approveTopicForFaculty } = require('../controllers/faculty.controller');
+const { getAllFacultyCodeForUniver, getUnconfirmedTopicsForFaculty, approveTopicForFaculty, countTopicsUnconfirmForFaculty } = require('../controllers/faculty.controller');
 const { authenMiddleware } = require('../middlewares/authen.middleware');
 
 const facultyRoute = express.Router();
@@ -17,6 +17,13 @@ facultyRoute
     .get(
         authenMiddleware,
         getUnconfirmedTopicsForFaculty
+    );
+
+facultyRoute
+    .route('/CountTopicsUnconfirmForFaculty')
+    .get(
+        authenMiddleware,
+        countTopicsUnconfirmForFaculty
     );
 
 facultyRoute

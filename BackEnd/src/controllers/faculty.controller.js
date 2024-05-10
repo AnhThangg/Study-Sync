@@ -44,6 +44,11 @@ const getUnconfirmedTopicsForFaculty = async (req, res) => {
                     model: Student,
                     as: 'student',
                     attributes: ['studentFullname'] // Chọn chỉ trường studentFullname
+                },
+                {
+                    model: Mentor,
+                    as: 'mentor',
+                    attributes: ['mentorFullname'] // Chọn chỉ trường mentorFullname
                 }
             ],
             attributes: ['topicCode', 'topicName'] // Chọn chỉ trường topicCode và topicName
@@ -52,7 +57,8 @@ const getUnconfirmedTopicsForFaculty = async (req, res) => {
             no: index + 1,
             topicCode: topic.topicCode,
             topicName: topic.topicName,
-            leader: topic.student.studentFullname
+            leader: topic.student.studentFullname,
+            mentor: topic.mentor.mentorFullname
         }));
 
         return res.status(200).json(simplifiedTopics);
@@ -369,11 +375,32 @@ const refuseTopicForFaculty = async (req, res) => {
     }
 }
 
+const countTopicsUnconfirmForFaculty = async (req, res) => {
+    try {
+        const faculty = await Faculty.findOne({
+            where: {
+                accountId: req.account.accountId
+            }
+        })
+        const topicCount = await Topic.count({
+            where: {
+                facultyCode: faculty.facultyCode,
+                topicStatus: 'Waiting for Faculty Approval'
+            }
+        });
+        return res.status(200).json(topicCount);
+    } catch (e) {
+        console.log(e)
+        return res.status(500).json(e);
+    }
+}
+
 
 
 module.exports = {
     getAllFacultyCodeForUniver,
     getUnconfirmedTopicsForFaculty,
     approveTopicForFaculty,
-    refuseTopicForFaculty
+    refuseTopicForFaculty,
+    countTopicsUnconfirmForFaculty
 }
