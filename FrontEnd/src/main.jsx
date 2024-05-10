@@ -47,7 +47,7 @@ import MyProposeIdea from './Pages/Mentor/MyProposeIdea/MyProposeIdea.jsx'
 import MentorWaittingInformation from './Pages/Mentor/MentorWaittingInformation/MentorWaittingInformation.jsx'
 import MentorEditIdea from './Pages/Mentor/MentorEditIdea/MentorEditIdea.jsx'
 import ReceiveProposeIdea from './Pages/Student/ReceiveProposeIdea/ReceiveProposeIdea.jsx'
-
+import TopicsUnconfirm from './Pages/Faculty/TopicsUnconfirm/TopicsUnconfirm.jsx'
 
 const router = createBrowserRouter([
   { path: '*', element: <Page404 /> },
@@ -239,7 +239,10 @@ const router = createBrowserRouter([
         path: "/faculty/acceptproject",
         element: <AcceptProject />,
       },
-      //
+      {
+        path: "/faculty/topicUnconfirm",
+        element: <TopicsUnconfirm />,
+      },
     ],
   },
 ]);
