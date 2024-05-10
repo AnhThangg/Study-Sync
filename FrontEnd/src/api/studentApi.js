@@ -26,3 +26,12 @@ export const getTopicApprovedDetailForStudent = (id) => {
         console.log(e);
     }
 }
+
+export const updateTopic = (id, infoUpdate) => {
+    try {
+        const res = request.patch(`/student/updateTopic/${id}`,infoUpdate);
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}

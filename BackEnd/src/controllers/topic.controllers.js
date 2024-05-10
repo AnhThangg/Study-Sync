@@ -2,6 +2,7 @@ const { raw } = require('body-parser');
 const { Topic, Document, Team, StudentTeam, Mentor, Student, sequelize, Faculty } = require('../database/database');
 const { Sequelize, where } = require('sequelize');
 const { v4: uuid } = require('uuid');
+const path = require('path');
 
 
 const getTopics = async (req, res) => {
@@ -80,13 +81,12 @@ const createTopic = async (req, res) => {
             }
 
             await Topic.create({
-                topicCode,
+                topicCode, 
                 topicName: infoTopic.topicName,
                 topicDescription: infoTopic.topicDescription,
                 topicGoalSubject: infoTopic.topicGoalSubject,
                 topicExpectedResearch: infoTopic.topicExpectedResearch,
                 topicTech: null,
-                otherNotes: null,
                 topicStatus: 'Waiting for Mentor Approval',
                 topicDateStart: new Date(infoTopic.topicDateStart),
                 topicDateEnd: infoTopic.topicDateEnd,
@@ -110,7 +110,24 @@ const createTopic = async (req, res) => {
     }
 }
 
+const downloadFile = async (req,res) => {
+    try {
+        // const fileName = req.params.fileName;
+        // const arr = fileName.split('*');
+        // const fileUrl = path.join(__dirname,`../Documents/${arr[0]}/${arr[1]}`);
+        // // console.log(fileUrl)
+        res.download('/Users/Work/Capstone 2/Study-Sync/BackEnd/src/adu.txt');
+        
+
+    } catch (e) {
+        return res.status(500).json(e);
+    }
+}
+
+
+
 module.exports = {
     getTopics,
-    createTopic
+    createTopic,
+    downloadFile,
 }

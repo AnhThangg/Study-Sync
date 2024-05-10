@@ -1,5 +1,5 @@
 const express = require('express');
-const { getStudent, getTopicApprovedForStudent, getTopicApprovedDetailForStudent } = require('../controllers/student.controllers')
+const { getStudent, getTopicApprovedForStudent, getTopicApprovedDetailForStudent, updateTopic, upload } = require('../controllers/student.controllers')
 const { authenMiddleware } = require('../middlewares/authen.middleware');
 const studentRoute = express.Router();
 
@@ -15,6 +15,15 @@ studentRoute
   .get(
     authenMiddleware,
     getTopicApprovedDetailForStudent
+  );
+
+studentRoute
+  .route('/updateTopic/:id')
+  .patch(
+    authenMiddleware,
+    (req,res,next)=>{ req.listFile = [];next();},
+    upload.any(),
+    updateTopic
   );
 
 studentRoute

@@ -46,7 +46,7 @@ import ListProposeIdea from './Pages/Mentor/ListProposeIdea/ListProposeIdea.jsx'
 import MyProposeIdea from './Pages/Mentor/MyProposeIdea/MyProposeIdea.jsx'
 import MentorWaittingInformation from './Pages/Mentor/MentorWaittingInformation/MentorWaittingInformation.jsx'
 import MentorEditIdea from './Pages/Mentor/MentorEditIdea/MentorEditIdea.jsx'
-
+import ReceiveProposeIdea from './Pages/Student/ReceiveProposeIdea/ReceiveProposeIdea.jsx'
 
 
 const router = createBrowserRouter([
@@ -98,6 +98,10 @@ const router = createBrowserRouter([
       {
         path: "/student/project/createProject",
         element: <CreateProject />,
+      },
+      {
+        path: '/student/proposeidea/receiveproposeidea/:id',
+        element: <ReceiveProposeIdea />
       },
     ]
   },

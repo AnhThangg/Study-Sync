@@ -275,6 +275,46 @@ const getConfirmedTopicDetailForMentor = async (req, res) => {
     }
 }
 
+const countTopicsConfirmed = async (req, res) => {
+    try {
+        const mentor = await Mentor.findOne({
+            where: {
+                accountId: req.account.accountId
+            }
+        })
+        const topicCount = await Topic.count({
+            where: {
+                mentorCode: mentor.mentorCode,
+                topicStatus: { [Sequelize.Op.or]: ['Approved', 'In progess'] }
+            }
+        });
+        return res.status(200).json(topicCount);
+    } catch (e) {
+        console.log(e)
+        return res.status(500).json(e);
+    }
+}
+
+const countTopicsUnconfirm = async (req, res) => {
+    try {
+        const mentor = await Mentor.findOne({
+            where: {
+                accountId: req.account.accountId
+            }
+        })
+        const topicCount = await Topic.count({
+            where: {
+                mentorCode: mentor.mentorCode,
+                topicStatus: 'Waiting for Mentor Approval'
+            }
+        });
+        return res.status(200).json(topicCount);
+    } catch (e) {
+        console.log(e)
+        return res.status(500).json(e);
+    }
+}
+
 module.exports = {
     getMentor,
     getUnconfirmedTopicsForMentor,
@@ -282,4 +322,6 @@ module.exports = {
     approveTopicForMentor,
     getConfirmedTopicsForMentor,
     getConfirmedTopicDetailForMentor,
+    countTopicsConfirmed,
+    countTopicsUnconfirm,
 }

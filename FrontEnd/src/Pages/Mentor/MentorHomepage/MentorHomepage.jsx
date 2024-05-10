@@ -6,24 +6,45 @@ import {
   IconButton,
   Button,
 } from "@mui/material";
-import {React, useEffect} from "react";
+import { React, useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { Groups, AccessAlarms } from "@mui/icons-material";
 import './MentorHomepage.scss'
 // import { FileUpload, RecentActors } from "@mui/icons-material";
+import { countTopicsUnconfirm, countConfirmedTopicsForMentor } from '../../../api/mentor.Api'
 const MentorHomepage = () => {
 
   const { pathname: url } = useLocation();
-    useEffect(() => {
-        const navLinks = document.getElementsByClassName("homePageContain");
-        for (let i = 0; i < navLinks.length; i += 1) {
-            if (navLinks[i].classList.contains("active")) {
-                navLinks[i].childNodes[0].classList.add("isClick");
-            } else {
-                navLinks[i].childNodes[0].classList.remove("isClick");
-            }
-        }
-    }, [url]);
+  useEffect(() => {
+    const navLinks = document.getElementsByClassName("homePageContain");
+    for (let i = 0; i < navLinks.length; i += 1) {
+      if (navLinks[i].classList.contains("active")) {
+        navLinks[i].childNodes[0].classList.add("isClick");
+      } else {
+        navLinks[i].childNodes[0].classList.remove("isClick");
+      }
+    }
+  }, [url]);
+  const [numTopics, setNumTopics] = useState();
+  const [numUnconfirmTopics, setNumUnconfirmTopics] = useState();
+
+  useEffect(() => {
+    countConfirmedTopicsForMentor()
+      .then((data) => {
+        setNumTopics(data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+    countTopicsUnconfirm()
+      .then((data) => {
+        setNumUnconfirmTopics(data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  })
+  console.log(numUnconfirmTopics);
 
   return (
     <Box sx={{
@@ -74,7 +95,7 @@ const MentorHomepage = () => {
                   color: '#D82C2C',
                   fontWeight: 'bold'
                 }}>
-                  7
+                  {numTopics}
                 </Typography>
                 <Typography sx={{
                   fontSize: '20px',
@@ -90,7 +111,7 @@ const MentorHomepage = () => {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <Groups className="customIcon" fontSize="inherit" sx={{ color: "#D82C2C", fontSize : "3rem" }} />
+                <Groups className="customIcon" fontSize="inherit" sx={{ color: "#D82C2C", fontSize: "3rem" }} />
               </Box>
             </Box>
           </NavLink>
@@ -120,7 +141,7 @@ const MentorHomepage = () => {
                   color: '#D82C2C',
                   fontWeight: 'bold'
                 }}>
-                  4
+                  {numUnconfirmTopics}
                 </Typography>
                 <Typography sx={{
                   fontSize: '20px',

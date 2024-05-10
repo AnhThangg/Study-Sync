@@ -24,8 +24,10 @@ import {
   Delete,
   Article, Person2, Link, Groups, AccessAlarm, WorkspacePremium
 } from "@mui/icons-material";
-import { getTopicApprovedDetailForStudent } from '../../../api/studentApi';
+import { getTopicApprovedDetailForStudent, updateTopic } from '../../../api/studentApi';
 import { v4 as uuid } from "uuid";
+import { downloadFile } from "../../../api/topicsApi";
+import fileDownload from 'js-file-download'
 
 function InformationProject() {
   const topicCode = useParams().id;
@@ -67,7 +69,7 @@ function InformationProject() {
   const [topicGoalSubject, setTopicGoalSubject] = useState();
   const [topicExpectedResearch, setTopicExpectedResearch] = useState();
   const [topicTech, setTopicTech] = useState();
-  const [folders, setFolders] = useState([{ id: 1, name: 'New Folder', files: [] }]);
+  const [folders, setFolders] = useState([{ id: uuid(), name: 'New Folder', files: [] }]);
   const [newFolderName, setNewFolderName] = useState('');
 
   const onChangeName = (value, index) => {
@@ -87,12 +89,13 @@ function InformationProject() {
     return true;
   }
 
+
   const addFolder = () => {
     const isNewFolderExist = folders.some(folder => folder.name === 'New Folder');
     if (!isNewFolderExist) {
       if (onCheckDuplicated(folders)) {
         const newFolder = { id: uuid(), name: `New Folder`, files: [] };
-        const newFileInputRef = {current: null};
+        const newFileInputRef = { current: null };
         setFileInputRefs([...fileInputRefs, newFileInputRef])
         setFolders([...folders, newFolder]);
       }
@@ -126,7 +129,7 @@ function InformationProject() {
 
   const onChangeFile = (e, index) => {
     const newFolders = [...folders];
-    newFolders[index].files.push({ id: uuid(), file: e.target.files[0], name: e.target.value });
+    newFolders[index].files.push({ id: uuid(), file: e.target.files[0], name: e.target.value, new: true });
     setFolders(newFolders);
   }
 
@@ -140,12 +143,55 @@ function InformationProject() {
   useEffect(() => {
     getTopicApprovedDetailForStudent(topicCode)
       .then(data => {
-        setInfoTopic(data)
+        setInfoTopic(data);
+        setTopicDescription(data?.topic?.topicDescription);
+        setTopicGoalSubject(data?.topic?.topicGoalSubject);
+        setTopicExpectedResearch(data?.topic?.topicExpectedResearch);
+        setTopicTech(data?.topic?.topicTech);
+        if (data?.listDocument.length > 0) {
+          setFolders(data?.listDocument);
+          const listRef = [];
+          data?.listDocument.forEach(item => {
+            listRef.push({ current: null });
+          });
+          setFileInputRefs(listRef);
+        }
       })
       .catch((e) => {
         console.log(e);
       })
   }, [topicCode])
+
+  console.log(folders)
+
+  const openDialog = async () => {
+    const formData = new FormData();
+    formData.append('topicDescription', topicDescription)
+    formData.append('topicGoalSubject', topicDescription)
+    formData.append('topicExpectedResearch', topicDescription)
+    formData.append('topicTech', topicDescription)
+    for (let i = 0; i < folders.length; i++) {
+      for (let j = 0; j < folders[i].files.length; j++) {
+        if (folders[i].files[j].new) {
+          formData.append(folders[i].name, folders[i].files[j].file);
+        }
+      }
+    }
+    const res = await updateTopic(topicCode, formData);
+    if (res.status === 200) {
+      const newFolders = [...folders];
+      for (let i = 0; i < folders.length; i++) {
+        for (let j = 0; j < folders[i].files.length; j++) {
+          if (folders[i].files[j].new) {
+            newFolders[i].files[j].new = false;
+          }
+        }
+      }
+      setFolders(newFolders);
+    }
+  }
+
+  // console.log(infoTopic?.listDocument);
 
   return (
     <Box sx={{ margin: "50px 50px 0 50px", color: "#818181" }}>
@@ -191,7 +237,8 @@ function InformationProject() {
             <InfoItem label="Describe project" />
 
             <TextareaAutosize
-              value={infoTopic.topic?.topicDescription}
+              value={topicDescription}
+              onChange={(e) => { setTopicDescription(e.target.value) }}
               style={{
                 width: "700px",
                 height: "200px",
@@ -206,7 +253,8 @@ function InformationProject() {
             <InfoItem label="Technology" />
 
             <TextareaAutosize
-              value={infoTopic.topic?.topicTech}
+              value={topicTech}
+              onChange={(e) => { setTopicTech(e.target.value) }}
               style={{
                 width: "700px",
                 height: "200px",
@@ -222,7 +270,8 @@ function InformationProject() {
             <InfoItem label="The Goal Of The Subject" />
 
             <TextareaAutosize
-              value={infoTopic.topic?.topicGoalSubject}
+              value={topicGoalSubject}
+              onChange={(e) => { setTopicGoalSubject(e.target.value) }}
               style={{
                 width: "700px",
                 height: "200px",
@@ -238,7 +287,8 @@ function InformationProject() {
             <InfoItem label="Expected research products of the topic and applicability" />
 
             <TextareaAutosize
-              value={infoTopic.topic?.topicExpectedResearch}
+              value={topicExpectedResearch}
+              onChange={(e) => { setTopicExpectedResearch(e.target.value) }}
               // onChange={(e)=>{e.target.value}}
               style={{
                 width: "700px",
@@ -256,7 +306,7 @@ function InformationProject() {
             <Box className="createFolder" sx={{
               margin: '10px 0 30px 10px'
             }}>
-              {folders.map((folder, index) => (
+              {folders?.map((folder, index) => (
                 <Box className="folder" key={folder.id} sx={{
                   display: 'flex',
                   flexDirection: 'column'
@@ -318,13 +368,17 @@ function InformationProject() {
                               display: 'flex',
                               alignItems: 'center'
                             }}>
-                              <Typography ClassName="documentsPJ" sx={{
-                                marginTop: '10px',
-                                fontSize: '18px',
-                                marginLeft: '10px',
-                                color: '#1e385d',
-                                marginBottom: '8px'
-                              }}>
+                              <Typography
+                                onClick={async() => {const res = await downloadFile(item.source);
+                                }}
+                                ClassName="documentsPJ" sx={{
+                                  marginTop: '10px',
+                                  fontSize: '18px',
+                                  marginLeft: '10px',
+                                  color: '#1e385d',
+                                  marginBottom: '8px'
+                                }}>
+                                
                                 {item.name?.split('\\').pop()}
                               </Typography>
                               <Button onClick={() => onDeleteFile(index, item.id)}>
@@ -477,6 +531,7 @@ function InformationProject() {
         }}
       >
         <Button
+          onClick={openDialog}
           sx={{
             backgroundColor: "#D82C2C",
             borderRadius: "10px",
