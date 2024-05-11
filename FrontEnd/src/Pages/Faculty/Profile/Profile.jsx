@@ -1,6 +1,7 @@
-import { React } from "react";
+import { React, useEffect, useState } from "react";
 import { Box, Typography, Input, IconButton, Button } from "@mui/material";
 import { RecentActors } from "@mui/icons-material";
+import { getInfo } from "../../../api/infoApi"
 import "./Profile.scss";
 
 function Profile() {
@@ -14,6 +15,29 @@ function Profile() {
     facultyProvince: "Viet Nam",
     facultyPhone: "0796503172",
   };
+
+  const [infoFaculty, setInfoFaculty] = useState({});
+
+  useEffect(() => {
+    getInfo()
+      .then(data => {
+        setInfoFaculty(data);
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+  }, [])
+
+  const address = (addressString) => {
+    if (addressString) {
+        const parts = addressString.split(',').map(part => part.trim());
+        const address = parts[0];
+        const ward = parts[1];
+        const district = parts[2];
+        const province = parts[3];
+        return { address, ward, district, province };
+    }
+}
 
   return (
     <Box
@@ -92,10 +116,10 @@ function Profile() {
             }}
           >
             <Typography sx={{ fontWeight: "bold" }}>
-              {information.facultyName}
+              {infoFaculty?.facultyName}
             </Typography>
-            <Typography>{information.facultyCode}</Typography>
-            <Typography>{information.facultyEmail}</Typography>
+            <Typography>{infoFaculty?.facultyCode}</Typography>
+            <Typography>{infoFaculty?.facultyEmail}</Typography>
           </Box>
         </Box>
       </Box>
@@ -149,15 +173,14 @@ function Profile() {
               paddingLeft: "20px",
             }}
           >
-            <Typography>{information.facultyAddress}</Typography>
-            <Typography>{information.facultyWard}</Typography>
-            <Typography>{information.facultyDistrict}</Typography>
-            <Typography>{information.facultyProvince}</Typography>
-            <Typography>{information.facultyPhone}</Typography>
+            <Typography>{infoFaculty?.facultyAddress}</Typography>
+            <Typography>{address(infoFaculty?.facultyAddress)?.ward}</Typography>
+            <Typography>{address(infoFaculty?.facultyAddress)?.district}</Typography>
+            <Typography>{address(infoFaculty?.facultyAddress)?.province}</Typography>
+            <Typography>{infoFaculty?.facultyPhone}</Typography>
           </Box>
         </Box>
       </Box>
-
       <Box
         sx={{
           display: "flex",
