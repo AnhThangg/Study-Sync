@@ -38,6 +38,7 @@ const UnconfirmedTopicForMentor = () => {
                 console.log(e);
             })
     }, [topicCode]);
+    
     const InfoItem = ({ label, value }) => (
         <Box className="leaderContainerRow" sx={{
             display: 'flex',

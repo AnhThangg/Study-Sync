@@ -72,7 +72,7 @@ const TopicsUnconfirm = () => {
         <DataGrid
           autoHeight
           rows={rows}
-          onCellClick={(e) => (navigate(`/mentor/unconfirmedtopicformentor/${e.row.topicCode}`))}
+          onCellClick={(e) => (navigate(`/faculty/topicUnconfirm/topicUnconfirmDetail/${e.row.topicCode}`))}
           columns={columns}
           initialState={{
             pagination: {

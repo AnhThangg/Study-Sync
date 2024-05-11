@@ -48,6 +48,25 @@ import MentorWaittingInformation from './Pages/Mentor/MentorWaittingInformation/
 import MentorEditIdea from './Pages/Mentor/MentorEditIdea/MentorEditIdea.jsx'
 import ReceiveProposeIdea from './Pages/Student/ReceiveProposeIdea/ReceiveProposeIdea.jsx'
 import TopicsUnconfirm from './Pages/Faculty/TopicsUnconfirm/TopicsUnconfirm.jsx'
+import FacultyUnconfirmTopicDetail from './Pages/Faculty/FacultyUnconfirmTopicDetail/FacultyUnconfirmTopicDetail.jsx'
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+
+const color =
+  createTheme({
+    palette: {
+      white: '#FFFFFF',
+      red: '#D82C2C',
+      palePink: '#F6E8E8',
+      green: '#41B06E',
+      navyBlue: '#1e385d',
+      slateBlue: '#718199',
+      coralRed: '#ff6666',
+      silver: '#999999',
+      grey: '#707070',
+      ashGrey: '#818181'
+    },
+  })
 
 const router = createBrowserRouter([
   { path: '*', element: <Page404 /> },
@@ -212,7 +231,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'mentor/myproposeIdea/editidea/:id',
-        element: <MentorEditIdea/>
+        element: <MentorEditIdea />
       }
     ]
   },
@@ -243,10 +262,17 @@ const router = createBrowserRouter([
         path: "/faculty/topicUnconfirm",
         element: <TopicsUnconfirm />,
       },
+      {
+        path: "/faculty/topicUnconfirm/topicUnconfirmDetail/:id",
+        element: <FacultyUnconfirmTopicDetail />,
+      },
     ],
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />
+  <ThemeProvider theme={color}>
+    <CssBaseline />
+    <RouterProvider router={router} />
+  </ThemeProvider>
 );

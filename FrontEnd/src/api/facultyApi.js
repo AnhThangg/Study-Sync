@@ -17,3 +17,12 @@ export const getUnconfirmedTopicsForFaculty = () => {
         console.log(e);
     }
 }
+
+export const getUnconfirmedTopicDetailForFaculty = (id) => {
+    try {
+        const res = request.get(`/faculty/unconfirmedTopicDetailForFaculty/${id}`)
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}
