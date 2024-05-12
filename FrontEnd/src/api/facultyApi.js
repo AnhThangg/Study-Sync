@@ -26,3 +26,12 @@ export const getUnconfirmedTopicDetailForFaculty = (id) => {
         console.log(e);
     }
 }
+
+export const approveTopicForFaculty = (id) => {
+    try {
+        const res = request.patch(`/faculty/approveTopicForFaculty/${id}`)
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}

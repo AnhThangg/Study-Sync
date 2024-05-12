@@ -16,7 +16,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 // import './MentorProjectInformation.scss'
 import { Reply, Clear, DonutLarge, Person, Groups, AccessAlarm, Check } from "@mui/icons-material";
-import { getUnconfirmedTopicDetailForFaculty } from '../../../api/facultyApi';
+import { getUnconfirmedTopicDetailForFaculty, approveTopicForFaculty } from '../../../api/facultyApi';
 import { useTheme } from '@mui/material/styles';
 
 const FacultyUnconfirmTopicDetail = () => {
@@ -24,6 +24,11 @@ const FacultyUnconfirmTopicDetail = () => {
   const navigate = useNavigate();
   const topicCode = useParams().id;
   const [topicInfo, setTopicInfo] = useState({});
+  const [message, setMessage] = useState('');
+  const [isCheckAlert, setIsCheckAlert] = useState(false);
+  const [alertType, setAlertType] = useState('error');
+  const [openDialog, setOpenDialog] = useState(false);
+  const [showProgress, setShowProgress] = useState(false);
 
   useEffect(() => {
     getUnconfirmedTopicDetailForFaculty(topicCode)
@@ -82,7 +87,31 @@ const FacultyUnconfirmTopicDetail = () => {
   );
 
   const approveTopic = async () => {
-    // setOpenDialog(true);
+    setOpenDialog(true);
+  }
+
+  const onApproveTopic = async () => {
+    setShowProgress(true);
+    const res = await approveTopicForFaculty(topicCode);
+    console.log(res);
+    if (res.status === 200) {
+      setOpenDialog(false)
+      setAlertType('success');
+      setMessage(res.data);
+      setTimeout(() => {
+        navigate('/faculty/topicUnconfirm')
+      }, 2500);
+    }
+    else {
+      // setOpenDialog(false)
+      setShowProgress(true);
+      setAlertType('error');
+      setMessage(res.data);
+    }
+    setIsCheckAlert(true);
+    setTimeout(() => {
+      setIsCheckAlert(false);
+    }, 4000)
   }
 
   const formatContent = (text) => {
@@ -200,8 +229,7 @@ const FacultyUnconfirmTopicDetail = () => {
               }}>Topic Description:</Typography>
               <Typography id="description" sx={{
                 fontSize: '18px',
-                fontWeight: '100',
-                color: '#707070',
+                color: color.navyBlue,
                 marginTop: '5px'
               }}>{formatContent(topicInfo.topicDescription)}</Typography>
             </Box>
@@ -221,8 +249,7 @@ const FacultyUnconfirmTopicDetail = () => {
               }}>The Goal Of The Subject:</Typography>
               <Typography id="description" sx={{
                 fontSize: '18px',
-                fontWeight: '100',
-                color: '#707070',
+                color: color.navyBlue,
                 marginTop: '5px'
               }}>{formatContent(topicInfo.topicGoalSubject)}</Typography>
             </Box>
@@ -242,8 +269,7 @@ const FacultyUnconfirmTopicDetail = () => {
               }}>Expected research products of the topic and applicability:</Typography>
               <Typography ClassName="Technologyz" id="technology" sx={{
                 fontSize: '18px',
-                fontWeight: '100',
-                color: '#707070',
+                color: color.navyBlue,
                 marginTop: '5px'
               }}>
                 {formatContent(topicInfo.topicExpectedResearch)}
@@ -470,6 +496,125 @@ const FacultyUnconfirmTopicDetail = () => {
             </Button>
           </Box>
         </Box>
+      </Box>
+      <Dialog sx={{
+        '& .MuiDialog-paper': {
+          width: '80%',
+          maxWidth: 'lg',
+        },
+      }}
+        open={openDialog}
+        // onClose=''
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title" sx={{ color: '#D82C2C', fontWeight: 'bold', fontSize: '25px' }}>
+          {`Read the information carefully before browsing Topic!`}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <Box className="dialogContain" sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px'
+            }}>
+              {/* Topic Code */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d', textDecoration: 'underline', fontSize: '20px' }}>Topic Code: </Typography>
+                <Typography sx={{ marginLeft: '10px', fontWeight: 'bold', color: '#D82C2C', fontSize: '17px' }}>{formatContent(topicInfo.topicCode)}</Typography>
+              </Box>
+
+              {/* Topic Name */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d', textDecoration: 'underline', fontSize: '20px' }}>Topic Name: </Typography>
+                <Typography sx={{ marginLeft: '10px', fontWeight: 'bold', color: '#D82C2C', fontSize: '17px' }}>{formatContent(topicInfo.topicName)}</Typography>
+              </Box>
+
+              {/* Topic Description */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d', textDecoration: 'underline', fontSize: '20px' }}>Topic Description: </Typography>
+                <Typography sx={{ marginLeft: '10px', fontWeight: 'bold', color: color.slateBlue, fontSize: '17px' }}>{formatContent(topicInfo.topicDescription)}</Typography>
+              </Box>
+
+              {/* Topic Goal Of The Subject */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d', textDecoration: 'underline', fontSize: '20px' }}>Topic Goal Of The Subject: </Typography>
+                <Typography sx={{ marginLeft: '10px', fontWeight: 'bold', color: color.slateBlue, fontSize: '17px' }}>{formatContent(topicInfo.topicGoalSubject)}</Typography>
+              </Box>
+
+              {/* Topic expected research products of the topic and applicability */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
+                <Typography sx={{ fontWeight: 'bold', color: '#1e385d', textDecoration: 'underline', fontSize: '20px' }}>Topic expected research products of the topic and applicability: </Typography>
+                <Typography sx={{ marginLeft: '10px', fontWeight: 'bold', color: color.slateBlue, fontSize: '17px' }}>{formatContent(topicInfo.topicExpectedResearch)}</Typography>
+              </Box>
+
+            </Box>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)} className="reject" sx={{
+            background: '#1e385d',
+            border: '1px solid #1e385d',
+            borderRadius: '5px',
+            fontSize: '20px',
+            color: '#fff',
+            padding: '0 20px',
+            fontSize: '20px',
+            gap: '10px',
+            textTransform: 'none',
+            '&:hover': {
+              background: '#fff',
+              color: '#1e385d',
+            }
+          }}>
+            <Clear fontSize='large' />Cancel
+          </Button>
+          <Button
+            autoFocus
+            onClick={onApproveTopic}
+            className="approve"
+            sx={{
+              textTransform: 'none',
+              background: '#D82C2C',
+              border: '1px solid #D82C2C',
+              borderRadius: '5px',
+              fontSize: '20px',
+              color: '#fff',
+              padding: '0 20px',
+              gap: '10px',
+              '&:hover': {
+                background: '#fff',
+                color: '#D82C2C',
+              }
+            }}>
+            <Check fontSize='large' />Approve
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Snackbar open={isCheckAlert} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+        <Alert variant="filled" severity={alertType}>{message}</Alert>
+      </Snackbar>
+      <Box sx={{ display: 'flex' }}>
+        {showProgress && (
+          <div className="overlay">
+            <CircularProgress style={{ color: '#D82C2C' }} className="progress" />
+          </div>
+        )}
       </Box>
     </Box>
   )

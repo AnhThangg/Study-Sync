@@ -476,7 +476,6 @@ const UnconfirmedTopicForMentor = () => {
                     </Box>
                 </Box>
             </Box>
-
             <Dialog sx={{
                 '& .MuiDialog-paper': {
                     width: '80%',
@@ -597,7 +596,6 @@ const UnconfirmedTopicForMentor = () => {
                 )}
             </Box>
         </Box>
-
     )
 }
 
