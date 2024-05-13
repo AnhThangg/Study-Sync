@@ -7,7 +7,8 @@ const {
   getConfirmedTopicsForMentor,
   getConfirmedTopicDetailForMentor,
   countTopicsConfirmed,
-  countTopicsUnconfirm
+  countTopicsUnconfirm,
+  getDocumentForTopic
 } = require('../controllers/mentor.controllers')
 const { authenMiddleware } = require('../middlewares/authen.middleware');
 const mentorRoute = express.Router();
@@ -50,6 +51,13 @@ mentorRoute
   .get(
     authenMiddleware,
     getConfirmedTopicDetailForMentor
+  );
+
+mentorRoute
+  .route('/documentForTopic/:id')
+  .get(
+    authenMiddleware,
+    getDocumentForTopic
   );
 
 mentorRoute

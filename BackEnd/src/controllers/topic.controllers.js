@@ -112,11 +112,11 @@ const createTopic = async (req, res) => {
 
 const downloadFile = async (req,res) => {
     try {
-        // const fileName = req.params.fileName;
-        // const arr = fileName.split('*');
-        // const fileUrl = path.join(__dirname,`../Documents/${arr[0]}/${arr[1]}`);
-        // // console.log(fileUrl)
-        res.download('/Users/Work/Capstone 2/Study-Sync/BackEnd/src/adu.txt');
+        const fileName = req.params.fileName;
+        const arr = fileName.split('*');
+        const fileUrl = path.join(__dirname,`../Documents/${arr[0]}/${arr[1]}`);
+        // console.log(fileUrl)
+        res.download(fileUrl);
         
 
     } catch (e) {

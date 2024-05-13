@@ -138,13 +138,6 @@ const getTopicApprovedDetailForStudent = async (req, res) => {
             }
         })
 
-        // const formatListDocument = listDocument.map(document => {
-        //     return {
-        //         id: document.documentCode,
-        //         name: 
-        //     }
-        // })
-
         const formattedData = {};
         
         listDocument.forEach(document => {

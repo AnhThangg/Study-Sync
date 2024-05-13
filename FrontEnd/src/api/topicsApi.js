@@ -8,13 +8,3 @@ export const createTopic = (info) => {
         console.log(e);
     }
 }
-
-export const downloadFile = async (fileName) => {
-    try {
-        const res = request.get(`/topic/downloadfile/${fileName}`)
-        console.log(res);
-        return res;
-    } catch (e) {
-        console.log(e);
-    }
-}

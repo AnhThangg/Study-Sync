@@ -13,10 +13,12 @@ import {
     DialogTitle
 } from "@mui/material";
 import './MentorProjectInformation.scss'
-import { Article, Person2, Link, Person, Groups, AccessAlarm, WorkspacePremium } from "@mui/icons-material";
-import { getConfirmedTopicDetailForMentor } from '../../../api/mentor.Api'
+import { Article, Person2, Link, Person, Groups, AccessAlarm, WorkspacePremium, Folder } from "@mui/icons-material";
+import { getConfirmedTopicDetailForMentor } from '../../../api/mentor.Api';
+import { useTheme } from '@mui/material/styles';
 
 const MentorProjectInformation = () => {
+    const color = useTheme().palette;
     const navigate = useNavigate();
     const topicCode = useParams().id;
     const [topicInfo, setTopicInfo] = useState({});
@@ -235,253 +237,69 @@ const MentorProjectInformation = () => {
                             <Typography sx={{
                                 fontSize: '20px',
                                 fontWeight: '600',
-                                color: '#707070'
-                            }}>Documents Upload</Typography>
-                            <Box sx={{
-                                marginTop: '5px',
-                                width: '100%',
-                                height: 'auto',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center'
+                                color: color.red
                             }}>
-                                <NavLink>
-                                    <Box sx={{
-                                        width: '100%',
-                                        height: '40px',
+                                Documents Upload
+                            </Typography>
+                            {topicInfo?.listDocument?.map((folders) => (
+                                <Box className="folder">
+                                    <Box className="rowFolder" sx={{
                                         display: 'flex',
                                         flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center'
+                                        alignItems: 'center',
+                                        gap: '20px',
+                                        marginLeft: '20px'
                                     }}>
-                                        <Box sx={{
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            width: 'auto',
-                                            height: '100%',
-                                            alignItems: 'center'
+                                        <Folder fontSize="large" sx={{
+                                            color: color.coralRed
+                                        }} />
+                                        <Typography sx={{
+                                            color: color.coralRed,
+                                            fontSize: '20px',
+                                            fontWeight: '600',
                                         }}>
-                                            <Article fontSize="large" sx={{
-                                                color: '#707070'
-                                            }}></Article>
+                                            {folders.name}
+                                        </Typography>
+                                    </Box>
+                                    {folders?.files?.map((file) => (
+                                        <Box className="file">
                                             <Box sx={{
+                                                display: 'flex',
+                                                flexDirection: 'row',
                                                 width: 'auto',
                                                 height: '100%',
-                                                display: 'flex',
-                                                alignItems: 'center'
+                                                alignItems: 'center',
+                                                marginLeft: '40px'
                                             }}>
-                                                <Typography ClassName="documentsPJ" sx={{
-                                                    marginTop: '10px',
-                                                    fontSize: '18px',
-                                                    marginLeft: '10px',
-                                                    color: '#707070',
-                                                    marginBottom: '8px'
-                                                }}>Proposal_Document_Ver1.0.pdf</Typography>
+                                                <Article fontSize="large" sx={{
+                                                    color: '#1e385d'
+                                                }}></Article>
+                                                <Box sx={{
+                                                    width: 'auto',
+                                                    height: '100%',
+                                                    display: 'flex',
+                                                    alignItems: 'center'
+                                                }}>
+                                                    <Typography
+                                                        // onClick={async () => {
+                                                        //     const res = await downloadFile(item.source);
+                                                        // }}
+                                                        ClassName="documentsPJ" sx={{
+                                                            marginTop: '10px',
+                                                            fontSize: '20px',
+                                                            marginLeft: '10px',
+                                                            color: '#1e385d',
+                                                            marginBottom: '8px'
+                                                        }}>
+                                                        {file.name}
+                                                    </Typography>
+                                                </Box>
                                             </Box>
                                         </Box>
-                                        <Typography sx={{
-                                            color: '#707070',
-                                            textDecoration: 'none'
-                                        }}>21:03:38 PM  26/02/2024</Typography>
-                                    </Box>
-                                </NavLink>
-                            </Box>
-                            <Box sx={{
-                                marginTop: '5px',
-                                width: '100%',
-                                height: 'auto',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center'
-                            }}>
-                                <NavLink>
-                                    <Box sx={{
-                                        width: '100%',
-                                        height: '40px',
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center'
-                                    }}>
-                                        <Box sx={{
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            width: 'auto',
-                                            height: '100%',
-                                            alignItems: 'center'
-                                        }}>
-                                            <Article fontSize="large" sx={{
-                                                color: '#707070'
-                                            }}></Article>
-                                            <Box sx={{
-                                                width: 'auto',
-                                                height: '100%',
-                                                display: 'flex',
-                                                alignItems: 'center'
-                                            }}>
-                                                <Typography ClassName="documentsPJ" sx={{
-                                                    marginTop: '10px',
-                                                    fontSize: '18px',
-                                                    marginLeft: '10px',
-                                                    color: '#707070',
-                                                    marginBottom: '8px'
-                                                }}>Project_Plan_Document_Ver1.0.pdf</Typography>
-                                            </Box>
-                                        </Box>
-                                        <Typography sx={{
-                                            color: '#707070',
-                                            textDecoration: 'none'
-                                        }}>21:03:38 PM  26/02/2024</Typography>
-                                    </Box>
-                                </NavLink>
-                            </Box>
-                            <Box sx={{
-                                marginTop: '5px',
-                                width: '100%',
-                                height: 'auto',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center'
-                            }}>
-                                <NavLink>
-                                    <Box sx={{
-                                        width: '100%',
-                                        height: '40px',
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center'
-                                    }}>
-                                        <Box sx={{
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            width: 'auto',
-                                            height: '100%',
-                                            alignItems: 'center'
-                                        }}>
-                                            <Article fontSize="large" sx={{
-                                                color: '#707070'
-                                            }}></Article>
-                                            <Box sx={{
-                                                width: 'auto',
-                                                height: '100%',
-                                                display: 'flex',
-                                                alignItems: 'center'
-                                            }}>
-                                                <Typography ClassName="documentsPJ" sx={{
-                                                    marginTop: '10px',
-                                                    fontSize: '18px',
-                                                    marginLeft: '10px',
-                                                    color: '#707070',
-                                                    marginBottom: '8px'
-                                                }}>Product_Backlog_Document_Ver1.0.pdf</Typography>
-                                            </Box>
-                                        </Box>
-                                        <Typography sx={{
-                                            color: '#707070',
-                                            textDecoration: 'none'
-                                        }}>21:03:38 PM  26/02/2024</Typography>
-                                    </Box>
-                                </NavLink>
-                            </Box>
-                            <Box sx={{
-                                marginTop: '5px',
-                                width: '100%',
-                                height: 'auto',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center'
-                            }}>
-                                <NavLink>
-                                    <Box sx={{
-                                        width: '100%',
-                                        height: '40px',
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center'
-                                    }}>
-                                        <Box sx={{
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            width: 'auto',
-                                            height: '100%',
-                                            alignItems: 'center'
-                                        }}>
-                                            <Article fontSize="large" sx={{
-                                                color: '#707070'
-                                            }}></Article>
-                                            <Box sx={{
-                                                width: 'auto',
-                                                height: '100%',
-                                                display: 'flex',
-                                                alignItems: 'center'
-                                            }}>
-                                                <Typography ClassName="documentsPJ" sx={{
-                                                    marginTop: '10px',
-                                                    fontSize: '18px',
-                                                    marginLeft: '10px',
-                                                    color: '#707070',
-                                                    marginBottom: '8px'
-                                                }}>UserStory_Document_Ver1.0.pdf</Typography>
-                                            </Box>
-                                        </Box>
-                                        <Typography sx={{
-                                            color: '#707070',
-                                            textDecoration: 'none'
-                                        }}>21:03:38 PM  26/02/2024</Typography>
-                                    </Box>
-                                </NavLink>
-                            </Box>
-                            <Box sx={{
-                                marginTop: '5px',
-                                width: '100%',
-                                height: 'auto',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center'
-                            }}>
-                                <NavLink>
-                                    <Box sx={{
-                                        width: '100%',
-                                        height: '40px',
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center'
-                                    }}>
-                                        <Box sx={{
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            width: 'auto',
-                                            height: '100%',
-                                            alignItems: 'center'
-                                        }}>
-                                            <Article fontSize="large" sx={{
-                                                color: '#707070'
-                                            }}></Article>
-                                            <Box sx={{
-                                                width: 'auto',
-                                                height: '100%',
-                                                display: 'flex',
-                                                alignItems: 'center'
-                                            }}>
-                                                <Typography ClassName="documentsPJ" sx={{
-                                                    marginTop: '10px',
-                                                    fontSize: '18px',
-                                                    marginLeft: '10px',
-                                                    color: '#707070',
-                                                    marginBottom: '8px'
-                                                }}>Proposal_Document_Ver1.0.pdf</Typography>
-                                            </Box>
-                                        </Box>
-                                        <Typography sx={{
-                                            color: '#707070',
-                                            textDecoration: 'none'
-                                        }}>21:03:38 PM  26/02/2024</Typography>
-                                    </Box>
-                                </NavLink>
-                            </Box>
+                                    ))}
+
+                                </Box>
+                            ))}
                         </Box>
                         <Box ClassName="LinkProject" sx={{
                             width: '95%',

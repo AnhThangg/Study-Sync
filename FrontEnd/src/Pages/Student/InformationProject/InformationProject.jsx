@@ -26,8 +26,7 @@ import {
 } from "@mui/icons-material";
 import { getTopicApprovedDetailForStudent, updateTopic } from '../../../api/studentApi';
 import { v4 as uuid } from "uuid";
-import { downloadFile } from "../../../api/topicsApi";
-import fileDownload from 'js-file-download'
+
 
 function InformationProject() {
   const topicCode = useParams().id;
@@ -369,7 +368,52 @@ function InformationProject() {
                               alignItems: 'center'
                             }}>
                               <Typography
-                                onClick={async() => {const res = await downloadFile(item.source);
+                                onClick={() => {
+                                  fetch(`http://localhost:2109/topic/downloadfile/${item.source}`)
+                                    .then(response => response.blob())
+                                    .then(blob => {
+                                      console.log(blob)
+                                      const url = window.URL.createObjectURL(blob);
+                                      // Tạo một thẻ a để tải xuống file
+                                      const a = document.createElement('a');
+                                      a.href = url;
+                                      console.log(blob.type);
+                                      if (!item.name.includes('.')) {
+                                        switch (blob.type.split('/')[1]) {
+                                          case 'vnd.openxmlformats-officedocument.wordprocessingml.document':
+                                            a.download = `${item.name}.docx`;
+                                            break;
+                                          case 'vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                                            a.download = `${item.name}.xlsx`;
+                                            break;
+                                          case 'pdf':
+                                            a.download = `${item.name}.pdf`;
+                                            break;
+                                          case 'zip':
+                                            a.download = `${item.name}.zip`;
+                                            break;
+                                          default:
+                                            console.log('Unsupported file type');
+                                        }
+                                      } else {
+                                        // Nếu đã có phần mở rộng, không cần thêm "docx"
+                                        a.download = item.name;
+                                      }
+                                      // a.download = `${item.name}.${blob.type.split('/')[1]}`; // Tên của file khi tải xuống
+                                      // a.download = 'file.pdf'; // Tên của file khi tải xuống
+                                      // Thêm thẻ a vào body và kích hoạt sự kiện click để tải xuống
+                                      document.body.appendChild(a);
+                                      a.click();
+                                      // Xóa URL khi đã tải xuống xong và sau khi sự kiện onload của thẻ a được kích hoạt
+                                      a.onload = function () {
+                                        window.URL.revokeObjectURL(url);
+                                        document.body.removeChild(a); // Xóa thẻ a
+                                      };
+                                    })
+                                    .catch(error => console.log(error));
+                                  // console.log(item.name);
+
+
                                 }}
                                 ClassName="documentsPJ" sx={{
                                   marginTop: '10px',
@@ -378,7 +422,7 @@ function InformationProject() {
                                   color: '#1e385d',
                                   marginBottom: '8px'
                                 }}>
-                                
+
                                 {item.name?.split('\\').pop()}
                               </Typography>
                               <Button onClick={() => onDeleteFile(index, item.id)}>
