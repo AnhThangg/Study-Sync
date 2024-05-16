@@ -12,8 +12,8 @@ import {
 import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
 import AssignmentTurnedIn from '@mui/icons-material/AssignmentTurnedIn';
 import Reply from '@mui/icons-material/Reply';
-import { getProposeIdea } from '../../../api/proposeIdeaApi'
-import { getMentor } from '../../../api/mentor.Api'
+import { getProposeIdea } from '../../../api/proposeIdeaApi';
+import { getMentor } from '../../../api/mentor.Api';
 
 const ProposeIdeaDetailStudent = () => {
 
@@ -377,28 +377,30 @@ const ProposeIdeaDetailStudent = () => {
             width: '80%',
             padding: '10px',
           }}>
-            <Button sx={{
-              width: '38%',
-              height: '45px',
-              textTransform: 'none',
-              background: '#1e385d',
-              border: '1px solid #1e385d',
-              borderRadius: '10px',
-              fontSize: '20px',
-              color: '#fff',
-              padding: '0 20px',
-              gap: '10px',
-              '&:hover': {
-                background: '#fff',
-                color: '#1e385d',
-              }
-            }}>
+            <Button
+              onClick={()=>{navigate('/student/proposeidea')}}
+              sx={{
+                width: '38%',
+                height: '45px',
+                textTransform: 'none',
+                background: '#1e385d',
+                border: '1px solid #1e385d',
+                borderRadius: '10px',
+                fontSize: '20px',
+                color: '#fff',
+                padding: '0 20px',
+                gap: '10px',
+                '&:hover': {
+                  background: '#fff',
+                  color: '#1e385d',
+                }
+              }}>
               <Reply fontSize='large' />
               Back
             </Button>
 
             <Button
-              onClick={()=>{navigate('/')}}
+              onClick={() => { navigate(`/student/proposeidea/receiveproposeidea/${ideaCode}`) }}
               sx={{
                 width: '60%',
                 height: '45px',

@@ -14,7 +14,8 @@ const { unitVietNamRoute } = require('./src/routes/unitVietNam.route')
 const { univerRoute } = require('./src/routes/univer.route');
 const { facultyRoute } = require('./src/routes/faculty.route');
 const { proposeIdea } = require('./src/routes/proposeIdea.route')
-const {status} = require('./src/util/checkStatus.util')
+const {status} = require('./src/util/checkStatus.util');
+const { downloadFile } = require('./src/controllers/topic.controllers');
 
 app.use("/account", accountRoute);
 app.use("/auth", authRoute);
@@ -26,8 +27,8 @@ app.use("/unitvietnam", unitVietNamRoute);
 app.use("/univer", univerRoute);
 app.use("/faculty", facultyRoute);
 app.use("/proposeIdea", proposeIdea);
-app.get('/', (req, res) => {
-    res.json('Study-Sync')
+app.get('/cc', (req, res) => {
+    res.download('/Users/Work/Capstone 2/Study-Sync/BackEnd/src/adu.txt')
 })
 
 module.exports = app;

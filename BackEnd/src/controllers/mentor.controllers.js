@@ -1,5 +1,5 @@
 const { Model } = require('sequelize');
-const { Mentor, Student, Faculty, Topic, ProposeIdea, AccountUser, StudentTeam } = require('../database/database');
+const { Mentor, Student, Faculty, Topic, ProposeIdea, AccountUser, StudentTeam, Document } = require('../database/database');
 const { Sequelize, where } = require('sequelize');
 const { v4: uuid } = require('uuid');
 
@@ -252,6 +252,39 @@ const getConfirmedTopicDetailForMentor = async (req, res) => {
             attributes: ['facultyName']
         });
 
+        const listDocument = await Document.findAll({
+            where: {
+                topicCode: topicId
+            }
+        })
+
+        const formattedData = {};
+        listDocument.forEach(document => {
+            // Tách documentNameSourceCode thành folderName và filename bằng cách sử dụng hàm split()
+            const parts = document.documentNameSourceCode.split('*');
+            const filename = parts.pop(); // Lấy phần tử cuối cùng là filename
+            const folderName = parts.join('/'); // Gộp các phần tử còn lại là folderName
+            // Kiểm tra xem folderName đã tồn tại trong formattedData chưa
+            if (!formattedData[folderName]) {
+                // Nếu chưa tồn tại, thêm mới một mục vào formattedData với key là folderName và một mảng files rỗng
+                formattedData[folderName] = {
+                    id: uuid(),
+                    name: folderName,
+                    files: []
+                };
+            }
+
+            // Thêm tên tệp vào mảng files của folder tương ứng
+            formattedData[folderName].files.push({
+                id: document.documentCode,
+                name: document.documentName,
+                source: document.documentNameSourceCode
+            });
+        });
+
+        // Chuyển đổi object thành mảng để trả về
+        const formattedDocuments = Object.values(formattedData);
+
         const result = {
             facultyName: facultyName.facultyName,
             topicCode: topic.topicCode,
@@ -266,7 +299,10 @@ const getConfirmedTopicDetailForMentor = async (req, res) => {
             leaderName: topic.student.studentFullname,
             leaderEmail: topic.student.studentEmail,
             leaderPhone: topic.student.studentPhone,
-            members: filteredMembersArray
+            members: filteredMembersArray,
+            listDocument: [
+                ...formattedDocuments
+            ]
         };
         return res.status(200).json(result);
     } catch (e) {
@@ -275,6 +311,64 @@ const getConfirmedTopicDetailForMentor = async (req, res) => {
     }
 }
 
+const getDocumentForTopic = async (req, res) => {
+    try {
+        const { id: topicId } = req.params;
+        const document = await Document.findAll({
+            where: {
+                topicCode: topicId
+            }
+        })
+
+        return res.status(200).json(document);
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json(e);
+    }
+}
+
+const countTopicsConfirmed = async (req, res) => {
+    try {
+        const mentor = await Mentor.findOne({
+            where: {
+                accountId: req.account.accountId
+            }
+        })
+        const topicCount = await Topic.count({
+            where: {
+                mentorCode: mentor.mentorCode,
+                topicStatus: { [Sequelize.Op.or]: ['Approved', 'In progess'] }
+            }
+        });
+        return res.status(200).json(topicCount);
+    } catch (e) {
+        console.log(e)
+        return res.status(500).json(e);
+    }
+}
+
+const countTopicsUnconfirm = async (req, res) => {
+    try {
+        const mentor = await Mentor.findOne({
+            where: {
+                accountId: req.account.accountId
+            }
+        })
+        const topicCount = await Topic.count({
+            where: {
+                mentorCode: mentor.mentorCode,
+                topicStatus: 'Waiting for Mentor Approval'
+            }
+        });
+        return res.status(200).json(topicCount);
+    } catch (e) {
+        console.log(e)
+        return res.status(500).json(e);
+    }
+}
+
+
+
 module.exports = {
     getMentor,
     getUnconfirmedTopicsForMentor,
@@ -282,4 +376,7 @@ module.exports = {
     approveTopicForMentor,
     getConfirmedTopicsForMentor,
     getConfirmedTopicDetailForMentor,
+    countTopicsConfirmed,
+    countTopicsUnconfirm,
+    getDocumentForTopic,
 }

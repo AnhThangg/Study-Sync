@@ -38,6 +38,7 @@ const UnconfirmedTopicForMentor = () => {
                 console.log(e);
             })
     }, [topicCode]);
+    
     const InfoItem = ({ label, value }) => (
         <Box className="leaderContainerRow" sx={{
             display: 'flex',
@@ -475,7 +476,6 @@ const UnconfirmedTopicForMentor = () => {
                     </Box>
                 </Box>
             </Box>
-
             <Dialog sx={{
                 '& .MuiDialog-paper': {
                     width: '80%',
@@ -596,7 +596,6 @@ const UnconfirmedTopicForMentor = () => {
                 )}
             </Box>
         </Box>
-
     )
 }
 

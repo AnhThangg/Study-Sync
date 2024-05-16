@@ -26,6 +26,7 @@ import { getInfo, getNameMentor } from "../../../api/infoApi";
 import { getStudent } from "../../../api/studentApi";
 import { v4 as uuid } from "uuid";
 import { createTopic } from "../../../api/topicsApi";
+
 function CreateProject() {
   const InfoItem = ({ label, value }) => (
     <Box
@@ -168,6 +169,7 @@ function CreateProject() {
       topicDescription,
       topicGoalSubject: goalOfSubject,
       topicExpectedResearch: researchProducts,
+      otherNotes: null,
       topicDateStart: fortmartDate(
         startDate?.$y,
         startDate?.$d.getMonth(),

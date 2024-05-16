@@ -1,6 +1,10 @@
 const { ProposeIdea, Topic, Document, Team, StudentTeam, Mentor, Student, sequelize, Faculty } = require('../database/database');
 const { Sequelize, where } = require('sequelize');
 const { v4: uuid } = require('uuid');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
 
 const fortmartDate = (dateString) => {
     const date = new Date(dateString);
@@ -11,8 +15,6 @@ const fortmartDate = (dateString) => {
     const formattedDay = day < 10 ? `0${day}` : day;
     return `${year}-${formattedMonth}-${formattedDay}`;
 }
-
-
 
 const getStudent = async (req, res) => {
     try {
@@ -129,7 +131,41 @@ const getTopicApprovedDetailForStudent = async (req, res) => {
             },
             attributes: ['facultyName']
         })
-        facultyName =faculty.facultyName;
+        facultyName = faculty.facultyName;
+        const listDocument = await Document.findAll({
+            where: {
+                topicCode: id
+            }
+        })
+
+        const formattedData = {};
+        
+        listDocument.forEach(document => {
+            // Tách documentNameSourceCode thành folderName và filename bằng cách sử dụng hàm split()
+            const parts = document.documentNameSourceCode.split('*');
+            const filename = parts.pop(); // Lấy phần tử cuối cùng là filename
+            const folderName = parts.join('/'); // Gộp các phần tử còn lại là folderName
+            // Kiểm tra xem folderName đã tồn tại trong formattedData chưa
+            if (!formattedData[folderName]) {
+                // Nếu chưa tồn tại, thêm mới một mục vào formattedData với key là folderName và một mảng files rỗng
+                formattedData[folderName] = {
+                    id: uuid(),
+                    name: folderName,
+                    files: []
+                };
+            }
+
+            // Thêm tên tệp vào mảng files của folder tương ứng
+            formattedData[folderName].files.push({
+                id: document.documentCode,
+                name: document.documentName,
+                source: document.documentNameSourceCode
+            });
+        });
+
+        // Chuyển đổi object thành mảng để trả về
+        const formattedDocuments = Object.values(formattedData);
+
 
         const result = {
             mentor: {
@@ -144,6 +180,9 @@ const getTopicApprovedDetailForStudent = async (req, res) => {
             topic: {
                 ...topic
             },
+            listDocument: [
+                ...formattedDocuments
+            ]
         }
 
         return res.status(200).json(result);
@@ -153,8 +192,83 @@ const getTopicApprovedDetailForStudent = async (req, res) => {
     }
 }
 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const folderPath = `./src/Documents/${file.fieldname}`;
+        // Kiểm tra xem thư mục đã tồn tại hay không
+        fs.access(folderPath, fs.constants.F_OK, (err) => {
+            if (err) {
+                // Nếu thư mục chưa tồn tại, tạo mới
+                fs.mkdir(folderPath, { recursive: true }, (err) => {
+                    if (err) {
+                        console.error('Error creating directory:', err);
+                    } else {
+                        console.log('Directory created successfully');
+                        cb(null, folderPath);
+                    }
+                });
+            } else {
+                console.log('Directory already exists');
+                cb(null, folderPath);
+            }
+        });
+    },
+    filename: function (req, file, cb) {
+        // Tạo tên file mới
+        const fileName = file.fieldname + '-' + Date.now() + path.extname(file.originalname);
+        req.listFile.push({
+            ...file,
+            fileName
+        });
+        cb(null, fileName)
+    }
+});
+
+// Khai báo middleware multer
+const upload = multer({ storage: storage });
+
+const updateTopic = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const {
+            topicDescription,
+            topicGoalSubject,
+            topicExpectedResearch,
+            topicTech
+        } = req.body;
+
+        const topic = await Topic.findOne({
+            where: {
+                topicCode: id,
+            }
+        })
+
+        await topic.update({
+            topicDescription,
+            topicGoalSubject,
+            topicExpectedResearch,
+            topicTech
+        })
+
+        req.listFile.forEach(async (item) => {
+            await Document.create({
+                documentCode: uuid(),
+                documentName: item.originalname,
+                topicCode: id,
+                documentNameSourceCode: item.fieldname + '*' + item.fileName,
+            })
+        });
+        return res.status(200).json(id);
+    } catch (e) {
+        console.log(e)
+        return res.status(500).json(e.error);
+    }
+}
+
 module.exports = {
     getStudent,
     getTopicApprovedForStudent,
-    getTopicApprovedDetailForStudent
+    getTopicApprovedDetailForStudent,
+    updateTopic,
+    upload
 }

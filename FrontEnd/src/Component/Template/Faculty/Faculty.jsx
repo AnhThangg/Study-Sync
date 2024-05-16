@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button, Box, Typography } from "@mui/material";
-import { ContactEmergency, AccountBox, Person, AccountTree, Logout } from "@mui/icons-material";
+import { ContactEmergency, AccountBox, Person, AccountTree, Logout, HourglassTop } from "@mui/icons-material";
 import logoDTU from "../../../assets/Logo-DuyTan.png";
 import avatar from "../../../assets/Avatar.png";
 import "./Faculty.scss";
+import { countTopicsUnconfirmForFaculty } from '../../../api/facultyApi'
 
 import { getInfo } from '../../../api/infoApi'
 
@@ -49,6 +50,19 @@ const Faculty = () => {
     localStorage.removeItem('accessToken');
     navigate('/')
   }
+
+  const [numberTopicsUnconfirm, setNumberTopicsUnconfirm] = useState();
+
+  useEffect(() => {
+    countTopicsUnconfirmForFaculty()
+      .then((data) => {
+        setNumberTopicsUnconfirm(data);
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+  })
+
   return (
     <Box sx={{
       display: 'flex',
@@ -117,6 +131,31 @@ const Faculty = () => {
                   }}
                 >
                   Mentor
+                </Typography>
+              </Box>
+            </NavLink>
+
+            {/* Waiting Topic */}
+            <NavLink to="/faculty/topicUnconfirm" className="listBar">
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: "10px",
+                  height: "50px",
+                  paddingLeft: "10px",
+                }}
+              >
+                <HourglassTop fontSize="large" sx={{ color: "#D82C2C" }} />
+                <Typography
+                  sx={{
+                    color: "#D82C2C",
+                    fontWeight: "bold",
+                    fontSize: "20px",
+                  }}
+                >
+                  Waiting Topic({numberTopicsUnconfirm})
                 </Typography>
               </Box>
             </NavLink>

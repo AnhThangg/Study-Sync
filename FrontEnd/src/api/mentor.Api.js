@@ -62,3 +62,21 @@ export const getConfirmedTopicDetailForMentor = (id) => {
         console.log(e);
     }
 }
+
+export const countConfirmedTopicsForMentor = () => {
+    try {
+        const res = request.get(`/mentor/countConfirmedTopicsForMentor`);
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+export const countTopicsUnconfirm = () => {
+    try {
+        const res = request.get(`/mentor/countUnconfirmedTopicsForMentor`);
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}

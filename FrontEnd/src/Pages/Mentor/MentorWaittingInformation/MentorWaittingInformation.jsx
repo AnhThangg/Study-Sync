@@ -122,7 +122,7 @@ const MentorWaittingInformation = () => {
                             marginTop: '50px'
                         }}>
                             <Typography sx={{
-                                fontSize: '20px',
+                                fontSize: '20px', 
                                 fontWeight: '600',
                                 color: '#707070'
                             }}>Technology</Typography>
