@@ -14,7 +14,7 @@ const {proposeIdeaModel} = require('../models/proposeIdea.model');
 const host = 'localhost';
 const port = 3306;
 const user = 'root';
-const password = '123456';
+const password = 'Nhat200274@';
 
 const databaseName = 'studysync';
 
@@ -34,6 +34,7 @@ const sequelize = new Sequelize(databaseName, user, password, {
         raw: true,
     },
 })
+
 const AccountUser = accountUserModel(sequelize, DataTypes);
 const Univer = univerModel(sequelize, DataTypes);
 const Faculty = facultyModel(sequelize, DataTypes);

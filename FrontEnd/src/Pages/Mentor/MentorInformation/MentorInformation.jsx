@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Box,
     Icon,
@@ -8,7 +8,38 @@ import {
     Button,
 } from "@mui/material";
 import { FileUpload, RecentActors } from "@mui/icons-material";
+import { getInfo } from "../../../api/infoApi";
+import { useNavigate, useParams } from 'react-router-dom';
 const MentorInformation = () => {
+    const [infoMentor, setInfoMentor] = useState({});
+    useEffect(() => {
+        getInfo()
+            .then(data => {
+                setInfoMentor(data);
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }, [])
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
+
+    const address = (addressString) => {
+        if (addressString) {
+            const parts = addressString.split(',').map(part => part.trim());
+            const address = parts[0];
+            const ward = parts[1];
+            const district = parts[2];
+            const province = parts[3];
+            return { address, ward, district, province };
+        }
+    }
+
     return (
         <Box sx={{ margin: "50px 0 0 50px" }}>
             <Box
@@ -67,7 +98,7 @@ const MentorInformation = () => {
                             textAlign: "right",
                         }}
                     >
-                        <Typography sx={{ fontWeight: "bold" }}>User name:</Typography>
+                        <Typography sx={{ fontWeight: "bold" }}>Mentor name:</Typography>
                         <Typography sx={{ fontWeight: "bold" }}>Mentor code:</Typography>
                         <Typography sx={{ fontWeight: "bold" }}>Sex:</Typography>
                         <Typography sx={{ fontWeight: "bold" }}>Date of birth:</Typography>
@@ -80,12 +111,12 @@ const MentorInformation = () => {
                         }}
                     >
                         <Typography sx={{ fontWeight: "bold" }}>
-                            Vũ Như Cẩn
+                            {infoMentor?.mentorFullname}
                         </Typography>
-                        <Typography>DTU1235678</Typography>
-                        <Typography>Male</Typography>
-                        <Typography>07/04/1989</Typography>
-                        <Typography>vunhucan@dtu.edu.vn</Typography>
+                        <Typography>{infoMentor?.mentorCode}</Typography>
+                        <Typography>{(infoMentor?.mentorSex) ? 'Nam' : 'Nữ'}</Typography>
+                        <Typography>{formatDate(infoMentor?.mentorBirthday)}</Typography>
+                        <Typography>{infoMentor?.mentorEmail}</Typography>
                     </Box>
                 </Box>
                 <Box
@@ -166,9 +197,7 @@ const MentorInformation = () => {
                         <Typography sx={{ fontWeight: "bold" }}>Wards:</Typography>
                         <Typography sx={{ fontWeight: "bold" }}>District:</Typography>
                         <Typography sx={{ fontWeight: "bold" }}>City:</Typography>
-                        <Typography sx={{ fontWeight: "bold" }}>Nation:</Typography>
                         <Typography sx={{ fontWeight: "bold" }}>Phone:</Typography>
-                        <Typography sx={{ fontWeight: "bold" }}>Email(Orther):</Typography>
                     </Box>
                     <Box
                         className="Infor_Right"
@@ -176,15 +205,11 @@ const MentorInformation = () => {
                             paddingLeft: "20px",
                         }}
                     >
-                        <Typography>
-                            Thôn Cành Lá, xã Cành Cây, huyện Trên Mây, tỉnh Dưới Đất
-                        </Typography>
-                        <Typography>Cành Cây</Typography>
-                        <Typography>Trên Mây</Typography>
-                        <Typography>Dưới Đất</Typography>
-                        <Typography>Sounth Korea</Typography>
-                        <Typography>0329270501</Typography>
-                        <Typography>vunhucan247@gmail.com</Typography>
+                        <Typography>{infoMentor?.mentorAddress}</Typography>
+                        <Typography>{address(infoMentor?.mentorAddress)?.ward}</Typography>
+                        <Typography>{address(infoMentor?.mentorAddress)?.district}</Typography>
+                        <Typography>{address(infoMentor?.mentorAddress)?.province}</Typography>
+                        <Typography>{infoMentor?.mentorPhone}</Typography>
                     </Box>
                 </Box>
             </Box>
