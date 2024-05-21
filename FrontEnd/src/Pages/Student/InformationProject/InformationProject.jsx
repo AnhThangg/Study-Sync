@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom"
 import {
   Box,
@@ -8,17 +8,25 @@ import {
   Button,
   IconButton,
   TextareaAutosize,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import {
-  Person2,
+  Folder,
+  FileUpload,
+  CreateNewFolder,
   Person,
-  Groups,
   AccessTime,
   DataSaverOff,
   Attachment,
   Description,
   Upload,
+  Delete,
+  Article, Person2, Link, Groups, AccessAlarm, WorkspacePremium
 } from "@mui/icons-material";
+import { getTopicApprovedDetailForStudent, updateTopic } from '../../../api/studentApi';
+import { v4 as uuid } from "uuid";
+
 
 function InformationProject() {
   const topicCode = useParams().id;
@@ -40,11 +48,10 @@ function InformationProject() {
     </Box>
   );
 
-  const fileInputRef = useRef(null);
+  const [fileInputRefs, setFileInputRefs] = useState([useRef(null)]);
   const [uploadedFile, setUploadedFile] = useState(null);
-
   const handleUploadClick = () => {
-    fileInputRef.current.click();
+    fileInputRefs[0].current.click();
   };
 
   const handleFileChange = (event) => {
@@ -53,30 +60,137 @@ function InformationProject() {
     setUploadedFile(file);
   };
 
-  const project = {
-    faculty: "Khoa Công Nghệ Phần Mềm",
-    projectName: "StudySync Manage scientific research projects for students in Duy Tan University",
-    procjectCode: "PJ01SA",
+  const [message, setMessage] = useState("");
+  const [isCheckAlert, setIsCheckAlert] = useState(false);
+  const [alertType, setAlertType] = useState("error");
+  const [infoTopic, setInfoTopic] = useState({});
+  const [topicDescription, setTopicDescription] = useState();
+  const [topicGoalSubject, setTopicGoalSubject] = useState();
+  const [topicExpectedResearch, setTopicExpectedResearch] = useState();
+  const [topicTech, setTopicTech] = useState();
+  const [folders, setFolders] = useState([{ id: uuid(), name: 'New Folder', files: [] }]);
+  const [newFolderName, setNewFolderName] = useState('');
+
+  const onChangeName = (value, index) => {
+    const newFolder = [...folders];
+    newFolder[index].name = value;
+    setFolders(newFolder);
+  }
+
+  const onCheckDuplicated = (folders) => {
+    for (let i = 0; i < folders.length; i++) {
+      for (let j = i + 1; j < folders.length; j++) {
+        if (folders[i].name === folders[j].name) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+
+  const addFolder = () => {
+    const isNewFolderExist = folders.some(folder => folder.name === 'New Folder');
+    if (!isNewFolderExist) {
+      if (onCheckDuplicated(folders)) {
+        const newFolder = { id: uuid(), name: `New Folder`, files: [] };
+        const newFileInputRef = { current: null };
+        setFileInputRefs([...fileInputRefs, newFileInputRef])
+        setFolders([...folders, newFolder]);
+      }
+      else {
+        setMessage(`Folder name already has exist.`);
+        setAlertType("error");
+        setIsCheckAlert(true);
+        setTimeout(() => {
+          setIsCheckAlert(false);
+        }, 4000);
+      }
+    } else {
+      setMessage(`A folder with name "New Folder" already exists.`);
+      setAlertType("error");
+      setIsCheckAlert(true);
+      setTimeout(() => {
+        setIsCheckAlert(false);
+      }, 4000);
+    }
   };
-  const mentor = {
-    mentorName: "Dr. Tran Thi Thuy Trinh",
-    mentorEmail: "ttthuytrinh@dtu.edu.vn",
-    mentorPhone: "09133350642",
+  const deleteFolder = (id) => {
+    const newFolder = folders.filter(folder => folder.id !== id);
+
+    setFolders(newFolder); // Loại bỏ folder có id tương ứng khỏi danh sách
   };
 
-  const leader = {
-    leaderName: "Nguyen Tran Anh Thang",
-    leaderEmail: "anhthang2529@gmail.com",
-    leaderPhone: "0869132529",
-  };
+  const upFile = (index) => {
+    console.log(fileInputRefs[index])
+    fileInputRefs[index].current.click();
+  }
 
-  const members = {
-    membersOne: "Nguyen Hoang Quoc Anh",
-    membersTwo: "Duong Nguyen Cong Luan",
-    membersThree: "Nguyen Quoc Nhat",
-  };
-  const startTime = "24/02/2024";
-  const trangThai = "In progess";
+  const onChangeFile = (e, index) => {
+    const newFolders = [...folders];
+    newFolders[index].files.push({ id: uuid(), file: e.target.files[0], name: e.target.value, new: true });
+    setFolders(newFolders);
+  }
+
+  const onDeleteFile = (folderIndex, fileId) => {
+    const newFolders = [...folders];
+    const newFiles = newFolders[folderIndex].files.filter(item => item.id !== fileId);
+    newFolders[folderIndex].files = newFiles;
+    setFolders(newFolders);
+  }
+
+  useEffect(() => {
+    getTopicApprovedDetailForStudent(topicCode)
+      .then(data => {
+        setInfoTopic(data);
+        setTopicDescription(data?.topic?.topicDescription);
+        setTopicGoalSubject(data?.topic?.topicGoalSubject);
+        setTopicExpectedResearch(data?.topic?.topicExpectedResearch);
+        setTopicTech(data?.topic?.topicTech);
+        if (data?.listDocument.length > 0) {
+          setFolders(data?.listDocument);
+          const listRef = [];
+          data?.listDocument.forEach(item => {
+            listRef.push({ current: null });
+          });
+          setFileInputRefs(listRef);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+  }, [topicCode])
+
+  console.log(folders)
+
+  const openDialog = async () => {
+    const formData = new FormData();
+    formData.append('topicDescription', topicDescription)
+    formData.append('topicGoalSubject', topicDescription)
+    formData.append('topicExpectedResearch', topicDescription)
+    formData.append('topicTech', topicDescription)
+    for (let i = 0; i < folders.length; i++) {
+      for (let j = 0; j < folders[i].files.length; j++) {
+        if (folders[i].files[j].new) {
+          formData.append(folders[i].name, folders[i].files[j].file);
+        }
+      }
+    }
+    const res = await updateTopic(topicCode, formData);
+    if (res.status === 200) {
+      const newFolders = [...folders];
+      for (let i = 0; i < folders.length; i++) {
+        for (let j = 0; j < folders[i].files.length; j++) {
+          if (folders[i].files[j].new) {
+            newFolders[i].files[j].new = false;
+          }
+        }
+      }
+      setFolders(newFolders);
+    }
+  }
+
+  // console.log(infoTopic?.listDocument);
 
   return (
     <Box sx={{ margin: "50px 50px 0 50px", color: "#818181" }}>
@@ -93,10 +207,10 @@ function InformationProject() {
               //   width:'100%'
             }}
           >
-            {project.faculty}
+            {infoTopic.facultyName}
           </Typography>
           <Box>
-            <InfoItem label="Project code" value={project.procjectCode} />
+            <InfoItem label="Project code" value={infoTopic.topic?.topicCode} />
           </Box>
         </Box>
         <Box
@@ -104,7 +218,7 @@ function InformationProject() {
           sx={{ display: "flex", flexDirection: "row" }}
         >
           <Typography sx={{ fontSize: "24px" }}>
-            {project.projectName}
+            {infoTopic.topic?.topicName}
           </Typography>
         </Box>
       </Box>
@@ -112,7 +226,6 @@ function InformationProject() {
       <Box
         className="container"
         sx={{
-          //   width: "100%",
           height: "100%",
           display: "flex",
           flexDirection: "row",
@@ -123,6 +236,8 @@ function InformationProject() {
             <InfoItem label="Describe project" />
 
             <TextareaAutosize
+              value={topicDescription}
+              onChange={(e) => { setTopicDescription(e.target.value) }}
               style={{
                 width: "700px",
                 height: "200px",
@@ -137,6 +252,43 @@ function InformationProject() {
             <InfoItem label="Technology" />
 
             <TextareaAutosize
+              value={topicTech}
+              onChange={(e) => { setTopicTech(e.target.value) }}
+              style={{
+                width: "700px",
+                height: "200px",
+                border: "2px solid #999",
+                borderRadius: "10px",
+                padding: "10px",
+                fontSize: "20px",
+              }}
+            />
+          </Box>
+
+          <Box className="topicGoalSubject" sx={{ marginBottom: "20px" }}>
+            <InfoItem label="The Goal Of The Subject" />
+
+            <TextareaAutosize
+              value={topicGoalSubject}
+              onChange={(e) => { setTopicGoalSubject(e.target.value) }}
+              style={{
+                width: "700px",
+                height: "200px",
+                border: "2px solid #999",
+                borderRadius: "10px",
+                padding: "10px",
+                fontSize: "20px",
+              }}
+            />
+          </Box>
+
+          <Box className="topicExpectedResearch" sx={{ marginBottom: "20px" }}>
+            <InfoItem label="Expected research products of the topic and applicability" />
+
+            <TextareaAutosize
+              value={topicExpectedResearch}
+              onChange={(e) => { setTopicExpectedResearch(e.target.value) }}
+              // onChange={(e)=>{e.target.value}}
               style={{
                 width: "700px",
                 height: "200px",
@@ -150,190 +302,179 @@ function InformationProject() {
 
           <Box className="document" sx={{ marginBottom: "20px" }}>
             <InfoItem label="Document Uploaded" />
-            <input
-              type="file"
-              ref={fileInputRef}
-              style={{ display: "none" }}
-              onChange={handleFileChange}
-            />
+            <Box className="createFolder" sx={{
+              margin: '10px 0 30px 10px'
+            }}>
+              {folders?.map((folder, index) => (
+                <Box className="folder" key={folder.id} sx={{
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}>
+                  <Box className="rowFolder" sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                  }}>
+                    <Folder fontSize="large" sx={{
+                      color: '#D82C2C'
+                    }} />
+                    <TextField
+                      sx={{
+                        width: "500px",
+                        paddingLeft: "10px"
+                      }}
+                      size="small"
+                      onBlur={(e) => { onChangeName(e.target.value, index) }}
+                      defaultValue={folder.name}
+                    // onChange={event => {
+                    //   const newName = event.target.value;
+                    //   setFolders(prevFolders => prevFolders.map(item => (item.id === folder.id ? { ...item, name: newName } : item)));
+                    // }}
+                    />
+                    <Button onClick={() => deleteFolder(folder.id)}>
+                      <Delete
+                        sx={{
+                          color: '#D82C2C'
+                        }}
+                        fontSize="large" />
+                    </Button>
+                  </Box>
+                  <Box className="chooseFile" sx={{
+                    marginLeft: '50px'
+                  }}>
+                    <input
+                      ref={fileInputRefs[index]}
+                      type="file"
+                      style={{ display: 'none' }}
+                      onChange={(e) => { onChangeFile(e, index); e.target.value = '' }}
+                    />
+                    {
+                      folder.files?.map((item, fileIndex) => (
+                        <Box key={item.id} className="file">
+                          <Box sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            width: 'auto',
+                            height: '100%',
+                            alignItems: 'center'
+                          }}>
+                            <Article fontSize="large" sx={{
+                              color: '#1e385d'
+                            }}></Article>
+                            <Box sx={{
+                              width: 'auto',
+                              height: '100%',
+                              display: 'flex',
+                              alignItems: 'center'
+                            }}>
+                              <Typography
+                                onClick={() => {
+                                  fetch(`http://localhost:2109/topic/downloadfile/${item.source}`)
+                                    .then(response => response.blob())
+                                    .then(blob => {
+                                      console.log(blob)
+                                      const url = window.URL.createObjectURL(blob);
+                                      // Tạo một thẻ a để tải xuống file
+                                      const a = document.createElement('a');
+                                      a.href = url;
+                                      console.log(blob.type);
+                                      if (!item.name.includes('.')) {
+                                        switch (blob.type.split('/')[1]) {
+                                          case 'vnd.openxmlformats-officedocument.wordprocessingml.document':
+                                            a.download = `${item.name}.docx`;
+                                            break;
+                                          case 'vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                                            a.download = `${item.name}.xlsx`;
+                                            break;
+                                          case 'pdf':
+                                            a.download = `${item.name}.pdf`;
+                                            break;
+                                          case 'zip':
+                                            a.download = `${item.name}.zip`;
+                                            break;
+                                          default:
+                                            console.log('Unsupported file type');
+                                        }
+                                      } else {
+                                        // Nếu đã có phần mở rộng, không cần thêm "docx"
+                                        a.download = item.name;
+                                      }
+                                      // a.download = `${item.name}.${blob.type.split('/')[1]}`; // Tên của file khi tải xuống
+                                      // a.download = 'file.pdf'; // Tên của file khi tải xuống
+                                      // Thêm thẻ a vào body và kích hoạt sự kiện click để tải xuống
+                                      document.body.appendChild(a);
+                                      a.click();
+                                      // Xóa URL khi đã tải xuống xong và sau khi sự kiện onload của thẻ a được kích hoạt
+                                      a.onload = function () {
+                                        window.URL.revokeObjectURL(url);
+                                        document.body.removeChild(a); // Xóa thẻ a
+                                      };
+                                    })
+                                    .catch(error => console.log(error));
+                                  // console.log(item.name);
 
-            <Box
-              className="proposal"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ width: "40%" }}>Proposal</Typography>
 
-              <Box className="upload">
-                <IconButton onClick={handleUploadClick}>
-                  <Upload />
-                </IconButton>
-              </Box>
-            </Box>
-            {uploadedFile && (
-              <Typography
+                                }}
+                                ClassName="documentsPJ" sx={{
+                                  marginTop: '10px',
+                                  fontSize: '18px',
+                                  marginLeft: '10px',
+                                  color: '#1e385d',
+                                  marginBottom: '8px'
+                                }}>
+
+                                {item.name?.split('\\').pop()}
+                              </Typography>
+                              <Button onClick={() => onDeleteFile(index, item.id)}>
+                                <Delete />
+                              </Button>
+                            </Box>
+                          </Box>
+                        </Box>
+                      ))
+                    }
+                    <Button onClick={() => upFile(index)} sx={{
+                      background: "#1e385d",
+                      color: "#fff",
+                      border: "1px solid #1e385d",
+                      "&:hover": {
+                        border: '1px solid #1e385d',
+                        color: '#1e385d',
+                      },
+                    }}>
+                      <FileUpload />
+                      Upload File
+                    </Button>
+                  </Box>
+                </Box>
+              ))}
+              <Button
+                onClick={addFolder}
                 sx={{
-                  // width: "100%",
-                  paddingLeft: "25px",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {uploadedFile.name}
-              </Typography>
-            )}
-            <Box
-              className="projectPlan"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ width: "40%" }}>Project Plan</Typography>
-              <IconButton>
-                <Upload />
-              </IconButton>
+                  margin: '10px 0',
+                  gap: '5px',
+                  background: "#D82C2C",
+                  color: "#fff",
+                  border: "1px solid #D82C2C",
+                  "&:hover": {
+                    border: '1px solid #D82C2C',
+                    color: '#D82C2C',
+                  },
+                }}>
+                <CreateNewFolder />
+                Add Folder
+              </Button>
             </Box>
-            <Box
-              className="productBacklog"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ width: "40%" }}>Product Backlog</Typography>
-              <IconButton>
-                <Upload />
-              </IconButton>
-            </Box>
-            <Box
-              className="userStories"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ width: "40%" }}>User Stories</Typography>
-              <IconButton>
-                <Upload />
-              </IconButton>
-            </Box>
-            <Box
-              className="architecture"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ width: "40%" }}>Architecture Design</Typography>
-              <IconButton>
-                <Upload />
-              </IconButton>
-            </Box>
-            <Box
-              className="database"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ width: "40%" }}>Database Design</Typography>
-              <IconButton>
-                <Upload />
-              </IconButton>
-            </Box>
-            <Box
-              className="userInter"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ width: "40%" }}>
-                User Interface Design
-              </Typography>
-              <IconButton>
-                <Upload />
-              </IconButton>
-            </Box>
-            <Box
-              className="testCase"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ width: "40%" }}>Test Case</Typography>
-              <IconButton>
-                <Upload />
-              </IconButton>
-            </Box>
-            <Box
-              className="testPlan"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ width: "40%" }}>Test Plan</Typography>
-              <IconButton>
-                <Upload />
-              </IconButton>
-            </Box>
-            <Box
-              className="sprintBacklog"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Icon>
-                <Description />
-              </Icon>
-              <Typography sx={{ width: "40%" }}>Sprint Backlog</Typography>
-              <IconButton>
-                <Upload />
-              </IconButton>
-            </Box>
+
+
+
+
+
+
+
+
+
+
           </Box>
         </Box>
 
@@ -341,14 +482,14 @@ function InformationProject() {
           className="contRight"
           sx={{
             backgroundColor: "#F6E8E8",
-            width: "360px",
-            height: "570px",
+            width: "fit-content",
+            height: "fit-content",
             borderRadius: "20px",
           }}
         >
           <Box
             sx={{
-              margin: "20px 10px ",
+              margin: "10px 35px 35px 10px",
             }}
           >
             <Box
@@ -360,9 +501,9 @@ function InformationProject() {
               </Icon>
               <Box sx={{ marginTop: "20px" }}>
                 <InfoItem label="Mentor" />
-                <Typography>{mentor.mentorName}</Typography>
-                <Typography>{mentor.mentorEmail}</Typography>
-                <Typography>{mentor.mentorPhone}</Typography>
+                <Typography>{infoTopic.mentor?.mentorScientificName}</Typography>
+                <Typography>{infoTopic.mentor?.mentorEmail}</Typography>
+                <Typography>{infoTopic.mentor?.mentorPhone}</Typography>
               </Box>
             </Box>
             <Box
@@ -374,9 +515,9 @@ function InformationProject() {
               </Icon>
               <Box sx={{ marginTop: "20px" }}>
                 <InfoItem label="Leader" />
-                <Typography>{leader.leaderName}</Typography>
-                <Typography>{leader.leaderEmail}</Typography>
-                <Typography>{leader.leaderPhone}</Typography>
+                <Typography>{infoTopic.leader?.studentFullname}</Typography>
+                <Typography>{infoTopic.leader?.studentEmail}</Typography>
+                <Typography>{infoTopic.leader?.studentPhone}</Typography>
               </Box>
             </Box>
             <Box
@@ -388,9 +529,11 @@ function InformationProject() {
               </Icon>
               <Box sx={{ marginTop: "20px" }}>
                 <InfoItem label="Group members" />
-                <Typography>{members.membersOne}</Typography>
-                <Typography>{members.membersTwo}</Typography>
-                <Typography>{members.membersThree}</Typography>
+                {
+                  infoTopic.groupMembers?.map(member => (
+                    <Typography>{member.studentFullname}</Typography>
+                  ))
+                }
               </Box>
             </Box>
             <Box
@@ -402,7 +545,7 @@ function InformationProject() {
               </Icon>
               <Box sx={{ marginTop: "20px" }}>
                 <InfoItem label="Start" />
-                <Typography>{startTime}</Typography>
+                <Typography>{infoTopic.topicDate}</Typography>
               </Box>
             </Box>
             <Box
@@ -413,26 +556,15 @@ function InformationProject() {
                 <DataSaverOff fontSize="large" />
               </Icon>
               <Box sx={{ marginTop: "20px" }}>
-                <InfoItem label="Status" />
-                <Typography>{trangThai}</Typography>
+                <InfoItem label="Status (yyyy-mm-dd)" />
+                <Typography>{infoTopic.topic?.topicStatus}</Typography>
               </Box>
             </Box>
           </Box>
         </Box>
       </Box>
 
-      <Box className="link">
-        <InfoItem label="Link Project" />
-        <Box>
-          <Icon>
-            <Attachment />
-          </Icon>
-          <TextField
-            size="small"
-            sx={{ width: "600px", paddingLeft: "10px" }}
-          />
-        </Box>
-      </Box>
+
       <Box
         className="btnCreate"
         sx={{
@@ -443,6 +575,7 @@ function InformationProject() {
         }}
       >
         <Button
+          onClick={openDialog}
           sx={{
             backgroundColor: "#D82C2C",
             borderRadius: "10px",
@@ -462,6 +595,14 @@ function InformationProject() {
           Update
         </Button>
       </Box>
+      <Snackbar
+        open={isCheckAlert}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert variant="filled" severity={alertType}>
+          {message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

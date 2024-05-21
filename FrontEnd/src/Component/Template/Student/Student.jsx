@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button, Box, Typography } from "@mui/material";
-import { AccountBox, AccountTree, Logout } from "@mui/icons-material";
+import { AccountBox, AccountTree, Logout, TipsAndUpdates } from "@mui/icons-material";
 import { getInfo } from '../../../api/infoApi'
 import logoDTU from "../../../assets/Logo-DuyTan.png";
 import "./Student.scss";
@@ -117,6 +117,30 @@ const Student = () => {
                   }}
                 >
                   Project
+                </Typography>
+              </Box>
+            </NavLink>
+
+            <NavLink to="/student/proposeidea" className="listBar">
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: "10px",
+                  height: "50px",
+                  paddingLeft: "10px",
+                }}
+              >
+                <TipsAndUpdates fontSize="large" sx={{ color: "#D82C2C" }} />
+                <Typography
+                  sx={{
+                    color: "#D82C2C",
+                    fontWeight: "bold",
+                    fontSize: "20px",
+                  }}
+                >
+                  Propose Idea
                 </Typography>
               </Box>
             </NavLink>

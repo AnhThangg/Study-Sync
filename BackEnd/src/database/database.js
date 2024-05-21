@@ -16,7 +16,7 @@ const port = 3306;
 const user = 'root';
 const password = '1008';
 
-const databaseName = 'StudySync';
+const databaseName = 'studysync';
 
 const pool = mysql.createPool({ host, port, user, password });
 pool.query(`CREATE DATABASE IF NOT EXISTS ${databaseName}`);
@@ -84,8 +84,9 @@ StudentTeam.belongsTo(Team, { foreignKey: "teamCode" });
 // teamModel 1-1 to topicModel
 Topic.belongsTo(Team, { foreignKey: "teamCode" });
 
-// documentModel 1-1 to topicModel
-Topic.belongsTo(Document, { foreignKey: "documentCode" });
+//  to topicModel 1-n documentModel
+Topic.hasMany(Document, { foreignKey: "topicCode" });
+Document.belongsTo(Topic, { foreignKey: "topicCode" });
 
 // mentorModel 1-n to proposeIdea
 Mentor.hasMany(ProposeIdea, { foreignKey: "mentorCode" });

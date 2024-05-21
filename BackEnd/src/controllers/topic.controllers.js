@@ -2,6 +2,7 @@ const { raw } = require('body-parser');
 const { Topic, Document, Team, StudentTeam, Mentor, Student, sequelize, Faculty } = require('../database/database');
 const { Sequelize, where } = require('sequelize');
 const { v4: uuid } = require('uuid');
+const path = require('path');
 
 
 const getTopics = async (req, res) => {
@@ -30,9 +31,7 @@ const getTopics = async (req, res) => {
 const createTopic = async (req, res) => {
     try {
         const { body: infoTopic } = req;
-        const documentCode = uuid();
         const teamCode = uuid();
-        let document;
         let team;
         let student_team;
         const univerCode = await Faculty.findOne({
@@ -55,17 +54,12 @@ const createTopic = async (req, res) => {
         // return res.json(topicCode);
 
         try {
-            document = await Document.create({
-                documentCode,
-                documentName: infoTopic.topicName,
-                documentNameSourceCode: infoTopic.topicName + documentCode,
-            });
             team = await Team.create({
                 teamCode,
                 teamName: infoTopic.topicName
             });
             const findLeader = infoTopic.listMember.find(item => item === infoTopic.leader)
-
+            console.log(findLeader);
             if (findLeader) {
                 infoTopic.listMember.forEach(async (item) => {
                     student_team = await StudentTeam.create({
@@ -78,19 +72,24 @@ const createTopic = async (req, res) => {
                     studentCode: infoTopic.leader,
                     teamCode,
                 })
+                infoTopic.listMember.forEach(async (item) => {
+                    student_team = await StudentTeam.create({
+                        studentCode: item,
+                        teamCode,
+                    })
+                })
             }
 
             await Topic.create({
-                topicCode,
+                topicCode, 
                 topicName: infoTopic.topicName,
-                topicDescription: null,
+                topicDescription: infoTopic.topicDescription,
                 topicGoalSubject: infoTopic.topicGoalSubject,
                 topicExpectedResearch: infoTopic.topicExpectedResearch,
                 topicTech: null,
                 topicStatus: 'Waiting for Mentor Approval',
                 topicDateStart: new Date(infoTopic.topicDateStart),
                 topicDateEnd: infoTopic.topicDateEnd,
-                documentCode,
                 facultyCode: infoTopic.facultyCode,
                 teamCode,
                 mentorCode: infoTopic.mentorCode,
@@ -100,8 +99,7 @@ const createTopic = async (req, res) => {
             return res.status(200).json('Create Project Successfully')
         } catch (e) {
             console.log(e);
-            if (document || team) {
-                await document.destroy();
+            if (team) {
                 await team.destroy();
             }
             return res.status(500).json(e);
@@ -112,7 +110,24 @@ const createTopic = async (req, res) => {
     }
 }
 
+const downloadFile = async (req,res) => {
+    try {
+        const fileName = req.params.fileName;
+        const arr = fileName.split('*');
+        const fileUrl = path.join(__dirname,`../Documents/${arr[0]}/${arr[1]}`);
+        // console.log(fileUrl)
+        res.download(fileUrl);
+        
+
+    } catch (e) {
+        return res.status(500).json(e);
+    }
+}
+
+
+
 module.exports = {
     getTopics,
-    createTopic
+    createTopic,
+    downloadFile,
 }

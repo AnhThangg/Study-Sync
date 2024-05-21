@@ -158,6 +158,7 @@ const AddAccountFaculty = () => {
       display: 'flex',
       flexDirection: 'column',
       gap: '25px',
+      marginBottom: '50px'
     }}>
       <Box key={key} className="containerTop" sx={{
         display: 'flex',
@@ -654,14 +655,14 @@ const AddAccountFaculty = () => {
             width: '200',
             height: '50px',
             color: '#D82C2C',
-            borderRadius: '20px',
+            borderRadius: '10px',
             padding: '10px',
             '&:hover': {
               backgroundColor: '#D82C2C',
               color: '#FFF',
             },
           }}>
-          Add Univer
+          Add Faculty
         </Button>
       </Box>
       <Dialog

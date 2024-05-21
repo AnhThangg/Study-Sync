@@ -6,6 +6,8 @@ import Student from './Component/Template/Student/Student.jsx'
 import Check from './Component/Check/Check.jsx'
 import Profile from './Pages/Student/Profile/Profile.jsx'
 import Project from './Pages/Student/Project/Project.jsx'
+import ProposeIdeaStudent from './Pages/Student/ProposeIdea/ProposeIdeaStudent.jsx'
+import ProposeIdeaDetailStudent from './Pages/Student/ProposeIdeaDetail/ProposeIdeaDetailStudent.jsx'
 import Univer from './Component/Template/Univer/Univer.jsx'
 import InformationProject from "./Pages/Student/InformationProject/InformationProject.js";
 import CreateProject from "./Pages/Student/CreateProject/CreateProject.jsx";
@@ -39,11 +41,34 @@ import UniverCetificate from './Pages/Univer/UniverCetificate/UniverCetificate.j
 import AcceptProject from './Pages/Faculty/AcceptProject/AcceptProject.jsx'
 import MentorProjectInformation from './Pages/Mentor/MentorProjectInformation/MentorProjectInformation.jsx'
 import UnconfirmedTopicForMentor from './Pages/Mentor/UnconfirmedTopicForMentor/UnconfirmedTopicForMentor.jsx'
+import MentorDetailIdea from './Pages/Mentor/MentorDetailIdea/MentorDetailIdea.jsx'
 import ListProposeIdea from './Pages/Mentor/ListProposeIdea/ListProposeIdea.jsx'
 import MyProposeIdea from './Pages/Mentor/MyProposeIdea/MyProposeIdea.jsx'
+import MentorWaittingInformation from './Pages/Mentor/MentorWaittingInformation/MentorWaittingInformation.jsx'
+import MentorEditIdea from './Pages/Mentor/MentorEditIdea/MentorEditIdea.jsx'
+import ReceiveProposeIdea from './Pages/Student/ReceiveProposeIdea/ReceiveProposeIdea.jsx'
+import TopicsUnconfirm from './Pages/Faculty/TopicsUnconfirm/TopicsUnconfirm.jsx'
+import FacultyUnconfirmTopicDetail from './Pages/Faculty/FacultyUnconfirmTopicDetail/FacultyUnconfirmTopicDetail.jsx'
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+
+const color =
+  createTheme({
+    palette: {
+      white: '#FFFFFF',
+      red: '#D82C2C',
+      palePink: '#F6E8E8',
+      green: '#41B06E',
+      navyBlue: '#1e385d',
+      slateBlue: '#718199',
+      coralRed: '#ff6666',
+      silver: '#999999',
+      grey: '#707070',
+      ashGrey: '#818181'
+    },
+  })
 
 const router = createBrowserRouter([
-
   { path: '*', element: <Page404 /> },
   {
     path: "/",
@@ -74,6 +99,14 @@ const router = createBrowserRouter([
         element: <Project />
       },
       {
+        path: '/student/proposeidea',
+        element: <ProposeIdeaStudent />
+      },
+      {
+        path: '/student/proposeidea/:id',
+        element: <ProposeIdeaDetailStudent />
+      },
+      {
         path: '/student/profile',
         element: <Profile />
       },
@@ -84,6 +117,10 @@ const router = createBrowserRouter([
       {
         path: "/student/project/createProject",
         element: <CreateProject />,
+      },
+      {
+        path: '/student/proposeidea/receiveproposeidea/:id',
+        element: <ReceiveProposeIdea />
       },
     ]
   },
@@ -169,11 +206,11 @@ const router = createBrowserRouter([
         element: <MentorInformation />
       },
       {
-        path: '/Mentor/MentorProjectInformation',
+        path: '/Mentor/MentorProjectInformation/:id',
         element: <MentorProjectInformation />,
       },
       {
-        path: '/Mentor/unconfirmedtopicformentor',
+        path: '/Mentor/unconfirmedtopicformentor/:id',
         element: <UnconfirmedTopicForMentor />
       },
       {
@@ -183,6 +220,18 @@ const router = createBrowserRouter([
       {
         path: '/Mentor/myProposeIdea',
         element: <MyProposeIdea />
+      },
+      {
+        path: '/Mentor/MentorWaittingInformation',
+        element: <MentorWaittingInformation />,
+      },
+      {
+        path: '/Mentor/proposeidea/:id',
+        element: <MentorDetailIdea />
+      },
+      {
+        path: 'mentor/myproposeIdea/editidea/:id',
+        element: <MentorEditIdea />
       }
     ]
   },
@@ -209,11 +258,21 @@ const router = createBrowserRouter([
         path: "/faculty/acceptproject",
         element: <AcceptProject />,
       },
-      //
+      {
+        path: "/faculty/topicUnconfirm",
+        element: <TopicsUnconfirm />,
+      },
+      {
+        path: "/faculty/topicUnconfirm/topicUnconfirmDetail/:id",
+        element: <FacultyUnconfirmTopicDetail />,
+      },
     ],
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />
+  <ThemeProvider theme={color}>
+    <CssBaseline />
+    <RouterProvider router={router} />
+  </ThemeProvider>
 );

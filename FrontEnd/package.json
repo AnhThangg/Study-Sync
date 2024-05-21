@@ -23,6 +23,7 @@
     "apexcharts": "^3.48.0",
     "axios": "^1.6.8",
     "dayjs": "^1.11.10",
+    "js-file-download": "^0.4.12",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
     "react-dom": "^18.2.0",

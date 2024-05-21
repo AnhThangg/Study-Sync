@@ -28,6 +28,10 @@ const proposeIdeaModel = (sequelize, DataTypes) => {
                 type: DataTypes.TEXT,
                 allowNull: false
             },
+            status: {
+                type: DataTypes.TEXT,
+                allowNull: false
+            },
             mentorCode: {
                 type: DataTypes.STRING,
                 allowNull: false

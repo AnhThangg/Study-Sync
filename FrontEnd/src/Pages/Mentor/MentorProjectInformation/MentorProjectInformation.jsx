@@ -1,12 +1,57 @@
-import React from 'react'
-import { Outlet, NavLink, useLocation } from "react-router-dom";
-import { Button, Box, Typography } from "@mui/material";
+import { React, useEffect, useState } from 'react'
+import { Outlet, useParams, useLocation, useNavigate, NavLink } from "react-router-dom";
+import {
+    Button,
+    Box,
+    Typography,
+    Snackbar,
+    Alert,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle
+} from "@mui/material";
 import './MentorProjectInformation.scss'
-import { Article, Person2, Link, Person, Groups, AccessAlarm, WorkspacePremium } from "@mui/icons-material";
-import FileUpLoad from '../FileUpLoad';
-
+import { Article, Person2, Link, Person, Groups, AccessAlarm, WorkspacePremium, Folder } from "@mui/icons-material";
+import { getConfirmedTopicDetailForMentor } from '../../../api/mentor.Api';
+import { useTheme } from '@mui/material/styles';
 
 const MentorProjectInformation = () => {
+    const color = useTheme().palette;
+    const navigate = useNavigate();
+    const topicCode = useParams().id;
+    const [topicInfo, setTopicInfo] = useState({});
+    const [message, setMessage] = useState('');
+    const [isCheckAlert, setIsCheckAlert] = useState(false);
+    const [alertType, setAlertType] = useState('error');
+    const [openDialog, setOpenDialog] = useState(false);
+
+    useEffect(() => {
+        getConfirmedTopicDetailForMentor(topicCode)
+            .then(data => {
+                setTopicInfo(data);
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }, [topicCode]);
+
+
+    const formatContent = (text) => {
+        if (typeof text !== 'string') {
+            return [];
+        }
+        const lines = text.split('\n').map((line, index) => {
+            return (
+                <div key={index} style={{ textIndent: `20px`, marginBottom: `10px` }}>
+                    {line}
+                </div>
+            );
+        });
+        return lines;
+    }
+
     return (
         <div>
             <Box ClassName="Container" sx={{
@@ -36,7 +81,7 @@ const MentorProjectInformation = () => {
                             fontSize: '30px',
                             fontWeight: 'bold',
                             color: '#D82C2C'
-                        }}>Khoa Công Nghệ Phần Mềm</Typography>
+                        }}>{topicInfo.facultyName}</Typography>
                         <Box sx={{
                             width: '100%',
                             height: '50px',
@@ -55,7 +100,7 @@ const MentorProjectInformation = () => {
                                 marginLeft: '10px',
                                 fontSize: '18px',
                                 color: '#707070'
-                            }}>PJ01SA</Typography>
+                            }}>{topicInfo.topicCode}</Typography>
                         </Box>
                     </Box>
                     <Box sx={{
@@ -68,7 +113,11 @@ const MentorProjectInformation = () => {
                         <Typography sx={{
                             fontSize: '20px',
                             color: '#707070'
-                        }}>SyncStudy : Manage scientific research projects for students in Duy Tan University </Typography>
+                        }}><strong style={{
+                            fontSize: '24px',
+                            fontWeight: 'bold',
+                            color: '#707070'
+                        }}>Name:</strong> {topicInfo.topicName}</Typography>
                     </Box>
                 </Box>
                 <Box sx={{
@@ -98,20 +147,14 @@ const MentorProjectInformation = () => {
                             <Typography sx={{
                                 fontSize: '20px',
                                 fontWeight: '600',
-                                color: '#707070'
+                                color: '#D82C2C'
                             }}>Describle</Typography>
                             <Typography id="description" sx={{
                                 fontSize: '18px',
                                 fontWeight: '100',
                                 color: '#707070',
                                 marginTop: '5px'
-                            }}>This project aims to solve the problem of managing
-                                scientific research projects at Duy Tan University.
-                                Creating a website makes it convenient to register,
-                                interact, manage and report students' scientific research projects.
-                                Helps lecturers and schools closely follow projects,
-                                accurately and completely summarize
-                                statistics for each department and group.</Typography>
+                            }}>{formatContent(topicInfo.topicDescription)}</Typography>
                         </Box>
                         <Box ClassName="Technology" sx={{
                             width: '95%',
@@ -125,47 +168,61 @@ const MentorProjectInformation = () => {
                             <Typography sx={{
                                 fontSize: '20px',
                                 fontWeight: '600',
-                                color: '#707070'
-                            }}>Technology</Typography>
-                            <Typography ClassName="Technologyz" id="technology" sx={{
+                                color: '#D82C2C'
+                            }}>Technology:</Typography>
+                            <Typography ClassName="Technology" id="technology" sx={{
                                 fontSize: '18px',
                                 fontWeight: '100',
                                 color: '#707070',
                                 marginTop: '5px'
                             }}>
-                                Frontend : HTML,CSS,React,JavaScript
+                                {formatContent(topicInfo.topicTech)}
                             </Typography>
-                            <Typography ClassName="Technologyz" id="technology1" sx={{
+                        </Box>
+                        <Box ClassName="topicGoalSubject" sx={{
+                            width: '95%',
+                            height: 'auto',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'start',
+                            justifyContent: 'start',
+                            marginTop: '50px'
+                        }}>
+                            <Typography sx={{
+                                fontSize: '20px',
+                                fontWeight: '600',
+                                color: '#D82C2C'
+                            }}>The Goal Of The Subject:</Typography>
+                            <Typography ClassName="topicGoalSubject" id="goalSubject" sx={{
                                 fontSize: '18px',
                                 fontWeight: '100',
                                 color: '#707070',
                                 marginTop: '5px'
                             }}>
-                                Back-end : Java.
+                                {formatContent(topicInfo.topicGoalSubject)}
                             </Typography>
-                            <Typography ClassName="Technologyz" id="technology2" sx={{
+                        </Box>
+                        <Box ClassName="topicExpectedResearch" sx={{
+                            width: '95%',
+                            height: 'auto',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'start',
+                            justifyContent: 'start',
+                            marginTop: '50px'
+                        }}>
+                            <Typography sx={{
+                                fontSize: '20px',
+                                fontWeight: '600',
+                                color: '#D82C2C'
+                            }}>Expected research products of the topic and applicability:</Typography>
+                            <Typography ClassName="ExpectedResearch" id="expectedResearch" sx={{
                                 fontSize: '18px',
                                 fontWeight: '100',
                                 color: '#707070',
                                 marginTop: '5px'
                             }}>
-                                Database management system : SQL Server.
-                            </Typography>
-                            <Typography ClassName="Technologyz" id="technology3" sx={{
-                                fontSize: '18px',
-                                fontWeight: '100',
-                                color: '#707070',
-                                marginTop: '5px'
-                            }}>
-                                Design UI : Figma
-                            </Typography>
-                            <Typography ClassName="Technologyz" id="technology4" sx={{
-                                fontSize: '18px',
-                                fontWeight: '100',
-                                color: '#707070',
-                                marginTop: '5px'
-                            }}>
-                                Other tools : Postman, trello,github...
+                                {formatContent(topicInfo.topicExpectedResearch)}
                             </Typography>
                         </Box>
                         <Box ClassName="Documents" sx={{
@@ -180,254 +237,69 @@ const MentorProjectInformation = () => {
                             <Typography sx={{
                                 fontSize: '20px',
                                 fontWeight: '600',
-                                color: '#707070'
-                            }}>Documents Upload</Typography>
-                            <Box sx={{
-                                marginTop: '5px',
-                                width: '100%',
-                                height: 'auto',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center'
+                                color: color.red
                             }}>
-                                <NavLink>
-                                    <Box sx={{
-                                        width: '100%',
-                                        height: '40px',
+                                Documents Upload
+                            </Typography>
+                            {topicInfo?.listDocument?.map((folders) => (
+                                <Box className="folder">
+                                    <Box className="rowFolder" sx={{
                                         display: 'flex',
                                         flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center'
+                                        alignItems: 'center',
+                                        gap: '20px',
+                                        marginLeft: '20px'
                                     }}>
-                                        <Box sx={{
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            width: 'auto',
-                                            height: '100%',
-                                            alignItems: 'center'
+                                        <Folder fontSize="large" sx={{
+                                            color: color.coralRed
+                                        }} />
+                                        <Typography sx={{
+                                            color: color.coralRed,
+                                            fontSize: '20px',
+                                            fontWeight: '600',
                                         }}>
-                                            <Article fontSize="large" sx={{
-                                                color: '#707070'
-                                            }}></Article>
+                                            {folders.name}
+                                        </Typography>
+                                    </Box>
+                                    {folders?.files?.map((file) => (
+                                        <Box className="file">
                                             <Box sx={{
+                                                display: 'flex',
+                                                flexDirection: 'row',
                                                 width: 'auto',
                                                 height: '100%',
-                                                display: 'flex',
-                                                alignItems: 'center'
+                                                alignItems: 'center',
+                                                marginLeft: '40px'
                                             }}>
-                                                <Typography ClassName="documentsPJ" sx={{
-                                                    marginTop: '10px',
-                                                    fontSize: '18px',
-                                                    marginLeft: '10px',
-                                                    color: '#707070',
-                                                    marginBottom: '8px'
-                                                }}>Proposal_Document_Ver1.0.pdf</Typography>
+                                                <Article fontSize="large" sx={{
+                                                    color: '#1e385d'
+                                                }}></Article>
+                                                <Box sx={{
+                                                    width: 'auto',
+                                                    height: '100%',
+                                                    display: 'flex',
+                                                    alignItems: 'center'
+                                                }}>
+                                                    <Typography
+                                                        // onClick={async () => {
+                                                        //     const res = await downloadFile(item.source);
+                                                        // }}
+                                                        ClassName="documentsPJ" sx={{
+                                                            marginTop: '10px',
+                                                            fontSize: '20px',
+                                                            marginLeft: '10px',
+                                                            color: '#1e385d',
+                                                            marginBottom: '8px'
+                                                        }}>
+                                                        {file.name}
+                                                    </Typography>
+                                                </Box>
                                             </Box>
                                         </Box>
-                                        <Typography sx={{
-                                            color: '#707070',
-                                            textDecoration: 'none'
-                                        }}>21:03:38 PM  26/02/2024</Typography>
-                                    </Box>
-                                </NavLink>
-                            </Box>
-                            <Box sx={{
-                                marginTop: '5px',
-                                width: '100%',
-                                height: 'auto',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center'
-                            }}>
-                                <NavLink>
-                                    <Box sx={{
-                                        width: '100%',
-                                        height: '40px',
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center'
-                                    }}>
-                                        <Box sx={{
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            width: 'auto',
-                                            height: '100%',
-                                            alignItems: 'center'
-                                        }}>
-                                            <Article fontSize="large" sx={{
-                                                color: '#707070'
-                                            }}></Article>
-                                            <Box sx={{
-                                                width: 'auto',
-                                                height: '100%',
-                                                display: 'flex',
-                                                alignItems: 'center'
-                                            }}>
-                                                <Typography ClassName="documentsPJ" sx={{
-                                                    marginTop: '10px',
-                                                    fontSize: '18px',
-                                                    marginLeft: '10px',
-                                                    color: '#707070',
-                                                    marginBottom: '8px'
-                                                }}>Project_Plan_Document_Ver1.0.pdf</Typography>
-                                            </Box>
-                                        </Box>
-                                        <Typography sx={{
-                                            color: '#707070',
-                                            textDecoration: 'none'
-                                        }}>21:03:38 PM  26/02/2024</Typography>
-                                    </Box>
-                                </NavLink>
-                            </Box>
-                            <Box sx={{
-                                marginTop: '5px',
-                                width: '100%',
-                                height: 'auto',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center'
-                            }}>
-                                <NavLink>
-                                    <Box sx={{
-                                        width: '100%',
-                                        height: '40px',
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center'
-                                    }}>
-                                        <Box sx={{
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            width: 'auto',
-                                            height: '100%',
-                                            alignItems: 'center'
-                                        }}>
-                                            <Article fontSize="large" sx={{
-                                                color: '#707070'
-                                            }}></Article>
-                                            <Box sx={{
-                                                width: 'auto',
-                                                height: '100%',
-                                                display: 'flex',
-                                                alignItems: 'center'
-                                            }}>
-                                                <Typography ClassName="documentsPJ" sx={{
-                                                    marginTop: '10px',
-                                                    fontSize: '18px',
-                                                    marginLeft: '10px',
-                                                    color: '#707070',
-                                                    marginBottom: '8px'
-                                                }}>Product_Backlog_Document_Ver1.0.pdf</Typography>
-                                            </Box>
-                                        </Box>
-                                        <Typography sx={{
-                                            color: '#707070',
-                                            textDecoration: 'none'
-                                        }}>21:03:38 PM  26/02/2024</Typography>
-                                    </Box>
-                                </NavLink>
-                            </Box>
-                            <Box sx={{
-                                marginTop: '5px',
-                                width: '100%',
-                                height: 'auto',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center'
-                            }}>
-                                <NavLink>
-                                    <Box sx={{
-                                        width: '100%',
-                                        height: '40px',
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center'
-                                    }}>
-                                        <Box sx={{
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            width: 'auto',
-                                            height: '100%',
-                                            alignItems: 'center'
-                                        }}>
-                                            <Article fontSize="large" sx={{
-                                                color: '#707070'
-                                            }}></Article>
-                                            <Box sx={{
-                                                width: 'auto',
-                                                height: '100%',
-                                                display: 'flex',
-                                                alignItems: 'center'
-                                            }}>
-                                                <Typography ClassName="documentsPJ" sx={{
-                                                    marginTop: '10px',
-                                                    fontSize: '18px',
-                                                    marginLeft: '10px',
-                                                    color: '#707070',
-                                                    marginBottom: '8px'
-                                                }}>UserStory_Document_Ver1.0.pdf</Typography>
-                                            </Box>
-                                        </Box>
-                                        <Typography sx={{
-                                            color: '#707070',
-                                            textDecoration: 'none'
-                                        }}>21:03:38 PM  26/02/2024</Typography>
-                                    </Box>
-                                </NavLink>
-                            </Box>
-                            <Box sx={{
-                                marginTop: '5px',
-                                width: '100%',
-                                height: 'auto',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center'
-                            }}>
-                                <NavLink>
-                                    <Box sx={{
-                                        width: '100%',
-                                        height: '40px',
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center'
-                                    }}>
-                                        <Box sx={{
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            width: 'auto',
-                                            height: '100%',
-                                            alignItems: 'center'
-                                        }}>
-                                            <Article fontSize="large" sx={{
-                                                color: '#707070'
-                                            }}></Article>
-                                            <Box sx={{
-                                                width: 'auto',
-                                                height: '100%',
-                                                display: 'flex',
-                                                alignItems: 'center'
-                                            }}>
-                                                <Typography ClassName="documentsPJ" sx={{
-                                                    marginTop: '10px',
-                                                    fontSize: '18px',
-                                                    marginLeft: '10px',
-                                                    color: '#707070',
-                                                    marginBottom: '8px'
-                                                }}>Proposal_Document_Ver1.0.pdf</Typography>
-                                            </Box>
-                                        </Box>
-                                        <Typography sx={{
-                                            color: '#707070',
-                                            textDecoration: 'none'
-                                        }}>21:03:38 PM  26/02/2024</Typography>
-                                    </Box>
-                                </NavLink>
-                            </Box>
-                            <FileUpLoad></FileUpLoad>
+                                    ))}
+
+                                </Box>
+                            ))}
                         </Box>
                         <Box ClassName="LinkProject" sx={{
                             width: '95%',
@@ -483,249 +355,8 @@ const MentorProjectInformation = () => {
                             justifyContent: 'space-evenly',
                             alignItems: 'center'
                         }}>
-                            <Box sx={{
-                                width: '100%',
-                                height: '130px',
-                                display: 'flex',
-                                flexDirection: 'column'
-
-                            }}>
-                                <Box sx={{
-                                    marginLeft: '10px',
-                                    width: '90%',
-                                    height: 'auto',
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    justifyContent: 'start',
-                                    alignItems: 'center'
-                                }}>
-                                    <Person2 fontSize='large' sx={{ color: '#707070' }}></Person2>
-                                    <Typography sx={{
-                                        color: '#707070',
-                                        fontSize: '18px',
-                                        marginLeft: '10px',
-                                        fontWeight: 'bold'
-                                    }}>Mentor</Typography>
-                                </Box>
-                                <Box sx={{
-                                    marginLeft: '48px',
-                                    marginTop: '6px',
-                                    width: '90%',
-                                    height: '30px',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'start'
-                                }}>
-                                    <Typography sx={{
-                                        color: '#707070',
-                                        fontSize: '18px',
-                                        marginLeft: '10px',
-                                        marginTop: '4px'
-                                    }}>Dr. Tran Thi Thuy Trinh</Typography>
-                                    <Typography sx={{
-                                        color: '#707070',
-                                        fontSize: '18px',
-                                        marginLeft: '10px',
-                                        marginTop: '4px'
-                                    }}>ttthuytrinh@dtu.edu.vn</Typography>
-                                    <Typography sx={{
-                                        color: '#707070',
-                                        fontSize: '18px',
-                                        marginLeft: '10px',
-                                        marginTop: '4px'
-                                    }}>0913350642</Typography>
-                                </Box>
-                            </Box>
-                            <Box sx={{
-                                width: '100%',
-                                height: 'auto',
-                                display: 'flex',
-                                flexDirection: 'column'
-
-                            }}>
-                                <Box sx={{
-                                    marginLeft: '10px',
-                                    width: '90%',
-                                    height: 'auto',
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    justifyContent: 'start',
-                                    alignItems: 'center'
-                                }}>
-                                    <Person fontSize='large' sx={{ color: '#707070' }}></Person>
-                                    <Typography sx={{
-                                        color: '#707070',
-                                        fontSize: '18px',
-                                        marginLeft: '10px',
-                                        fontWeight: 'bold'
-                                    }}>Leader</Typography>
-                                </Box>
-                                <Box sx={{
-                                    marginLeft: '48px',
-                                    marginTop: '6px',
-                                    width: '90%',
-                                    height: 'auto',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'start'
-                                }}>
-                                    <Typography sx={{
-                                        color: '#707070',
-                                        fontSize: '18px',
-                                        marginLeft: '10px',
-                                        marginTop: '4px'
-                                    }}>Nguyen Tran Anh Thang</Typography>
-                                    <Typography sx={{
-                                        color: '#707070',
-                                        fontSize: '18px',
-                                        marginLeft: '10px',
-                                        marginTop: '4px'
-                                    }}>anhthang2529@gmail.com
-                                    </Typography>
-                                    <Typography sx={{
-                                        color: '#707070',
-                                        fontSize: '18px',
-                                        marginLeft: '10px',
-                                        marginTop: '4px'
-                                    }}>0869132529</Typography>
-                                </Box>
-                            </Box>
-                            <Box sx={{
-                                width: '100%',
-                                height: 'auto',
-                                display: 'flex',
-                                flexDirection: 'column'
-
-                            }}>
-                                <Box sx={{
-                                    marginLeft: '10px',
-                                    width: '90%',
-                                    height: 'auto',
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    justifyContent: 'start',
-                                    alignItems: 'center'
-                                }}>
-                                    <Groups fontSize='large' sx={{ color: '#707070' }}></Groups>
-                                    <Typography sx={{
-                                        color: '#707070',
-                                        fontSize: '18px',
-                                        marginLeft: '10px',
-                                        fontWeight: 'bold'
-                                    }}>Group Members</Typography>
-                                </Box>
-                                <Box sx={{
-                                    marginLeft: '48px',
-                                    marginTop: '6px',
-                                    width: '90%',
-                                    height: 'auto',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'start'
-                                }}>
-                                    <Typography sx={{
-                                        color: '#707070',
-                                        fontSize: '18px',
-                                        marginLeft: '10px',
-                                        marginTop: '4px'
-                                    }}>Nguyen Hoang Quoc Anh</Typography>
-                                    <Typography sx={{
-                                        color: '#707070',
-                                        fontSize: '18px',
-                                        marginLeft: '10px',
-                                        marginTop: '4px'
-                                    }}>Duong Nguyen Cong Luan
-                                    </Typography>
-                                    <Typography sx={{
-                                        color: '#707070',
-                                        fontSize: '18px',
-                                        marginLeft: '10px',
-                                        marginTop: '4px'
-                                    }}>Nguyen Quoc Nhat</Typography>
-                                </Box>
-                            </Box>
-                            <Box sx={{
-                                width: '100%',
-                                height: 'auto',
-                                display: 'flex',
-                                flexDirection: 'column'
-
-                            }}>
-                                <Box sx={{
-                                    marginLeft: '10px',
-                                    width: '90%',
-                                    height: 'auto',
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    justifyContent: 'start',
-                                    alignItems: 'center'
-                                }}>
-                                    <AccessAlarm fontSize='large' sx={{ color: '#707070' }}></AccessAlarm>
-                                    <Typography sx={{
-                                        color: '#707070',
-                                        fontSize: '18px',
-                                        marginLeft: '10px',
-                                        fontWeight: 'bold'
-                                    }}>Start</Typography>
-                                </Box>
-                                <Box sx={{
-                                    marginLeft: '48px',
-                                    marginTop: '6px',
-                                    width: '90%',
-                                    height: 'auto',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'start'
-                                }}>
-                                    <Typography sx={{
-                                        color: '#707070',
-                                        fontSize: '18px',
-                                        marginLeft: '10px',
-                                        marginTop: '4px'
-                                    }}>24/02/2024</Typography>
-                                </Box>
-                            </Box>
-                            <Box sx={{
-                                width: '100%',
-                                height: 'auto',
-                                display: 'flex',
-                                flexDirection: 'column'
-
-                            }}>
-                                <Box sx={{
-                                    marginLeft: '10px',
-                                    width: '90%',
-                                    height: 'auto',
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    justifyContent: 'start',
-                                    alignItems: 'center'
-                                }}>
-                                    <WorkspacePremium fontSize='large' sx={{ color: '#707070' }}></WorkspacePremium>
-                                    <Typography sx={{
-                                        color: '#707070',
-                                        fontSize: '18px',
-                                        marginLeft: '10px',
-                                        fontWeight: 'bold'
-                                    }}>Status</Typography>
-                                </Box>
-                                <Box sx={{
-                                    marginLeft: '48px',
-                                    marginTop: '6px',
-                                    width: '90%',
-                                    height: 'auto',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'start'
-                                }}>
-                                    <Typography sx={{
-                                        color: '#707070',
-                                        fontSize: '18px',
-                                        marginLeft: '10px',
-                                        marginTop: '4px'
-                                    }}>In progess</Typography>
-                                </Box>
-                            </Box>
+                            <Typography>Đoạn này chưa sửa</Typography>
+                            <Typography>Push tạm lên trước</Typography>
                         </Box>
                     </Box>
                 </Box>

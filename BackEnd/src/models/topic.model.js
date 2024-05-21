@@ -27,6 +27,10 @@ const topicModel = (sequelize, DataTypes) =>{
                 type: DataTypes.TEXT,
                 allowNull: true
             },
+            otherNotes: {
+                type: DataTypes.TEXT,
+                allowNull: true
+            },
             topicStatus: {
                 type: DataTypes.TEXT,
                 allowNull: false
@@ -38,11 +42,6 @@ const topicModel = (sequelize, DataTypes) =>{
             topicDateEnd: {
                 type: DataTypes.DATE,
                 allowNull: false
-            },
-            documentCode: {
-                type: DataTypes.STRING,
-                allowNull: false,
-                unique: true
             },
             facultyCode: {
                 type: DataTypes.STRING,
