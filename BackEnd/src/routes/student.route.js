@@ -1,6 +1,8 @@
 const express = require('express');
 const { getStudent, getTopicApprovedForStudent, getTopicApprovedDetailForStudent, updateTopic, upload } = require('../controllers/student.controllers')
 const { authenMiddleware } = require('../middlewares/authen.middleware');
+const {checkDocument} = require('../controllers/checkPlagiarism.controler');
+const {checkUpload} = require('../controllers/checkPlagiarism.controler');
 const studentRoute = express.Router();
 
 studentRoute
@@ -15,6 +17,14 @@ studentRoute
   .get(
     authenMiddleware,
     getTopicApprovedDetailForStudent
+  );
+
+  studentRoute
+  .route('/checkDocument')
+  .post(
+    authenMiddleware,
+    checkUpload.any(),
+    checkDocument
   );
 
 studentRoute

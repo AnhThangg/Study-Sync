@@ -24,7 +24,7 @@ import {
   Delete,
   Article, Person2, Link, Groups, AccessAlarm, WorkspacePremium
 } from "@mui/icons-material";
-import { getTopicApprovedDetailForStudent, updateTopic } from '../../../api/studentApi';
+import { checkDocument, getTopicApprovedDetailForStudent, updateTopic } from '../../../api/studentApi';
 import { v4 as uuid } from "uuid";
 
 
@@ -165,6 +165,20 @@ function InformationProject() {
 
   const openDialog = async () => {
     const formData = new FormData();
+    for (let i = 0; i < folders.length; i++) {
+      for (let j = 0; j < folders[i].files.length; j++) {
+        if (folders[i].files[j].new) {
+          formData.append(folders[i].name, folders[i].files[j].file);
+        }
+      }
+    }
+    const res = await checkDocument(formData);
+    console.log(res);
+    
+  }
+
+  const onUpdateTopic = async () => {
+    const formData = new FormData();
     formData.append('topicDescription', topicDescription)
     formData.append('topicGoalSubject', topicDescription)
     formData.append('topicExpectedResearch', topicDescription)
@@ -189,8 +203,7 @@ function InformationProject() {
       setFolders(newFolders);
     }
   }
-
-  // console.log(infoTopic?.listDocument);
+  console.log(infoTopic?.listDocument);
 
   return (
     <Box sx={{ margin: "50px 50px 0 50px", color: "#818181" }}>
