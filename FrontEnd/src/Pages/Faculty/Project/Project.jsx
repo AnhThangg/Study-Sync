@@ -3,6 +3,8 @@ import { Button, Box, Typography } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 import { Edit, Delete } from "@mui/icons-material";
 import { useState } from 'react';
+import { useEffect } from 'react';
+import { getAllTopic } from '../../../api/facultyApi';
 
 const columns = [
     {
@@ -21,7 +23,7 @@ const columns = [
             const status = params.row.status;
             let color = '';
             switch (status) {
-                case 'Waiting':
+                case 'Approved':
                     color = '#ffff00'; 
                     break;
                 case 'Refuse':
@@ -46,18 +48,27 @@ const columns = [
 ];
 
 const Project = () => {
-    const [listAccount, setListAccount] = useState([
-        { id: 1, projectCode: 'univer', projectName: 'truongdulich', leader: 'DTDL', status: 'Refuse' },
-        { id: 2, projectCode: 'univer', projectName: 'truongdaotao', leader: 'DTQT', status: 'Waiting' },
-        { id: 3, projectCode: 'faculty', projectName: 'nguyentanhthang', leader: '26211329003', status: 'Accept' },
-        { id: 4, projectCode: 'student', projectName: 'duongnguyencongluan', leader: '26211329003', status: 'Complete' },
-        { id: 5, projectCode: 'student', projectName: 'nguyenhoangquocanh', leader: '26211329003', status: 'Refuse' },
-        { id: 6, projectCode: 'student', projectName: 'nguyenquocnhat', leader: '26211329003', status: 'Complete' },
-        { id: 7, projectCode: 'student', projectName: 'nguyenxuanvang', leader: '26211329003', status: 'Waiting' },
-        { id: 8, projectCode: 'student', projectName: 'nguyentanhdo', leader: '26211329003', status: 'Accept' },
-        { id: 9, projectCode: 'student', projectName: 'trancongtri', leader: '26211329003', status: 'Refuse' },
-        { id: 10, projectCode: 'univer', projectName: 'truongdulich', leader: 'DTDL', status: 'Refuse' },
-    ]);
+
+    const [topics, setTopics] = useState([]);
+
+    useEffect(()=>{
+        getAllTopic()
+        .then((data) => {
+            setTopics(data);
+        })
+        .catch((e)=>{
+            console.log(e);
+        })
+    })
+    const rows = topics.map((item, index) => ({
+        id: index + 1,
+        projectCode: item.topicCode,
+        projectName: item.topicName,
+        leader: item.leader,
+        status: item.topicStatus,
+        
+      }));
+    
 
     return (
         <Box className="container" sx={{ margin: "50px 0 0 50px" }}>
@@ -79,7 +90,7 @@ const Project = () => {
             }}>
                 <DataGrid
                     autoHeight
-                    rows={listAccount}
+                    rows={rows}
                     columns={columns}
                     initialState={{
                         pagination: {

@@ -15,6 +15,7 @@ import MentorOfFaculty from "./Pages/Faculty/Mentor/Mentor.jsx";
 import StudentOfFaculty from "./Pages/Faculty/Student/Student.jsx";
 import ProjectOfFaculty from "./Pages/Faculty/Project/Project.jsx";
 import ProfileOfFaculty from "./Pages/Faculty/Profile/Profile.jsx";
+import DetailTopic from "./Pages/Faculty/DetailTopic/DetailTopic.jsx";
 import Admin from "./Component/Template/Admin/Admin.jsx";
 import AddAccount from "./Pages/Admin/AddAccount/AddAccount.jsx";
 import HomePage from "./Pages/Admin/HomePage/HomePage.jsx";
@@ -266,6 +267,11 @@ const router = createBrowserRouter([
         path: "/faculty/topicUnconfirm/topicUnconfirmDetail/:id",
         element: <FacultyUnconfirmTopicDetail />,
       },
+      {
+        path: "/faculty/detailTopic",
+        element: <DetailTopic />,
+      },
+      
     ],
   },
 ]);

@@ -1,43 +1,47 @@
-const express = require('express');
-const { getAllFacultyCodeForUniver, getUnconfirmedTopicsForFaculty, approveTopicForFaculty, countTopicsUnconfirmForFaculty, getUnconfirmedTopicDetailForFaculty } = require('../controllers/faculty.controller');
-const { authenMiddleware } = require('../middlewares/authen.middleware');
+const express = require("express");
+const {
+  getAllFacultyCodeForUniver,
+  getUnconfirmedTopicsForFaculty,
+  approveTopicForFaculty,
+  countTopicsUnconfirmForFaculty,
+  getUnconfirmedTopicDetailForFaculty,
+  getAllMentor,
+  getAllStudents,
+  getDetailMentor,
+  getDetailStudent,
+  getAllTopic
+} = require("../controllers/faculty.controller");
+const { authenMiddleware } = require("../middlewares/authen.middleware");
+const { Faculty } = require("../database/database");
 
 const facultyRoute = express.Router();
 
+facultyRoute
+  .route("/approveTopicForFaculty/:id")
+  .patch(authenMiddleware, approveTopicForFaculty);
 
 facultyRoute
-    .route('/approveTopicForFaculty/:id')
-    .patch(
-        authenMiddleware,
-        approveTopicForFaculty
-    );
+  .route("/UnconfirmedTopicsForFaculty")
+  .get(authenMiddleware, getUnconfirmedTopicsForFaculty);
 
 facultyRoute
-    .route('/UnconfirmedTopicsForFaculty')
-    .get(
-        authenMiddleware,
-        getUnconfirmedTopicsForFaculty
-    );
+  .route("/CountTopicsUnconfirmForFaculty")
+  .get(authenMiddleware, countTopicsUnconfirmForFaculty);
 
 facultyRoute
-    .route('/CountTopicsUnconfirmForFaculty')
-    .get(
-        authenMiddleware,
-        countTopicsUnconfirmForFaculty
-    );
+  .route("/unconfirmedTopicDetailForFaculty/:id")
+  .get(authenMiddleware, getUnconfirmedTopicDetailForFaculty);
 
-facultyRoute
-    .route('/unconfirmedTopicDetailForFaculty/:id')
-    .get(
-        authenMiddleware,
-        getUnconfirmedTopicDetailForFaculty
-    );
+facultyRoute.route("/getAllMentor").get(authenMiddleware, getAllMentor);
 
-facultyRoute
-    .route('/:id')
-    .get(
-        getAllFacultyCodeForUniver,
-    )
+facultyRoute.route("/getAllStudents").get(authenMiddleware, getAllStudents);
 
+facultyRoute.route("/getAllTopic").get(authenMiddleware, getAllTopic);
 
-module.exports = { facultyRoute }
+facultyRoute.route("/getDetailMentor/:id").get(authenMiddleware, getDetailMentor);
+
+facultyRoute.route("/getDetailStudent/:id").get(authenMiddleware, getDetailStudent);
+
+facultyRoute.route("/:id").get(getAllFacultyCodeForUniver);
+
+module.exports = { facultyRoute };

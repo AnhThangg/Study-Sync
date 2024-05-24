@@ -35,3 +35,51 @@ export const approveTopicForFaculty = (id) => {
         console.log(e);
     }
 }
+
+export const getAllMentor = () =>{
+    try {
+        const res = request.get(`/faculty/getAllMentor`)
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+
+export const getAllStudents = () =>{
+    try {
+        const res = request.get('/faculty/getAllStudents')
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+export const getDetailMetor = (id) =>{
+    try {
+        const res = request.get('/faculty/getDetailMetor/:id')
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+export const getDetailStudent = (id) =>{
+    try {
+        const res = request.get('/faculty/getDetailStudent/:id')
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+export const getAllTopic = () =>{
+    try {
+        const res = request.get('/faculty/getAllTopic')
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+

@@ -486,7 +486,94 @@ const countTopicsUnconfirmForFaculty = async (req, res) => {
     }
 }
 
+const getAllMentor = async (req, res) =>{
+    try {
+        const faculty = await Faculty.findOne({
+            where: {
+                accountId: req.account.accountId
+            }
+        })
+        const mentor = await Mentor.findAll({
+            where:{
+                facultyCode: faculty.facultyCode
+            }
+        })
+        return res.status(200).json(mentor);
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json(e);
+    }
+}
 
+const getAllStudents = async (req, res) =>{
+    try {
+        const faculty = await Faculty.findOne({
+            where:{
+                accountId: req.account.accountId
+            }
+        })
+        const students = await Student.findAll({
+            where:{
+                facultyCode: faculty.facultyCode
+            }
+        })
+        return res.status(200).json(students);
+
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json(e);
+    }
+}
+
+const getDetailMentor = async (req, res)=>{
+    try {
+        const { id } = req.params;
+        const mentor = await Mentor.findOne({
+            where:{
+                mentorCode: id
+            }
+        })
+        return res.status(200).json(mentor);
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json(e);
+    }
+}
+
+const getDetailStudent = async (req, res)=>{
+    try {
+        const { id } = req.params;
+        const student = await Student.findOne({
+            where:{
+                studentCode: id
+            }
+        })
+        return res.status(200).json(student);
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json(e);
+    }
+}
+
+const getAllTopic = async (req, res) =>{
+    try {
+        const faculty = await Faculty.findOne({
+            where:{
+                accountId: req.account.accountId
+            }
+        })
+        const topics = await Topic.findAll({
+            where:{
+                facultyCode: faculty.facultyCode
+            }
+        })
+        return res.status(200).json(topics);
+
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json(e);
+    }
+}
 
 module.exports = {
     getAllFacultyCodeForUniver,
@@ -495,4 +582,9 @@ module.exports = {
     approveTopicForFaculty,
     refuseTopicForFaculty,
     countTopicsUnconfirmForFaculty,
+    getAllMentor,
+    getAllStudents,
+    getDetailMentor,
+    getDetailStudent,
+    getAllTopic
 }
