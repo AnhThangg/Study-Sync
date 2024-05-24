@@ -35,3 +35,12 @@ export const updateTopic = (id, infoUpdate) => {
         console.log(e);
     }
 }
+
+export const checkDocument = (files) => {
+    try {
+        const res = request.post(`/student/checkDocument/`,files);
+        return res;
+    } catch (e) {
+        console.log(e);
+    }
+}

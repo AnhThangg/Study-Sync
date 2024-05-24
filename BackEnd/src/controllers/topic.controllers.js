@@ -3,7 +3,7 @@ const { Topic, Document, Team, StudentTeam, Mentor, Student, sequelize, Faculty 
 const { Sequelize, where } = require('sequelize');
 const { v4: uuid } = require('uuid');
 const path = require('path');
-
+const { spawn } = require("child_process");
 
 const getTopics = async (req, res) => {
     try {
